@@ -1,0 +1,492 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Belvo API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{secretId}}",
+      "password": "{{secretPassword}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Links",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Links",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/links/"
+          },
+          "docs": "List all Links"
+        },
+        {
+          "info": {
+            "name": "Register a new Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/links/",
+            "body": {
+              "type": "json",
+              "data": "{\"institution\": \"<string>\", \"username\": \"<string>\", \"password\": \"<string>\", \"access_mode\": \"single\"}"
+            }
+          },
+          "docs": "Register a new Link"
+        },
+        {
+          "info": {
+            "name": "Get a Link's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/links/:id/"
+          },
+          "docs": "Get a Link's details"
+        },
+        {
+          "info": {
+            "name": "Complete a Link request",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.belvo.com/api/links/:id/",
+            "body": {
+              "type": "json",
+              "data": "{\"id\": \"<uuid>\", \"token\": \"<string>\"}"
+            }
+          },
+          "docs": "Complete a Link request"
+        },
+        {
+          "info": {
+            "name": "Delete a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.belvo.com/api/links/:id/"
+          },
+          "docs": "Delete a Link"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/accounts/"
+          },
+          "docs": "List all accounts"
+        },
+        {
+          "info": {
+            "name": "Retrieve accounts for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/accounts/",
+            "body": {
+              "type": "json",
+              "data": "{\"link\": \"<uuid>\", \"save_data\": true}"
+            }
+          },
+          "docs": "Retrieve accounts for a Link"
+        },
+        {
+          "info": {
+            "name": "Get an account's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/accounts/:id/"
+          },
+          "docs": "Get an account's details"
+        },
+        {
+          "info": {
+            "name": "Delete an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.belvo.com/api/accounts/:id/"
+          },
+          "docs": "Delete an account"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/transactions/"
+          },
+          "docs": "List all transactions"
+        },
+        {
+          "info": {
+            "name": "Retrieve transactions for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/transactions/",
+            "body": {
+              "type": "json",
+              "data": "{\"link\": \"<uuid>\", \"date_from\": \"2026-01-01\", \"date_to\": \"2026-06-21\"}"
+            }
+          },
+          "docs": "Retrieve transactions for a Link"
+        },
+        {
+          "info": {
+            "name": "Get a transaction's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/transactions/:id/"
+          },
+          "docs": "Get a transaction's details"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Balances",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all balances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/balances/"
+          },
+          "docs": "List all balances"
+        },
+        {
+          "info": {
+            "name": "Retrieve balances for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/balances/",
+            "body": {
+              "type": "json",
+              "data": "{\"link\": \"<uuid>\", \"date_from\": \"2026-01-01\", \"date_to\": \"2026-06-21\"}"
+            }
+          },
+          "docs": "Retrieve balances for a Link"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Owners",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all owners",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/owners/"
+          },
+          "docs": "List all owners"
+        },
+        {
+          "info": {
+            "name": "Retrieve owners for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/owners/",
+            "body": {
+              "type": "json",
+              "data": "{\"link\": \"<uuid>\", \"save_data\": true}"
+            }
+          },
+          "docs": "Retrieve owners for a Link"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Incomes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all incomes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/incomes/"
+          },
+          "docs": "List all incomes"
+        },
+        {
+          "info": {
+            "name": "Retrieve incomes for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/incomes/",
+            "body": {
+              "type": "json",
+              "data": "{\"link\": \"<uuid>\", \"save_data\": true}"
+            }
+          },
+          "docs": "Retrieve incomes for a Link"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Recurring Expenses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all recurring expenses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/recurring-expenses/"
+          },
+          "docs": "List all recurring expenses"
+        },
+        {
+          "info": {
+            "name": "Retrieve recurring expenses for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/recurring-expenses/",
+            "body": {
+              "type": "json",
+              "data": "{\"link\": \"<uuid>\", \"save_data\": true}"
+            }
+          },
+          "docs": "Retrieve recurring expenses for a Link"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Institutions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all institutions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/institutions/"
+          },
+          "docs": "List all institutions"
+        },
+        {
+          "info": {
+            "name": "Get an institution's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/institutions/:id/"
+          },
+          "docs": "Get an institution's details"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/webhooks/"
+          },
+          "docs": "List all webhooks"
+        },
+        {
+          "info": {
+            "name": "Create a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/webhooks/",
+            "body": {
+              "type": "json",
+              "data": "{\"url\": \"<string>\", \"authorization_header\": \"<string>\"}"
+            }
+          },
+          "docs": "Create a webhook"
+        },
+        {
+          "info": {
+            "name": "Get a webhook's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/webhooks/:id/"
+          },
+          "docs": "Get a webhook's details"
+        },
+        {
+          "info": {
+            "name": "Delete a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.belvo.com/api/webhooks/:id/"
+          },
+          "docs": "Delete a webhook"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payments (Brazil)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all payment intents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/payment-intents/"
+          },
+          "docs": "List all payment intents"
+        },
+        {
+          "info": {
+            "name": "Create a payment intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/payments/br/payment-intents/",
+            "body": {
+              "type": "json",
+              "data": "{\"amount\": \"100.00\", \"description\": \"<string>\", \"provider\": \"pix\"}"
+            }
+          },
+          "docs": "Create a payment intent"
+        },
+        {
+          "info": {
+            "name": "Get a payment intent's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/payment-intents/:id/"
+          },
+          "docs": "Get a payment intent's details"
+        },
+        {
+          "info": {
+            "name": "List all customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/customers/"
+          },
+          "docs": "List all customers"
+        },
+        {
+          "info": {
+            "name": "Create a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/payments/br/customers/",
+            "body": {
+              "type": "json",
+              "data": "{\"name\": \"<string>\", \"identifier\": {\"type\": \"CPF\", \"number\": \"<string>\"}}"
+            }
+          },
+          "docs": "Create a customer"
+        },
+        {
+          "info": {
+            "name": "List all payment institutions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/payment-institutions/"
+          },
+          "docs": "List all payment institutions"
+        }
+      ]
+    }
+  ]
+}

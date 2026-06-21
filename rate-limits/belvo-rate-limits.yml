@@ -1,0 +1,61 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Belvo
+providerId: belvo
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- Open Finance
+- Open Banking
+- Bank Data
+- Aggregation
+- Payments
+- Pix
+- Latin America
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Belvo applies per-account rate limits across its REST API. Aggregation list
+  endpoints return paginated responses defaulting to 100 items per page, raisable
+  to a maximum of 1000 items via the page_size query parameter. Specific
+  requests-per-minute / per-second throttling thresholds are governed by the
+  customer's commercial agreement and are not published publicly; they are not
+  reconciled in this artifact.
+notes: >-
+  Verify per-account throttling thresholds and any per-resource limits with
+  Belvo support or in your commercial agreement on reconciliation. The 1000
+  items-per-page cap on list endpoints is documented.
+sources:
+- https://developers.belvo.com/apis/belvoopenapispec
+- https://developers.belvo.com/apis/belvoopenapispec/transactions/retrievetransactions
+responseCodes:
+  throttled: 429
+limits:
+- name: Page Size
+  scope: request
+  metric: items
+  limit: 1000
+  notes: Maximum items per page on list endpoints; default is 100, set via page_size.
+- name: Requests Per Minute (RPM)
+  scope: account
+  metric: requests
+  limit: see commercial agreement
+  notes: Per-account request throttling; thresholds are contract-defined and not published.
+- name: Concurrent Retrievals
+  scope: account
+  metric: requests
+  limit: see commercial agreement
+  notes: Concurrency on data retrieval (POST) requests may be limited per account.
+policies:
+- name: Pagination
+  description: List endpoints return paginated results with next / previous links; iterate to page through full result sets.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor 429 responses on throttling.
+- name: Asynchronous Retrieval
+  description: Recurrent Links and webhook-driven flows reduce the need for high-frequency polling; subscribe to webhooks instead of polling for fresh data.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

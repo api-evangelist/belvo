@@ -1,0 +1,115 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Belvo
+providerId: belvo
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- Open Finance
+- Open Banking
+- Bank Data
+- Aggregation
+- Payments
+- Pix
+- Latin America
+- Plans
+description: >-
+  Belvo uses a sales-led, contract-based commercial model. Public self-serve
+  pricing is not published; pricing is quoted per customer based on products
+  used (aggregation - accounts, transactions, balances, owners, incomes,
+  recurring expenses - vs. payment initiation), expected request / connection
+  volume, and country coverage (Mexico, Brazil, Colombia). A free Sandbox
+  environment is available to build and test against dummy data before signing
+  an agreement. Specific per-call or per-Link prices are not reconciled here.
+notes: >-
+  Pricing is not published publicly and must be obtained from Belvo sales.
+  Values below are structural placeholders, not quoted rates; reconcile against
+  a signed order form or a Belvo sales quote.
+sources:
+- https://belvo.com
+- https://developers.belvo.com
+- https://developers.belvo.com/apis/belvoopenapispec/section/introduction/sandbox
+plans:
+- id: belvo-sandbox
+  name: Sandbox
+  type: free
+  description: >-
+    Free sandbox environment to build and test the full API surface, the
+    Connect Widget, and webhooks against dummy data that mimics real-world
+    institutions.
+  entries:
+  - label: Sandbox Access
+    name: sandbox
+    type: free
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Aggregation (test)
+    note: Accounts, transactions, balances, owners, incomes, recurring expenses against dummy data.
+  - name: Connect Widget
+  - name: Webhooks
+- id: belvo-production
+  name: Production
+  type: enterprise
+  description: >-
+    Production access under a commercial agreement. Pricing is quoted by Belvo
+    sales based on the products used, request / connection volume, and country
+    coverage.
+  entries:
+  - label: Aggregation
+    name: aggregation
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  - label: Payment Initiation (Brazil / Pix)
+    name: payments_br
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Aggregation APIs
+  - name: Enrichment (Incomes, Recurring Expenses)
+  - name: Payments (Brazil / Pix)
+  - name: Webhooks
+  - name: Connect Widget
+- id: belvo-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Volume commitments, custom SLAs, dedicated support, and negotiated terms
+    for high-volume open-finance and payments deployments. Contact Belvo sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+  - name: Dedicated Support
+  - name: Custom SLAs
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

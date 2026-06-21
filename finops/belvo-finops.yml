@@ -1,0 +1,110 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Belvo
+providerId: belvo
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- Open Finance
+- Open Banking
+- Bank Data
+- Aggregation
+- Payments
+- Pix
+- Latin America
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Belvo spend. Belvo bills under a sales-led commercial
+  agreement rather than published self-serve rates, so cost is typically a
+  function of the products consumed (aggregation retrievals across accounts,
+  transactions, balances, owners, incomes, recurring expenses vs. payment
+  initiation), the number of Links / connections maintained, request volume,
+  and country coverage. Exact unit rates are not published and are not
+  reconciled here.
+notes: >-
+  Unit economics depend on the signed order form. During reconciliation, map
+  Belvo invoice line items (per product, per request or per Link, per country)
+  to the meters below and verify against the commercial agreement.
+sources:
+- https://belvo.com
+- https://developers.belvo.com
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Belvo
+serviceCategory: Financial Services
+billingModel:
+  pricingCategory: Commitment-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Belvo API
+  ServiceCategory: Financial Services
+  ProviderName: Belvo
+  PublisherName: Belvo
+  InvoiceIssuerName: Belvo
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Commitment-Based
+meters:
+- name: active_links
+  description: Number of active Links (end-user connections) maintained, often a primary billing dimension.
+  unit: links
+  aggregation: sum
+  dimensions:
+  - account
+  - country
+  - access_mode
+- name: aggregation_retrievals
+  description: Data retrieval calls against accounts, transactions, balances, and owners resources.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - account
+  - resource
+  - country
+- name: enrichment_requests
+  description: Income and recurring-expense insight requests derived from account activity.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - account
+  - resource
+- name: payment_transactions
+  description: Pix / Open Finance payment initiations processed via payment intents in Brazil.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - provider
+- name: webhook_deliveries
+  description: Asynchronous webhook notifications delivered for aggregation and payment events.
+  unit: events
+  aggregation: sum
+  dimensions:
+  - account
+  - event_type
+principles:
+- name: Visibility
+  description: Reconcile Belvo invoices against active Links and per-resource retrievals; track which products drive spend.
+- name: Allocation
+  description: Tag Links and API usage by product line, country, and team; map to internal cost centers.
+- name: Optimization
+  description: Prefer recurrent Links plus webhooks over high-frequency polling; delete unused Links; only retrieve enrichment resources when needed.
+- name: Accountability
+  description: Assign owners per integration; review active-Link counts and retrieval volume monthly against the commercial commitment.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

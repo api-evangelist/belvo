@@ -1,0 +1,202 @@
+aid: belvo
+url: https://raw.githubusercontent.com/api-evangelist/belvo/refs/heads/main/apis.yml
+name: Belvo
+kind: company
+description: Belvo is a Latin American open-finance API platform that lets companies
+  connect to bank, fiscal, and employment institutions across Mexico, Brazil, and
+  Colombia to aggregate accounts, balances, transactions, owners, and income data,
+  and to initiate account-to-account payments over Brazil's Pix / Open Finance rails.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Open Finance
+- Open Banking
+- Bank Data
+- Aggregation
+- Payments
+- Pix
+- Latin America
+created: '2026-06-21'
+modified: '2026-06-21'
+specificationVersion: '0.19'
+apis:
+- aid: belvo:belvo-links-api
+  name: Belvo Links API
+  tags:
+  - Links
+  - Connections
+  - Credentials
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  properties:
+  - url: https://developers.belvo.com/docs/links
+    type: Documentation
+  - url: https://developers.belvo.com/apis/belvoopenapispec/links
+    type: APIReference
+  - url: openapi/belvo-openapi.yml
+    type: OpenAPI
+  - url: collections/belvo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/belvo.opencollection.json
+    type: OpenCollection
+  description: A Link is the set of end-user credentials that grants access to an institution.
+    Create single (one-time) or recurrent Links and manage their lifecycle before
+    retrieving accounts, owners, balances, and transactions.
+- aid: belvo:belvo-accounts-api
+  name: Belvo Accounts API
+  tags:
+  - Accounts
+  - Bank Accounts
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  baseURL: https://api.belvo.com/api
+  properties:
+  - url: https://developers.belvo.com/docs/accounts
+    type: Documentation
+  - url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+    type: APIReference
+  - url: openapi/belvo-openapi.yml
+    type: OpenAPI
+  - url: collections/belvo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/belvo.opencollection.json
+    type: OpenCollection
+  description: Retrieve the bank accounts held inside a Link - checking, savings, credit
+    cards, and loans - with account numbers, currency, type, and balance details.
+- aid: belvo:belvo-transactions-balances-api
+  name: Belvo Transactions & Balances API
+  tags:
+  - Transactions
+  - Balances
+  - History
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  baseURL: https://api.belvo.com/api
+  properties:
+  - url: https://developers.belvo.com/docs/transactions
+    type: Documentation
+  - url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+    type: APIReference
+  - url: openapi/belvo-openapi.yml
+    type: OpenAPI
+  - url: collections/belvo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/belvo.opencollection.json
+    type: OpenCollection
+  description: Retrieve detailed, categorized transaction history for the accounts in
+    a Link and point-in-time balances for checking and savings accounts, with paginated
+    responses up to 1000 items per page.
+- aid: belvo:belvo-owners-incomes-api
+  name: Belvo Owners & Incomes API
+  tags:
+  - Owners
+  - Incomes
+  - Identity
+  - Verification
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/owners
+  baseURL: https://api.belvo.com/api
+  properties:
+  - url: https://developers.belvo.com/docs/owners
+    type: Documentation
+  - url: https://developers.belvo.com/apis/belvoopenapispec/owners
+    type: APIReference
+  - url: openapi/belvo-openapi.yml
+    type: OpenAPI
+  - url: collections/belvo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/belvo.opencollection.json
+    type: OpenCollection
+  description: Retrieve the identity of the Link owner, derive income sources over the
+    past 365 days, and identify regular recurring expenses such as subscriptions and
+    utility bills for verification and underwriting.
+- aid: belvo:belvo-institutions-api
+  name: Belvo Institutions API
+  tags:
+  - Institutions
+  - Catalog
+  - Coverage
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  baseURL: https://api.belvo.com/api
+  properties:
+  - url: https://developers.belvo.com/docs/institutions
+    type: Documentation
+  - url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+    type: APIReference
+  - url: openapi/belvo-openapi.yml
+    type: OpenAPI
+  - url: collections/belvo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/belvo.opencollection.json
+    type: OpenCollection
+  description: List the bank, fiscal, and employment institutions Belvo can connect
+    to across Mexico, Brazil, and Colombia, including supported resources, country,
+    and connection types.
+- aid: belvo:belvo-payments-api
+  name: Belvo Payments (Brazil / Pix) API
+  tags:
+  - Payments
+  - Pix
+  - Open Finance
+  - Brazil
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  baseURL: https://api.belvo.com
+  properties:
+  - url: https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+    type: Documentation
+  - url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+    type: APIReference
+  - url: openapi/belvo-openapi.yml
+    type: OpenAPI
+  - url: collections/belvo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/belvo.opencollection.json
+    type: OpenCollection
+  description: Initiate account-to-account payments in Brazil over Pix and the Open
+    Finance network using payment intents, customers, payment institutions, and payment
+    transactions.
+- aid: belvo:belvo-webhooks-api
+  name: Belvo Webhooks API
+  tags:
+  - Webhooks
+  - Events
+  - Notifications
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.belvo.com/docs/webhooks
+  baseURL: https://api.belvo.com/api
+  properties:
+  - url: https://developers.belvo.com/docs/webhooks
+    type: Documentation
+  - url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+    type: APIReference
+  - url: openapi/belvo-openapi.yml
+    type: OpenAPI
+  - url: review.yml
+    type: Review
+  - url: collections/belvo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/belvo.opencollection.json
+    type: OpenCollection
+  description: Register and manage webhook endpoints to receive asynchronous notifications
+    when aggregation resources (accounts, owners, transactions) are ready and when
+    payment intents, charges, and transactions change state.
+common:
+- type: GitHubOrganization
+  url: https://github.com/belvo-finance
+- type: LinkedIn
+  url: https://www.linkedin.com/company/belvo
+- type: Website
+  url: https://belvo.com
+- type: Documentation
+  url: https://developers.belvo.com
+- type: Plans
+  url: plans/belvo-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/belvo-rate-limits.yml
+- type: FinOps
+  url: finops/belvo-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

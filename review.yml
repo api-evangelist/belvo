@@ -1,0 +1,94 @@
+aid: belvo
+name: Belvo
+review:
+  question: Does Belvo expose a documented public WebSocket or streaming API?
+  answer: false
+  date: '2026-06-21'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    Belvo's asynchronous surface is delivered as outbound HTTP webhooks (server
+    POSTs JSON event payloads to a customer-registered URL), not as a streaming
+    transport the client connects to. There is no documented Server-Sent Events
+    (SSE) or WebSocket endpoint. Under current API Evangelist scope, neither an
+    SSE nor a WebSocket AsyncAPI document was authored because no client-facing
+    streaming channel is documented. The webhook surface is modeled in the
+    OpenAPI document (POST /api/webhooks/) and described below.
+findings:
+  summary: |
+    Belvo does not publish a documented public WebSocket or SSE streaming API.
+    The platform is a RESTful HTTPS API under https://api.belvo.com using HTTP
+    Basic authentication (Secret Key ID as username, Secret Key Password as
+    password). Asynchronous delivery is handled through outbound webhooks:
+    Belvo POSTs event notifications to a customer-registered HTTPS URL when
+    aggregation resources (accounts, owners, transactions) finish processing and
+    when payment intents, charges, and transactions change state. Belvo expects
+    a 2XX response within five seconds and retries otherwise. This is a
+    server-to-client callback, not a bidirectional or long-lived stream.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.belvo.com
+      documented: true
+    - protocol: Webhook
+      scheme: https
+      note: Outbound HTTP POST callbacks to a customer-registered URL for aggregation and payment events. Expects 2XX within five seconds; retried on failure.
+      documented: true
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: No Server-Sent Events endpoint is documented.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in the Belvo API reference or developer portal as of the review date.
+  endpointsConfirmedRest:
+    - POST   https://api.belvo.com/api/links/
+    - GET    https://api.belvo.com/api/links/
+    - GET    https://api.belvo.com/api/links/{id}/
+    - PATCH  https://api.belvo.com/api/links/{id}/
+    - DELETE https://api.belvo.com/api/links/{id}/
+    - GET    https://api.belvo.com/api/accounts/
+    - POST   https://api.belvo.com/api/accounts/
+    - GET    https://api.belvo.com/api/accounts/{id}/
+    - GET    https://api.belvo.com/api/transactions/
+    - POST   https://api.belvo.com/api/transactions/
+    - GET    https://api.belvo.com/api/transactions/{id}/
+    - GET    https://api.belvo.com/api/balances/
+    - POST   https://api.belvo.com/api/balances/
+    - GET    https://api.belvo.com/api/owners/
+    - POST   https://api.belvo.com/api/owners/
+    - GET    https://api.belvo.com/api/incomes/
+    - POST   https://api.belvo.com/api/incomes/
+    - GET    https://api.belvo.com/api/recurring-expenses/
+    - POST   https://api.belvo.com/api/recurring-expenses/
+    - GET    https://api.belvo.com/api/institutions/
+    - GET    https://api.belvo.com/api/institutions/{id}/
+    - GET    https://api.belvo.com/api/webhooks/
+    - POST   https://api.belvo.com/api/webhooks/
+    - DELETE https://api.belvo.com/api/webhooks/{id}/
+    - POST   https://api.belvo.com/payments/br/payment-intents/
+    - GET    https://api.belvo.com/payments/br/payment-intents/
+    - POST   https://api.belvo.com/payments/br/customers/
+    - GET    https://api.belvo.com/payments/br/payment-institutions/
+sources:
+  - url: https://developers.belvo.com/apis/belvoopenapispec
+    type: APIReference
+    note: All documented endpoints are HTTPS REST under https://api.belvo.com; no WebSocket mentioned.
+  - url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+    type: Documentation
+    note: Aggregation webhooks are outbound HTTP POST callbacks to a customer URL, not a client-connected stream.
+  - url: https://developers.belvo.com/docs/payments-webhooks
+    type: Documentation
+    note: Payment webhooks deliver Payment Intent / Charge / Transaction state changes via outbound POST; expects 2XX within five seconds.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No client-facing streaming (SSE or WebSocket) surface exists. Belvo's only
+    asynchronous mechanism is outbound webhooks, which are modeled in the
+    OpenAPI document and described in this review. No AsyncAPI document was
+    authored because there is no streaming channel a client subscribes to.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
