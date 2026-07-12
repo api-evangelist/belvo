@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/belvo-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: HTTP Basic authentication using your Secret Key ID as the username and your Secret
+    Key Password as the password.
+  sources:
+  - openapi/belvo-openapi.yml

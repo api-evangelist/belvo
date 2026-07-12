@@ -183,6 +183,12 @@ apis:
     when aggregation resources (accounts, owners, transactions) are ready and when
     payment intents, charges, and transactions change state.
 common:
+- type: VulnerabilityDisclosure
+  url: security/belvo-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/belvo-domain-security.yml
+- type: Authentication
+  url: authentication/belvo-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/belvo-finance
 - type: LinkedIn
@@ -197,6 +203,8 @@ common:
   url: rate-limits/belvo-rate-limits.yml
 - type: FinOps
   url: finops/belvo-finops.yml
+- url: https://belvo.com/feed
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
