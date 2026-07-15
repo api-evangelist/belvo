@@ -183,6 +183,8 @@ apis:
     when aggregation resources (accounts, owners, transactions) are ready and when
     payment intents, charges, and transactions change state.
 common:
+- type: AgenticAccess
+  url: agentic-access/belvo-agentic-access.yml
 - type: VulnerabilityDisclosure
   url: security/belvo-vulnerability-disclosure.yml
 - type: DomainSecurity
