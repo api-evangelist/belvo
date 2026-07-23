@@ -1,0 +1,189 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Balances API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Balances
+  description: Point-in-time balances for checking and savings accounts.
+paths:
+  /api/balances/:
+    get:
+      operationId: listBalances
+      tags:
+      - Balances
+      summary: List all balances
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of balances.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBalances'
+    post:
+      operationId: retrieveBalances
+      tags:
+      - Balances
+      summary: Retrieve balances for a Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveBalancesRequest'
+      responses:
+        '200':
+          description: The balances found for the Link.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Balance'
+        '201':
+          description: The balances were retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Balance'
+components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+  schemas:
+    RetrieveBalancesRequest:
+      allOf:
+      - $ref: '#/components/schemas/RetrieveRequest'
+      - type: object
+        required:
+        - date_from
+        properties:
+          date_from:
+            type: string
+            format: date
+          date_to:
+            type: string
+            format: date
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    Balance:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        account:
+          $ref: '#/components/schemas/Account'
+        value_date:
+          type: string
+          format: date
+        current_balance:
+          type: number
+        currency:
+          type: string
+        collected_at:
+          type: string
+          format: date-time
+    PaginatedBalances:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Balance'
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        institution:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+        category:
+          type: string
+          example: CHECKING_ACCOUNT
+        type:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        currency:
+          type: string
+          example: MXN
+        balance:
+          type: object
+          properties:
+            current:
+              type: number
+            available:
+              type: number
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.

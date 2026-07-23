@@ -1,0 +1,182 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Incomes API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Incomes
+  description: Income insights derived from account activity.
+paths:
+  /api/incomes/:
+    get:
+      operationId: listIncomes
+      tags:
+      - Incomes
+      summary: List all incomes
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of income records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedIncomes'
+    post:
+      operationId: retrieveIncomes
+      tags:
+      - Incomes
+      summary: Retrieve incomes for a Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveRequest'
+      responses:
+        '200':
+          description: The income insights found for the Link.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Income'
+        '201':
+          description: The income insights were retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Income'
+components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+  schemas:
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    PaginatedIncomes:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Income'
+    Income:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        account:
+          $ref: '#/components/schemas/Account'
+        currency:
+          type: string
+        income_summary:
+          type: object
+          properties:
+            monthly_average:
+              type: number
+            number_of_income_streams:
+              type: integer
+            number_of_income_transactions:
+              type: integer
+            regular_income:
+              type: boolean
+        collected_at:
+          type: string
+          format: date-time
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        institution:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+        category:
+          type: string
+          example: CHECKING_ACCOUNT
+        type:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        currency:
+          type: string
+          example: MXN
+        balance:
+          type: object
+          properties:
+            current:
+              type: number
+            available:
+              type: number
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.

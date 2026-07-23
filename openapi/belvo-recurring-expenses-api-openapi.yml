@@ -1,0 +1,199 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Recurring Expenses API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Recurring Expenses
+  description: Regular subscription and utility payments.
+paths:
+  /api/recurring-expenses/:
+    get:
+      operationId: listRecurringExpenses
+      tags:
+      - Recurring Expenses
+      summary: List all recurring expenses
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of recurring expense records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRecurringExpenses'
+    post:
+      operationId: retrieveRecurringExpenses
+      tags:
+      - Recurring Expenses
+      summary: Retrieve recurring expenses for a Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveRequest'
+      responses:
+        '200':
+          description: The recurring expenses found for the Link.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecurringExpense'
+        '201':
+          description: The recurring expenses were retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecurringExpense'
+components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+  schemas:
+    PaginatedRecurringExpenses:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/RecurringExpense'
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    RecurringExpense:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        account:
+          $ref: '#/components/schemas/Account'
+        name:
+          type: string
+        category:
+          type: string
+        frequency:
+          type: string
+          enum:
+          - WEEKLY
+          - BIMONTHLY
+          - MONTHLY
+          - BIWEEKLY
+          - QUARTERLY
+          - SEMESTRALLY
+          - YEARLY
+        average_transaction_amount:
+          type: number
+        currency:
+          type: string
+        transactions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              amount:
+                type: number
+              value_date:
+                type: string
+                format: date
+        collected_at:
+          type: string
+          format: date-time
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        institution:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+        category:
+          type: string
+          example: CHECKING_ACCOUNT
+        type:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        currency:
+          type: string
+          example: MXN
+        balance:
+          type: object
+          properties:
+            current:
+              type: number
+            available:
+              type: number
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.

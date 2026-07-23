@@ -1,0 +1,286 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Payments (Brazil) API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Payments (Brazil)
+  description: Pix / Open Finance payment initiation in Brazil.
+paths:
+  /payments/br/payment-intents/:
+    get:
+      operationId: listPaymentIntents
+      tags:
+      - Payments (Brazil)
+      summary: List all payment intents
+      responses:
+        '200':
+          description: A paginated list of payment intents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPaymentIntents'
+    post:
+      operationId: createPaymentIntent
+      tags:
+      - Payments (Brazil)
+      summary: Create a payment intent
+      description: Create a payment intent capturing the amount, description, provider, and beneficiary required to process a Pix payment over the Open Finance Network.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentIntentRequest'
+      responses:
+        '201':
+          description: The payment intent was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIntent'
+  /payments/br/payment-intents/{id}/:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: detailPaymentIntent
+      tags:
+      - Payments (Brazil)
+      summary: Get a payment intent's details
+      responses:
+        '200':
+          description: The requested payment intent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIntent'
+  /payments/br/customers/:
+    get:
+      operationId: listCustomers
+      tags:
+      - Payments (Brazil)
+      summary: List all customers
+      responses:
+        '200':
+          description: A paginated list of customers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCustomers'
+    post:
+      operationId: createCustomer
+      tags:
+      - Payments (Brazil)
+      summary: Create a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+      responses:
+        '201':
+          description: The customer was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+  /payments/br/payment-institutions/:
+    get:
+      operationId: listPaymentInstitutions
+      tags:
+      - Payments (Brazil)
+      summary: List all payment institutions
+      responses:
+        '200':
+          description: A list of institutions available for payments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentInstitution'
+components:
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          nullable: true
+        identifier:
+          type: object
+          properties:
+            type:
+              type: string
+              example: CPF
+            number:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    PaymentIntentRequest:
+      type: object
+      required:
+      - amount
+      - description
+      - provider
+      properties:
+        amount:
+          type: string
+          example: '100.00'
+        description:
+          type: string
+        provider:
+          type: string
+          example: pix
+        customer:
+          type: string
+          format: uuid
+        beneficiary:
+          type: object
+          properties:
+            name:
+              type: string
+            account:
+              type: object
+              properties:
+                institution:
+                  type: string
+                number:
+                  type: string
+                type:
+                  type: string
+        allowed_payment_method_types:
+          type: array
+          items:
+            type: string
+    PaginatedCustomers:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Customer'
+    CustomerRequest:
+      type: object
+      required:
+      - name
+      - identifier
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        identifier:
+          type: object
+          required:
+          - type
+          - number
+          properties:
+            type:
+              type: string
+              example: CPF
+            number:
+              type: string
+    PaymentInstitution:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        display_name:
+          type: string
+        status:
+          type: string
+        logo:
+          type: string
+          nullable: true
+    PaymentIntent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        currency:
+          type: string
+          example: BRL
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - REQUIRES_ACTION
+          - PROCESSING
+          - SUCCEEDED
+          - CANCELLED
+          - FAILED
+        provider:
+          type: string
+        next_action:
+          type: object
+          nullable: true
+          properties:
+            type:
+              type: string
+            redirect_url:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+    PaginatedPaymentIntents:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/PaymentIntent'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.

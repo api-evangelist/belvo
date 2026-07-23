@@ -1,0 +1,157 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Owners API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Owners
+  description: Identity of the Link owner.
+paths:
+  /api/owners/:
+    get:
+      operationId: listOwners
+      tags:
+      - Owners
+      summary: List all owners
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of owners.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOwners'
+    post:
+      operationId: retrieveOwners
+      tags:
+      - Owners
+      summary: Retrieve owners for a Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveRequest'
+      responses:
+        '200':
+          description: The owners found for the Link.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+        '201':
+          description: The owners were retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+  schemas:
+    PaginatedOwners:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Owner'
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    Owner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+        first_name:
+          type: string
+          nullable: true
+        last_name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone_number:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        document_id:
+          type: object
+          nullable: true
+          properties:
+            document_type:
+              type: string
+            document_number:
+              type: string
+        collected_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.

@@ -1,0 +1,240 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Links API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Links
+  description: Manage the credential connections to institutions.
+paths:
+  /api/links/:
+    get:
+      operationId: listLinks
+      tags:
+      - Links
+      summary: List all Links
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of Links.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLinks'
+    post:
+      operationId: registerLink
+      tags:
+      - Links
+      summary: Register a new Link
+      description: Register a Link by providing the institution and the end-user credentials. Use access_mode single for a one-time pull or recurrent to keep data refreshed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkRequest'
+      responses:
+        '201':
+          description: The Link was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '400':
+          $ref: '#/components/responses/Error'
+  /api/links/{id}/:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: detailLink
+      tags:
+      - Links
+      summary: Get a Link's details
+      responses:
+        '200':
+          description: The requested Link.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+    patch:
+      operationId: patchLink
+      tags:
+      - Links
+      summary: Complete or update a Link request
+      description: Send a token or OTP to complete a multi-factor Link request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkPatchRequest'
+      responses:
+        '200':
+          description: The updated Link.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+    delete:
+      operationId: deleteLink
+      tags:
+      - Links
+      summary: Delete a Link
+      responses:
+        '204':
+          description: The Link was deleted.
+components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    Link:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        institution:
+          type: string
+        access_mode:
+          type: string
+          enum:
+          - single
+          - recurrent
+        status:
+          type: string
+          enum:
+          - valid
+          - invalid
+          - unconfirmed
+          - token_required
+        created_at:
+          type: string
+          format: date-time
+        external_id:
+          type: string
+          nullable: true
+        institution_user_id:
+          type: string
+          nullable: true
+        last_accessed_at:
+          type: string
+          format: date-time
+          nullable: true
+    Error:
+      type: array
+      items:
+        type: object
+        properties:
+          request_id:
+            type: string
+          message:
+            type: string
+          code:
+            type: string
+    LinkRequest:
+      type: object
+      required:
+      - institution
+      - username
+      - password
+      properties:
+        institution:
+          type: string
+          example: erebor_mx_retail
+        username:
+          type: string
+        password:
+          type: string
+        access_mode:
+          type: string
+          enum:
+          - single
+          - recurrent
+          default: single
+        external_id:
+          type: string
+        username_type:
+          type: string
+    PaginatedLinks:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Link'
+    LinkPatchRequest:
+      type: object
+      required:
+      - id
+      - token
+      properties:
+        id:
+          type: string
+          format: uuid
+        token:
+          type: string
+        link:
+          type: string
+          format: uuid
+  responses:
+    Error:
+      description: An error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.

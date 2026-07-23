@@ -1,0 +1,260 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Transactions API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Transactions
+  description: Detailed transaction history for accounts in a Link.
+paths:
+  /api/transactions/:
+    get:
+      operationId: listTransactions
+      tags:
+      - Transactions
+      summary: List all transactions
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      - name: link
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: account
+        in: query
+        schema:
+          type: string
+      - name: value_date__gte
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: value_date__lte
+        in: query
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: A paginated list of transactions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransactions'
+    post:
+      operationId: retrieveTransactions
+      tags:
+      - Transactions
+      summary: Retrieve transactions for a Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveTransactionsRequest'
+      responses:
+        '200':
+          description: The transactions found for the Link.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '201':
+          description: The transactions were retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+  /api/transactions/{id}/:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: detailTransaction
+      tags:
+      - Transactions
+      summary: Get a transaction's details
+      responses:
+        '200':
+          description: The requested transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    PaginatedTransactions:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Transaction'
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        account:
+          $ref: '#/components/schemas/Account'
+        amount:
+          type: number
+        currency:
+          type: string
+        description:
+          type: string
+        value_date:
+          type: string
+          format: date
+        accounting_date:
+          type: string
+          format: date
+        type:
+          type: string
+          enum:
+          - INFLOW
+          - OUTFLOW
+        status:
+          type: string
+          enum:
+          - PROCESSED
+          - PENDING
+          - UNCATEGORIZED
+        category:
+          type: string
+          nullable: true
+        merchant:
+          type: object
+          nullable: true
+          properties:
+            name:
+              type: string
+            logo:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        institution:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+        category:
+          type: string
+          example: CHECKING_ACCOUNT
+        type:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        currency:
+          type: string
+          example: MXN
+        balance:
+          type: object
+          properties:
+            current:
+              type: number
+            available:
+              type: number
+        created_at:
+          type: string
+          format: date-time
+    RetrieveTransactionsRequest:
+      allOf:
+      - $ref: '#/components/schemas/RetrieveRequest'
+      - type: object
+        required:
+        - date_from
+        properties:
+          date_from:
+            type: string
+            format: date
+          date_to:
+            type: string
+            format: date
+          account:
+            type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.

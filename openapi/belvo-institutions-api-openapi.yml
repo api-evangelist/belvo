@@ -1,0 +1,134 @@
+openapi: 3.0.1
+info:
+  title: Belvo Accounts Institutions API
+  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
+  termsOfService: https://belvo.com/terms-and-conditions/
+  contact:
+    name: Belvo Support
+    email: support@belvo.com
+    url: https://developers.belvo.com
+  version: '1.0'
+servers:
+- url: https://api.belvo.com
+  description: Production
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Institutions
+  description: Institutions Belvo can connect to.
+paths:
+  /api/institutions/:
+    get:
+      operationId: listInstitutions
+      tags:
+      - Institutions
+      summary: List all institutions
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of institutions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInstitutions'
+  /api/institutions/{id}/:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: detailInstitution
+      tags:
+      - Institutions
+      summary: Get an institution's details
+      responses:
+        '200':
+          description: The requested institution.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    PaginatedInstitutions:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Institution'
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+    Institution:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - bank
+          - fiscal
+          - employment
+        website:
+          type: string
+          nullable: true
+        display_name:
+          type: string
+        country_codes:
+          type: array
+          items:
+            type: string
+        primary_color:
+          type: string
+        logo:
+          type: string
+          nullable: true
+        resources:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.
