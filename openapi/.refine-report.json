@@ -1,0 +1,32 @@
+{
+  "provider": "belvo",
+  "sources": [
+    "belvo-accounts-api-openapi.yml",
+    "belvo-balances-api-openapi.yml",
+    "belvo-incomes-api-openapi.yml",
+    "belvo-institutions-api-openapi.yml",
+    "belvo-links-api-openapi.yml",
+    "belvo-owners-api-openapi.yml",
+    "belvo-payments-brazil-api-openapi.yml",
+    "belvo-recurring-expenses-api-openapi.yml",
+    "belvo-transactions-api-openapi.yml",
+    "belvo-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "belvo-accounts-api-openapi.yml",
+    "belvo-balances-api-openapi.yml",
+    "belvo-incomes-api-openapi.yml",
+    "belvo-institutions-api-openapi.yml",
+    "belvo-links-api-openapi.yml",
+    "belvo-owners-api-openapi.yml",
+    "belvo-payments-brazil-api-openapi.yml",
+    "belvo-recurring-expenses-api-openapi.yml",
+    "belvo-transactions-api-openapi.yml",
+    "belvo-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
