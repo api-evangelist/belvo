@@ -1,0 +1,299 @@
+{
+  "item": [
+    {
+      "id": "820d1f75-c105-47b5-a82d-cfa84cec5e12",
+      "name": "Incomes",
+      "description": {
+        "content": "Income insights derived from account activity.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0bd3f445-58f6-415b-9582-3292093e7cf6",
+          "name": "List all incomes",
+          "request": {
+            "name": "List all incomes",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "incomes",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of items per page (max 1000)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number of results to return."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dd3a0629-098b-4185-81a4-415ec605b096",
+              "name": "A paginated list of income records.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "incomes",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 9976,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"5738f693-2096-939a-225e-b6ea7026db12\",\n      \"account\": {\n        \"id\": \"98dc7085-40ad-b674-8748-1fd1845e84c9\",\n        \"link\": \"f2cac561-475b-f917-4fe8-96d6ca4d0512\",\n        \"institution\": {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        \"category\": \"CHECKING_ACCOUNT\",\n        \"type\": \"string\",\n        \"name\": \"string\",\n        \"number\": \"string\",\n        \"currency\": \"MXN\",\n        \"balance\": {\n          \"current\": 2677.6473074273777,\n          \"available\": 3864.65427467836\n        },\n        \"created_at\": \"1949-03-13T09:57:11.448Z\"\n      },\n      \"currency\": \"string\",\n      \"income_summary\": {\n        \"monthly_average\": 401.6065942654268,\n        \"number_of_income_streams\": 9936,\n        \"number_of_income_transactions\": 5407,\n        \"regular_income\": false\n      },\n      \"collected_at\": \"1975-08-15T06:24:39.449Z\"\n    },\n    {\n      \"id\": \"82977bea-df92-c450-27a9-29677cb35a8a\",\n      \"account\": {\n        \"id\": \"1a53596f-cdd7-7a66-9a03-2ec6efad9c1d\",\n        \"link\": \"35e87e18-e5d7-2a44-8ec1-57cf72fbd167\",\n        \"institution\": {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        \"category\": \"CHECKING_ACCOUNT\",\n        \"type\": \"string\",\n        \"name\": \"string\",\n        \"number\": \"string\",\n        \"currency\": \"MXN\",\n        \"balance\": {\n          \"current\": 8378.710561820097,\n          \"available\": 1911.7019853330507\n        },\n        \"created_at\": \"1951-09-17T12:10:54.693Z\"\n      },\n      \"currency\": \"string\",\n      \"income_summary\": {\n        \"monthly_average\": 4128.1402521862365,\n        \"number_of_income_streams\": 4538,\n        \"number_of_income_transactions\": 2584,\n        \"regular_income\": false\n      },\n      \"collected_at\": \"2016-03-08T16:10:51.337Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "41cfc778-6686-49c8-b675-174a24abeeb0",
+          "name": "Retrieve incomes for a Link",
+          "request": {
+            "name": "Retrieve incomes for a Link",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "incomes",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7cb3b135-2845-47ea-8406-51d1cfd2f3f5",
+              "name": "The income insights found for the Link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "incomes",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"dd787b54-df8b-0e35-b746-7ee2567915d3\",\n    \"account\": {\n      \"id\": \"da7f3e96-ab58-d525-3a8c-5d22f43791a8\",\n      \"link\": \"bc8ebefe-ed99-5076-0fac-f9410923f2c8\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 1623.2779309859236,\n        \"available\": 1235.311089410449\n      },\n      \"created_at\": \"1970-05-29T11:39:25.454Z\"\n    },\n    \"currency\": \"string\",\n    \"income_summary\": {\n      \"monthly_average\": 6719.8677505559735,\n      \"number_of_income_streams\": 4297,\n      \"number_of_income_transactions\": 9927,\n      \"regular_income\": true\n    },\n    \"collected_at\": \"2008-06-30T11:07:50.776Z\"\n  },\n  {\n    \"id\": \"af98a489-1caa-bd32-fcee-6ecf97a83807\",\n    \"account\": {\n      \"id\": \"8e05f976-e7a5-3ba9-0834-49f822eecb08\",\n      \"link\": \"475d8f13-bc2f-b084-288c-cbabcf5616b3\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 7475.385664272447,\n        \"available\": 5004.9901508974135\n      },\n      \"created_at\": \"1947-08-06T22:00:07.474Z\"\n    },\n    \"currency\": \"string\",\n    \"income_summary\": {\n      \"monthly_average\": 2264.023994968346,\n      \"number_of_income_streams\": 5154,\n      \"number_of_income_transactions\": 4473,\n      \"regular_income\": false\n    },\n    \"collected_at\": \"2023-04-02T18:45:38.015Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0784a57b-6923-4a4c-b1d9-078419dad142",
+              "name": "The income insights were retrieved.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "incomes",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"dd787b54-df8b-0e35-b746-7ee2567915d3\",\n    \"account\": {\n      \"id\": \"da7f3e96-ab58-d525-3a8c-5d22f43791a8\",\n      \"link\": \"bc8ebefe-ed99-5076-0fac-f9410923f2c8\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 1623.2779309859236,\n        \"available\": 1235.311089410449\n      },\n      \"created_at\": \"1970-05-29T11:39:25.454Z\"\n    },\n    \"currency\": \"string\",\n    \"income_summary\": {\n      \"monthly_average\": 6719.8677505559735,\n      \"number_of_income_streams\": 4297,\n      \"number_of_income_transactions\": 9927,\n      \"regular_income\": true\n    },\n    \"collected_at\": \"2008-06-30T11:07:50.776Z\"\n  },\n  {\n    \"id\": \"af98a489-1caa-bd32-fcee-6ecf97a83807\",\n    \"account\": {\n      \"id\": \"8e05f976-e7a5-3ba9-0834-49f822eecb08\",\n      \"link\": \"475d8f13-bc2f-b084-288c-cbabcf5616b3\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 7475.385664272447,\n        \"available\": 5004.9901508974135\n      },\n      \"created_at\": \"1947-08-06T22:00:07.474Z\"\n    },\n    \"currency\": \"string\",\n    \"income_summary\": {\n      \"monthly_average\": 2264.023994968346,\n      \"number_of_income_streams\": 5154,\n      \"number_of_income_transactions\": 4473,\n      \"regular_income\": false\n    },\n    \"collected_at\": \"2023-04-02T18:45:38.015Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6bd91013-f68c-4993-b888-d6024526e34a",
+    "name": "Belvo Accounts Incomes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}

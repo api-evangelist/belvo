@@ -1,0 +1,299 @@
+{
+  "item": [
+    {
+      "id": "6047ead3-e074-4728-820d-00c1ad391267",
+      "name": "Owners",
+      "description": {
+        "content": "Identity of the Link owner.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8765dcd7-6b42-4ea9-a2c8-bf99c0d41b99",
+          "name": "List all owners",
+          "request": {
+            "name": "List all owners",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "owners",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of items per page (max 1000)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number of results to return."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e57f5135-0631-4043-9be3-bb246bcaa847",
+              "name": "A paginated list of owners.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "owners",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 9959,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"1c615fda-c0a4-fb0c-c049-b56156d46aaf\",\n      \"link\": \"7abd8011-3c90-cec1-95b2-e8e9b8fadf7d\",\n      \"display_name\": \"string\",\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"email\": \"string\",\n      \"phone_number\": \"string\",\n      \"address\": \"string\",\n      \"document_id\": {\n        \"document_type\": \"string\",\n        \"document_number\": \"string\"\n      },\n      \"collected_at\": \"1958-11-01T01:41:13.137Z\"\n    },\n    {\n      \"id\": \"c4299f83-384e-62cb-6d0a-86800e058d06\",\n      \"link\": \"1b370109-c276-bc15-e93e-05eb4df5fd03\",\n      \"display_name\": \"string\",\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"email\": \"string\",\n      \"phone_number\": \"string\",\n      \"address\": \"string\",\n      \"document_id\": {\n        \"document_type\": \"string\",\n        \"document_number\": \"string\"\n      },\n      \"collected_at\": \"1999-03-09T23:56:28.097Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "11e32bb8-6e61-4b4f-91fe-3d0e19085789",
+          "name": "Retrieve owners for a Link",
+          "request": {
+            "name": "Retrieve owners for a Link",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "owners",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "37ea5ae7-7eba-4d1f-968d-54c18eb7585a",
+              "name": "The owners found for the Link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "owners",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"be0329c9-9284-f3e7-14d9-5e250e2a9768\",\n    \"link\": \"36fe8992-080c-541f-1f83-482c10a20a4b\",\n    \"display_name\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"email\": \"string\",\n    \"phone_number\": \"string\",\n    \"address\": \"string\",\n    \"document_id\": {\n      \"document_type\": \"string\",\n      \"document_number\": \"string\"\n    },\n    \"collected_at\": \"1974-06-30T00:53:36.322Z\"\n  },\n  {\n    \"id\": \"ad0f53ff-16df-95a6-becc-2b87d16775b7\",\n    \"link\": \"9b100283-de6a-e250-ed92-ec2b1ed2821a\",\n    \"display_name\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"email\": \"string\",\n    \"phone_number\": \"string\",\n    \"address\": \"string\",\n    \"document_id\": {\n      \"document_type\": \"string\",\n      \"document_number\": \"string\"\n    },\n    \"collected_at\": \"1989-09-15T02:45:45.311Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6458e26f-7b56-4c0b-a130-9b78c19a9a6e",
+              "name": "The owners were retrieved.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "owners",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"be0329c9-9284-f3e7-14d9-5e250e2a9768\",\n    \"link\": \"36fe8992-080c-541f-1f83-482c10a20a4b\",\n    \"display_name\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"email\": \"string\",\n    \"phone_number\": \"string\",\n    \"address\": \"string\",\n    \"document_id\": {\n      \"document_type\": \"string\",\n      \"document_number\": \"string\"\n    },\n    \"collected_at\": \"1974-06-30T00:53:36.322Z\"\n  },\n  {\n    \"id\": \"ad0f53ff-16df-95a6-becc-2b87d16775b7\",\n    \"link\": \"9b100283-de6a-e250-ed92-ec2b1ed2821a\",\n    \"display_name\": \"string\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"email\": \"string\",\n    \"phone_number\": \"string\",\n    \"address\": \"string\",\n    \"document_id\": {\n      \"document_type\": \"string\",\n      \"document_number\": \"string\"\n    },\n    \"collected_at\": \"1989-09-15T02:45:45.311Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8d2a5448-f340-4658-a5de-f8e724450c8d",
+    "name": "Belvo Accounts Owners API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Belvo Accounts Incomes API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Incomes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all incomes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/incomes/",
+            "params": [
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (max 1000)."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of results to return."
+              }
+            ]
+          },
+          "docs": "List all incomes"
+        },
+        {
+          "info": {
+            "name": "Retrieve incomes for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/incomes/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieve incomes for a Link"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,432 @@
+{
+  "item": [
+    {
+      "id": "f786ee1c-9723-480c-a3c9-80c59866abd7",
+      "name": "Transactions",
+      "description": {
+        "content": "Detailed transaction history for accounts in a Link.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "05872504-9dcb-4a02-9325-e33a71e81785",
+          "name": "List all transactions",
+          "request": {
+            "name": "List all transactions",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "transactions",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of items per page (max 1000)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number of results to return."
+                },
+                {
+                  "disabled": false,
+                  "key": "link",
+                  "value": "<uuid>"
+                },
+                {
+                  "disabled": false,
+                  "key": "account",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "value_date__gte",
+                  "value": "<date>"
+                },
+                {
+                  "disabled": false,
+                  "key": "value_date__lte",
+                  "value": "<date>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "26bab3d7-0037-4be9-8694-7f0d862590f1",
+              "name": "A paginated list of transactions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "transactions",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "link",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "account",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "value_date__gte",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "value_date__lte",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 7124,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"aaa0246e-2601-4925-d90f-21882e68c422\",\n      \"account\": {\n        \"id\": \"6d8e139e-0dcd-fd22-71b2-64e66605331d\",\n        \"link\": \"bf6f6766-7561-44ae-29f6-3faad366e980\",\n        \"institution\": {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        \"category\": \"CHECKING_ACCOUNT\",\n        \"type\": \"string\",\n        \"name\": \"string\",\n        \"number\": \"string\",\n        \"currency\": \"MXN\",\n        \"balance\": {\n          \"current\": 8116.917762466343,\n          \"available\": 5411.187331342261\n        },\n        \"created_at\": \"1985-09-03T12:36:33.152Z\"\n      },\n      \"amount\": 8252.453696604525,\n      \"currency\": \"string\",\n      \"description\": \"string\",\n      \"value_date\": \"1981-09-14\",\n      \"accounting_date\": \"1995-12-23\",\n      \"type\": \"INFLOW\",\n      \"status\": \"PENDING\",\n      \"category\": \"string\",\n      \"merchant\": {\n        \"name\": \"string\",\n        \"logo\": \"string\"\n      },\n      \"created_at\": \"1974-10-05T08:57:02.016Z\"\n    },\n    {\n      \"id\": \"9584b6d8-0f86-02b2-c9f1-b128567852fc\",\n      \"account\": {\n        \"id\": \"e5bb6d5e-d488-f2fc-6029-72e3e73c714b\",\n        \"link\": \"856f08ae-843c-8c87-9568-f92ef169a42d\",\n        \"institution\": {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        \"category\": \"CHECKING_ACCOUNT\",\n        \"type\": \"string\",\n        \"name\": \"string\",\n        \"number\": \"string\",\n        \"currency\": \"MXN\",\n        \"balance\": {\n          \"current\": 3794.523714487151,\n          \"available\": 9935.789435910583\n        },\n        \"created_at\": \"2013-09-09T07:24:32.843Z\"\n      },\n      \"amount\": 5918.41058287828,\n      \"currency\": \"string\",\n      \"description\": \"string\",\n      \"value_date\": \"1997-08-04\",\n      \"accounting_date\": \"1983-01-31\",\n      \"type\": \"INFLOW\",\n      \"status\": \"PENDING\",\n      \"category\": \"string\",\n      \"merchant\": {\n        \"name\": \"string\",\n        \"logo\": \"string\"\n      },\n      \"created_at\": \"1982-08-11T03:41:18.889Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b27de71a-b8a2-4d6a-a211-19704213aa68",
+          "name": "Retrieve transactions for a Link",
+          "request": {
+            "name": "Retrieve transactions for a Link",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "transactions",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date_from\": \"<date>\",\n  \"link\": \"<uuid>\",\n  \"save_data\": true,\n  \"date_to\": \"<date>\",\n  \"account\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "17356cdf-a0a6-489e-ab78-04b4105a3f6b",
+              "name": "The transactions found for the Link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "transactions",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"date_from\": \"<date>\",\n  \"link\": \"<uuid>\",\n  \"save_data\": true,\n  \"date_to\": \"<date>\",\n  \"account\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"73ba71f7-aa9e-09b5-44b8-04a5ec00b5a7\",\n    \"account\": {\n      \"id\": \"a03804bb-2cbe-18ae-2133-b164f819b939\",\n      \"link\": \"d160054a-7c94-1147-ece7-4b2c3628d678\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 1995.7267159436087,\n        \"available\": 1759.8113346039147\n      },\n      \"created_at\": \"1973-12-13T15:36:32.129Z\"\n    },\n    \"amount\": 7246.280688942273,\n    \"currency\": \"string\",\n    \"description\": \"string\",\n    \"value_date\": \"1987-12-16\",\n    \"accounting_date\": \"1967-08-04\",\n    \"type\": \"INFLOW\",\n    \"status\": \"PROCESSED\",\n    \"category\": \"string\",\n    \"merchant\": {\n      \"name\": \"string\",\n      \"logo\": \"string\"\n    },\n    \"created_at\": \"2012-05-23T15:34:34.029Z\"\n  },\n  {\n    \"id\": \"28133ea9-649a-6b95-4d56-d71efe1b1aa0\",\n    \"account\": {\n      \"id\": \"b0236592-30ed-36b4-a23a-49e842bf22c3\",\n      \"link\": \"ddb7cc68-471c-7927-29de-6ae5018fb2ab\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 5108.375063715432,\n        \"available\": 5926.037091028771\n      },\n      \"created_at\": \"1979-10-31T02:07:06.918Z\"\n    },\n    \"amount\": 8765.4953934865,\n    \"currency\": \"string\",\n    \"description\": \"string\",\n    \"value_date\": \"2003-08-20\",\n    \"accounting_date\": \"2013-11-06\",\n    \"type\": \"INFLOW\",\n    \"status\": \"PENDING\",\n    \"category\": \"string\",\n    \"merchant\": {\n      \"name\": \"string\",\n      \"logo\": \"string\"\n    },\n    \"created_at\": \"2005-12-07T19:00:16.906Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "609ca37e-89e1-473e-b798-10f2c7c84303",
+              "name": "The transactions were retrieved.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "transactions",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"date_from\": \"<date>\",\n  \"link\": \"<uuid>\",\n  \"save_data\": true,\n  \"date_to\": \"<date>\",\n  \"account\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"73ba71f7-aa9e-09b5-44b8-04a5ec00b5a7\",\n    \"account\": {\n      \"id\": \"a03804bb-2cbe-18ae-2133-b164f819b939\",\n      \"link\": \"d160054a-7c94-1147-ece7-4b2c3628d678\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 1995.7267159436087,\n        \"available\": 1759.8113346039147\n      },\n      \"created_at\": \"1973-12-13T15:36:32.129Z\"\n    },\n    \"amount\": 7246.280688942273,\n    \"currency\": \"string\",\n    \"description\": \"string\",\n    \"value_date\": \"1987-12-16\",\n    \"accounting_date\": \"1967-08-04\",\n    \"type\": \"INFLOW\",\n    \"status\": \"PROCESSED\",\n    \"category\": \"string\",\n    \"merchant\": {\n      \"name\": \"string\",\n      \"logo\": \"string\"\n    },\n    \"created_at\": \"2012-05-23T15:34:34.029Z\"\n  },\n  {\n    \"id\": \"28133ea9-649a-6b95-4d56-d71efe1b1aa0\",\n    \"account\": {\n      \"id\": \"b0236592-30ed-36b4-a23a-49e842bf22c3\",\n      \"link\": \"ddb7cc68-471c-7927-29de-6ae5018fb2ab\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 5108.375063715432,\n        \"available\": 5926.037091028771\n      },\n      \"created_at\": \"1979-10-31T02:07:06.918Z\"\n    },\n    \"amount\": 8765.4953934865,\n    \"currency\": \"string\",\n    \"description\": \"string\",\n    \"value_date\": \"2003-08-20\",\n    \"accounting_date\": \"2013-11-06\",\n    \"type\": \"INFLOW\",\n    \"status\": \"PENDING\",\n    \"category\": \"string\",\n    \"merchant\": {\n      \"name\": \"string\",\n      \"logo\": \"string\"\n    },\n    \"created_at\": \"2005-12-07T19:00:16.906Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1f5e09d0-d1b2-4ef7-877f-edb9d6a8d296",
+          "name": "Get a transaction's details",
+          "request": {
+            "name": "Get a transaction's details",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "transactions",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "11752322-c5b7-4286-8cb1-20b81d377fdd",
+              "name": "The requested transaction.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "transactions",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"054241f3-f4f4-5122-f1d4-ec048544144e\",\n  \"account\": {\n    \"id\": \"44158c3a-2877-23f0-bf7c-7401ffc81d04\",\n    \"link\": \"77ff5030-ae75-de47-8851-98ad2aad6ca7\",\n    \"institution\": {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    \"category\": \"CHECKING_ACCOUNT\",\n    \"type\": \"string\",\n    \"name\": \"string\",\n    \"number\": \"string\",\n    \"currency\": \"MXN\",\n    \"balance\": {\n      \"current\": 4156.107147964218,\n      \"available\": 2086.5209503606698\n    },\n    \"created_at\": \"1986-10-29T03:48:12.777Z\"\n  },\n  \"amount\": 2885.982409616864,\n  \"currency\": \"string\",\n  \"description\": \"string\",\n  \"value_date\": \"2018-07-24\",\n  \"accounting_date\": \"2008-03-23\",\n  \"type\": \"INFLOW\",\n  \"status\": \"UNCATEGORIZED\",\n  \"category\": \"string\",\n  \"merchant\": {\n    \"name\": \"string\",\n    \"logo\": \"string\"\n  },\n  \"created_at\": \"1988-01-30T18:34:27.275Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4ce69e61-95a0-48f5-9bfe-1b3f37ae1027",
+    "name": "Belvo Accounts Transactions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}

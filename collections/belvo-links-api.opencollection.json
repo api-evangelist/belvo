@@ -1,0 +1,126 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Belvo Accounts Links API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Links",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Links",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/links/",
+            "params": [
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (max 1000)."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of results to return."
+              }
+            ]
+          },
+          "docs": "List all Links"
+        },
+        {
+          "info": {
+            "name": "Register a new Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/links/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register a Link by providing the institution and the end-user credentials. Use access_mode single for a one-time pull or recurrent to keep data refreshed."
+        },
+        {
+          "info": {
+            "name": "Get a Link's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/links/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the resource."
+              }
+            ]
+          },
+          "docs": "Get a Link's details"
+        },
+        {
+          "info": {
+            "name": "Complete or update a Link request",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.belvo.com/api/links/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the resource."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send a token or OTP to complete a multi-factor Link request."
+        },
+        {
+          "info": {
+            "name": "Delete a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.belvo.com/api/links/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the resource."
+              }
+            ]
+          },
+          "docs": "Delete a Link"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

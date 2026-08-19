@@ -1,0 +1,607 @@
+{
+  "item": [
+    {
+      "id": "fba72d97-4573-452c-9145-670a02fc7524",
+      "name": "Links",
+      "description": {
+        "content": "Manage the credential connections to institutions.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2192809d-9e9a-4867-84a1-5c9aeaf7d26e",
+          "name": "List all Links",
+          "request": {
+            "name": "List all Links",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "links",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of items per page (max 1000)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number of results to return."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3c254d1d-508c-4178-8e37-a460bd35cf3b",
+              "name": "A paginated list of Links.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "links",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 2270,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"56c105eb-ea58-8ed1-55a2-e6e42a844e96\",\n      \"institution\": \"string\",\n      \"access_mode\": \"recurrent\",\n      \"status\": \"token_required\",\n      \"created_at\": \"1995-09-12T14:08:39.143Z\",\n      \"external_id\": \"string\",\n      \"institution_user_id\": \"string\",\n      \"last_accessed_at\": \"1982-11-06T00:32:11.832Z\"\n    },\n    {\n      \"id\": \"c43ad535-0dd6-fd8f-15fc-1bb200b68edf\",\n      \"institution\": \"string\",\n      \"access_mode\": \"single\",\n      \"status\": \"invalid\",\n      \"created_at\": \"1968-08-31T22:59:29.340Z\",\n      \"external_id\": \"string\",\n      \"institution_user_id\": \"string\",\n      \"last_accessed_at\": \"2005-03-02T22:07:40.462Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d3f94347-2890-4ca0-80d4-628a9f6dcbd9",
+          "name": "Register a new Link",
+          "request": {
+            "name": "Register a new Link",
+            "description": {
+              "content": "Register a Link by providing the institution and the end-user credentials. Use access_mode single for a one-time pull or recurrent to keep data refreshed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "links",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"institution\": \"<string>\",\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"access_mode\": \"single\",\n  \"external_id\": \"<string>\",\n  \"username_type\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fea45505-764a-401a-8c23-871ddcdad0e0",
+              "name": "The Link was created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "links",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"institution\": \"erebor_mx_retail\",\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"access_mode\": \"single\",\n  \"external_id\": \"<string>\",\n  \"username_type\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"4867a2fe-90ee-444b-cea4-9be3ecbd9e8d\",\n  \"institution\": \"string\",\n  \"access_mode\": \"recurrent\",\n  \"status\": \"token_required\",\n  \"created_at\": \"2022-04-20T17:40:23.507Z\",\n  \"external_id\": \"string\",\n  \"institution_user_id\": \"string\",\n  \"last_accessed_at\": \"1999-02-19T01:33:29.513Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f67d7a46-98d3-4c21-86c6-7c5ba2c22fc0",
+              "name": "An error occurred.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "links",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"institution\": \"erebor_mx_retail\",\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"access_mode\": \"single\",\n  \"external_id\": \"<string>\",\n  \"username_type\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"request_id\": \"string\",\n    \"message\": \"string\",\n    \"code\": \"string\"\n  },\n  {\n    \"request_id\": \"string\",\n    \"message\": \"string\",\n    \"code\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8dfc7520-f7ce-46d8-9200-a505033e991a",
+          "name": "Get a Link's details",
+          "request": {
+            "name": "Get a Link's details",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "links",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d3a0a351-e56b-40f6-9819-83f09add9531",
+              "name": "The requested Link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "links",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"4867a2fe-90ee-444b-cea4-9be3ecbd9e8d\",\n  \"institution\": \"string\",\n  \"access_mode\": \"recurrent\",\n  \"status\": \"token_required\",\n  \"created_at\": \"2022-04-20T17:40:23.507Z\",\n  \"external_id\": \"string\",\n  \"institution_user_id\": \"string\",\n  \"last_accessed_at\": \"1999-02-19T01:33:29.513Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "36b0363c-9534-4574-9aa5-ec1d92d2ada4",
+          "name": "Complete or update a Link request",
+          "request": {
+            "name": "Complete or update a Link request",
+            "description": {
+              "content": "Send a token or OTP to complete a multi-factor Link request.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "links",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<uuid>\",\n  \"token\": \"<string>\",\n  \"link\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b779cc58-7539-465a-a242-0c27f78ae19e",
+              "name": "The updated Link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "links",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<uuid>\",\n  \"token\": \"<string>\",\n  \"link\": \"<uuid>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"4867a2fe-90ee-444b-cea4-9be3ecbd9e8d\",\n  \"institution\": \"string\",\n  \"access_mode\": \"recurrent\",\n  \"status\": \"token_required\",\n  \"created_at\": \"2022-04-20T17:40:23.507Z\",\n  \"external_id\": \"string\",\n  \"institution_user_id\": \"string\",\n  \"last_accessed_at\": \"1999-02-19T01:33:29.513Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "30f48b6f-cd4b-4b16-a511-18ba7f3c5393",
+          "name": "Delete a Link",
+          "request": {
+            "name": "Delete a Link",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "links",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "374c5f44-a96c-4f79-bf65-2e7dcc892417",
+              "name": "The Link was deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "links",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d9c67b7d-e015-43f2-9200-89dffcb65aa9",
+    "name": "Belvo Accounts Links API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}

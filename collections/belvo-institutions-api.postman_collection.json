@@ -1,0 +1,243 @@
+{
+  "item": [
+    {
+      "id": "fc3750b7-3e1e-44cd-96e5-d5cf727496d9",
+      "name": "Institutions",
+      "description": {
+        "content": "Institutions Belvo can connect to.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "39cce87e-5528-459c-bc04-89d6f6a79944",
+          "name": "List all institutions",
+          "request": {
+            "name": "List all institutions",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "institutions",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of items per page (max 1000)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number of results to return."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8f6b6a25-bdae-43f6-b5b5-4f9c63040cd6",
+              "name": "A paginated list of institutions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "institutions",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 8264,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": 7095,\n      \"name\": \"string\",\n      \"type\": \"fiscal\",\n      \"website\": \"string\",\n      \"display_name\": \"string\",\n      \"country_codes\": [\n        \"string\",\n        \"string\"\n      ],\n      \"primary_color\": \"string\",\n      \"logo\": \"string\",\n      \"resources\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": 4178,\n      \"name\": \"string\",\n      \"type\": \"employment\",\n      \"website\": \"string\",\n      \"display_name\": \"string\",\n      \"country_codes\": [\n        \"string\",\n        \"string\"\n      ],\n      \"primary_color\": \"string\",\n      \"logo\": \"string\",\n      \"resources\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "34a37b69-284c-4255-b758-a126c7a1da4b",
+          "name": "Get an institution's details",
+          "request": {
+            "name": "Get an institution's details",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "institutions",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b8dd9225-9ad7-4fec-b0e2-c87bd90779b1",
+              "name": "The requested institution.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "institutions",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2520,\n  \"name\": \"string\",\n  \"type\": \"employment\",\n  \"website\": \"string\",\n  \"display_name\": \"string\",\n  \"country_codes\": [\n    \"string\",\n    \"string\"\n  ],\n  \"primary_color\": \"string\",\n  \"logo\": \"string\",\n  \"resources\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b8710207-f88b-4878-9bd5-9e4d88c7363b",
+    "name": "Belvo Accounts Institutions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Belvo Accounts Transactions API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/transactions/",
+            "params": [
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (max 1000)."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of results to return."
+              },
+              {
+                "name": "link",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "account",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "value_date__gte",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "value_date__lte",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List all transactions"
+        },
+        {
+          "info": {
+            "name": "Retrieve transactions for a Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/api/transactions/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieve transactions for a Link"
+        },
+        {
+          "info": {
+            "name": "Get a transaction's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/api/transactions/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the resource."
+              }
+            ]
+          },
+          "docs": "Get a transaction's details"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

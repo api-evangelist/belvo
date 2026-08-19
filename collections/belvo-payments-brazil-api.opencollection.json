@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Belvo Accounts Payments (Brazil) API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payments (Brazil)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all payment intents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/payment-intents/"
+          },
+          "docs": "List all payment intents"
+        },
+        {
+          "info": {
+            "name": "Create a payment intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/payments/br/payment-intents/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a payment intent capturing the amount, description, provider, and beneficiary required to process a Pix payment over the Open Finance Network."
+        },
+        {
+          "info": {
+            "name": "Get a payment intent's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/payment-intents/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the resource."
+              }
+            ]
+          },
+          "docs": "Get a payment intent's details"
+        },
+        {
+          "info": {
+            "name": "List all customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/customers/"
+          },
+          "docs": "List all customers"
+        },
+        {
+          "info": {
+            "name": "Create a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.belvo.com/payments/br/customers/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a customer"
+        },
+        {
+          "info": {
+            "name": "List all payment institutions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.belvo.com/payments/br/payment-institutions/"
+          },
+          "docs": "List all payment institutions"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

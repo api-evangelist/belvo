@@ -1,0 +1,299 @@
+{
+  "item": [
+    {
+      "id": "d30f9132-e9c0-42da-a0a1-a628b00cca5c",
+      "name": "Recurring Expenses",
+      "description": {
+        "content": "Regular subscription and utility payments.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f18d2774-9686-4c6c-aebf-c85a5438eb46",
+          "name": "List all recurring expenses",
+          "request": {
+            "name": "List all recurring expenses",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "recurring-expenses",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of items per page (max 1000)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number of results to return."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2dedc437-ce60-40c9-9e17-d700cc498265",
+              "name": "A paginated list of recurring expense records.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "recurring-expenses",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 2086,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"f0f5e2fe-9b2d-7503-57a6-36dddf5500a2\",\n      \"account\": {\n        \"id\": \"39bcf33d-dedf-c190-9950-e4388912ca32\",\n        \"link\": \"d6f9ffe1-6fa6-7d74-02c6-21422c044750\",\n        \"institution\": {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        \"category\": \"CHECKING_ACCOUNT\",\n        \"type\": \"string\",\n        \"name\": \"string\",\n        \"number\": \"string\",\n        \"currency\": \"MXN\",\n        \"balance\": {\n          \"current\": 2206.760799669024,\n          \"available\": 2195.756650596736\n        },\n        \"created_at\": \"1991-03-09T19:18:39.404Z\"\n      },\n      \"name\": \"string\",\n      \"category\": \"string\",\n      \"frequency\": \"SEMESTRALLY\",\n      \"average_transaction_amount\": 3479.4064652124425,\n      \"currency\": \"string\",\n      \"transactions\": [\n        {\n          \"id\": \"string\",\n          \"amount\": 6760.799763705151,\n          \"value_date\": \"1950-11-16\"\n        },\n        {\n          \"id\": \"string\",\n          \"amount\": 4338.41805514183,\n          \"value_date\": \"2025-09-19\"\n        }\n      ],\n      \"collected_at\": \"1953-04-26T19:02:33.754Z\"\n    },\n    {\n      \"id\": \"788085d6-b2ab-363b-0606-8c7108a27625\",\n      \"account\": {\n        \"id\": \"1db6d091-6de8-e799-a01b-56869814e4cc\",\n        \"link\": \"43e7c6f0-2a2e-a201-e903-b1bc895fe7b9\",\n        \"institution\": {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        \"category\": \"CHECKING_ACCOUNT\",\n        \"type\": \"string\",\n        \"name\": \"string\",\n        \"number\": \"string\",\n        \"currency\": \"MXN\",\n        \"balance\": {\n          \"current\": 6010.0066699242225,\n          \"available\": 2307.323272324633\n        },\n        \"created_at\": \"1985-03-06T01:39:26.428Z\"\n      },\n      \"name\": \"string\",\n      \"category\": \"string\",\n      \"frequency\": \"QUARTERLY\",\n      \"average_transaction_amount\": 3847.8012904311354,\n      \"currency\": \"string\",\n      \"transactions\": [\n        {\n          \"id\": \"string\",\n          \"amount\": 3176.5062563006986,\n          \"value_date\": \"1949-10-13\"\n        },\n        {\n          \"id\": \"string\",\n          \"amount\": 9491.52767318947,\n          \"value_date\": \"1966-06-13\"\n        }\n      ],\n      \"collected_at\": \"1972-09-15T05:38:41.316Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bd988c28-e9db-4be9-9f06-4dbe89037a5f",
+          "name": "Retrieve recurring expenses for a Link",
+          "request": {
+            "name": "Retrieve recurring expenses for a Link",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "recurring-expenses",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b9036470-dd81-4441-8888-54fcd5ef8af3",
+              "name": "The recurring expenses found for the Link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "recurring-expenses",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"9997e09d-d673-5857-cdee-727a1bdb246a\",\n    \"account\": {\n      \"id\": \"a32fe122-1f5e-3399-80b9-9fa02a12b527\",\n      \"link\": \"13b27ba0-4267-5e0f-7e9f-60a9497e1939\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 6775.182469850989,\n        \"available\": 3738.501589151478\n      },\n      \"created_at\": \"2017-11-11T18:44:00.141Z\"\n    },\n    \"name\": \"string\",\n    \"category\": \"string\",\n    \"frequency\": \"SEMESTRALLY\",\n    \"average_transaction_amount\": 3262.268144159107,\n    \"currency\": \"string\",\n    \"transactions\": [\n      {\n        \"id\": \"string\",\n        \"amount\": 1834.8036047897865,\n        \"value_date\": \"1948-07-18\"\n      },\n      {\n        \"id\": \"string\",\n        \"amount\": 7375.559378613751,\n        \"value_date\": \"1974-04-17\"\n      }\n    ],\n    \"collected_at\": \"1982-02-22T19:31:35.999Z\"\n  },\n  {\n    \"id\": \"dccb4b10-2104-eb19-4cce-0116d05e7113\",\n    \"account\": {\n      \"id\": \"2562edb4-234c-1389-84b6-de0059654c87\",\n      \"link\": \"fd807c22-feda-b2c5-0006-7af453c0d307\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 9623.4054649861,\n        \"available\": 1935.2200238593898\n      },\n      \"created_at\": \"2022-03-19T15:07:59.001Z\"\n    },\n    \"name\": \"string\",\n    \"category\": \"string\",\n    \"frequency\": \"YEARLY\",\n    \"average_transaction_amount\": 5496.875944138631,\n    \"currency\": \"string\",\n    \"transactions\": [\n      {\n        \"id\": \"string\",\n        \"amount\": 9064.454500783017,\n        \"value_date\": \"1986-08-16\"\n      },\n      {\n        \"id\": \"string\",\n        \"amount\": 9399.897746180108,\n        \"value_date\": \"1992-09-01\"\n      }\n    ],\n    \"collected_at\": \"2023-06-04T08:06:30.156Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "33975149-6687-416c-bee4-dfcdebf1c075",
+              "name": "The recurring expenses were retrieved.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "recurring-expenses",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"9997e09d-d673-5857-cdee-727a1bdb246a\",\n    \"account\": {\n      \"id\": \"a32fe122-1f5e-3399-80b9-9fa02a12b527\",\n      \"link\": \"13b27ba0-4267-5e0f-7e9f-60a9497e1939\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 6775.182469850989,\n        \"available\": 3738.501589151478\n      },\n      \"created_at\": \"2017-11-11T18:44:00.141Z\"\n    },\n    \"name\": \"string\",\n    \"category\": \"string\",\n    \"frequency\": \"SEMESTRALLY\",\n    \"average_transaction_amount\": 3262.268144159107,\n    \"currency\": \"string\",\n    \"transactions\": [\n      {\n        \"id\": \"string\",\n        \"amount\": 1834.8036047897865,\n        \"value_date\": \"1948-07-18\"\n      },\n      {\n        \"id\": \"string\",\n        \"amount\": 7375.559378613751,\n        \"value_date\": \"1974-04-17\"\n      }\n    ],\n    \"collected_at\": \"1982-02-22T19:31:35.999Z\"\n  },\n  {\n    \"id\": \"dccb4b10-2104-eb19-4cce-0116d05e7113\",\n    \"account\": {\n      \"id\": \"2562edb4-234c-1389-84b6-de0059654c87\",\n      \"link\": \"fd807c22-feda-b2c5-0006-7af453c0d307\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 9623.4054649861,\n        \"available\": 1935.2200238593898\n      },\n      \"created_at\": \"2022-03-19T15:07:59.001Z\"\n    },\n    \"name\": \"string\",\n    \"category\": \"string\",\n    \"frequency\": \"YEARLY\",\n    \"average_transaction_amount\": 5496.875944138631,\n    \"currency\": \"string\",\n    \"transactions\": [\n      {\n        \"id\": \"string\",\n        \"amount\": 9064.454500783017,\n        \"value_date\": \"1986-08-16\"\n      },\n      {\n        \"id\": \"string\",\n        \"amount\": 9399.897746180108,\n        \"value_date\": \"1992-09-01\"\n      }\n    ],\n    \"collected_at\": \"2023-06-04T08:06:30.156Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "aac0529d-b975-4ff9-a91e-1728fd6237a6",
+    "name": "Belvo Accounts Recurring Expenses API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,594 @@
+{
+  "item": [
+    {
+      "id": "42ce61b6-75c1-42e8-885c-60e70aa07d25",
+      "name": "Payments (Brazil)",
+      "description": {
+        "content": "Pix / Open Finance payment initiation in Brazil.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "70a2f18a-f17f-44f9-9b1e-4a2bf6ee8ddd",
+          "name": "List all payment intents",
+          "request": {
+            "name": "List all payment intents",
+            "description": {},
+            "url": {
+              "path": [
+                "payments",
+                "br",
+                "payment-intents",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0f0c1128-75d4-473b-b90d-52abbc0dadc0",
+              "name": "A paginated list of payment intents.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "payments",
+                    "br",
+                    "payment-intents",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 3141,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"d73947b4-f8fd-5550-c783-d63a44de0e82\",\n      \"amount\": \"string\",\n      \"currency\": \"BRL\",\n      \"description\": \"string\",\n      \"status\": \"SUCCEEDED\",\n      \"provider\": \"string\",\n      \"next_action\": {\n        \"type\": \"string\",\n        \"redirect_url\": \"string\"\n      },\n      \"created_at\": \"1972-10-08T03:50:44.765Z\"\n    },\n    {\n      \"id\": \"b75d5ca1-77d5-4c58-a4dc-58841aad260f\",\n      \"amount\": \"string\",\n      \"currency\": \"BRL\",\n      \"description\": \"string\",\n      \"status\": \"FAILED\",\n      \"provider\": \"string\",\n      \"next_action\": {\n        \"type\": \"string\",\n        \"redirect_url\": \"string\"\n      },\n      \"created_at\": \"1983-01-31T05:12:26.296Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "82752eb3-e925-4f37-ba71-a8475af35b36",
+          "name": "Create a payment intent",
+          "request": {
+            "name": "Create a payment intent",
+            "description": {
+              "content": "Create a payment intent capturing the amount, description, provider, and beneficiary required to process a Pix payment over the Open Finance Network.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "payments",
+                "br",
+                "payment-intents",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"<string>\",\n  \"description\": \"<string>\",\n  \"provider\": \"<string>\",\n  \"customer\": \"<uuid>\",\n  \"beneficiary\": {\n    \"name\": \"<string>\",\n    \"account\": {\n      \"institution\": \"<string>\",\n      \"number\": \"<string>\",\n      \"type\": \"<string>\"\n    }\n  },\n  \"allowed_payment_method_types\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4d5f67a2-207d-436f-af41-7bfa7d6ad1f1",
+              "name": "The payment intent was created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "payments",
+                    "br",
+                    "payment-intents",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"100.00\",\n  \"description\": \"<string>\",\n  \"provider\": \"pix\",\n  \"customer\": \"<uuid>\",\n  \"beneficiary\": {\n    \"name\": \"<string>\",\n    \"account\": {\n      \"institution\": \"<string>\",\n      \"number\": \"<string>\",\n      \"type\": \"<string>\"\n    }\n  },\n  \"allowed_payment_method_types\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"e98c53cb-ef5b-95f1-3e0a-6dfa00410c9b\",\n  \"amount\": \"string\",\n  \"currency\": \"BRL\",\n  \"description\": \"string\",\n  \"status\": \"SUCCEEDED\",\n  \"provider\": \"string\",\n  \"next_action\": {\n    \"type\": \"string\",\n    \"redirect_url\": \"string\"\n  },\n  \"created_at\": \"1996-07-02T11:20:48.915Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4ce829af-a1a7-4dcc-8e75-d5266df4a7f5",
+          "name": "Get a payment intent's details",
+          "request": {
+            "name": "Get a payment intent's details",
+            "description": {},
+            "url": {
+              "path": [
+                "payments",
+                "br",
+                "payment-intents",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cd147503-b59e-4317-91f8-0b7be4e33baf",
+              "name": "The requested payment intent.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "payments",
+                    "br",
+                    "payment-intents",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"e98c53cb-ef5b-95f1-3e0a-6dfa00410c9b\",\n  \"amount\": \"string\",\n  \"currency\": \"BRL\",\n  \"description\": \"string\",\n  \"status\": \"SUCCEEDED\",\n  \"provider\": \"string\",\n  \"next_action\": {\n    \"type\": \"string\",\n    \"redirect_url\": \"string\"\n  },\n  \"created_at\": \"1996-07-02T11:20:48.915Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "06a1ef91-8fbb-44bb-9c6d-e4e4ec5ecd01",
+          "name": "List all customers",
+          "request": {
+            "name": "List all customers",
+            "description": {},
+            "url": {
+              "path": [
+                "payments",
+                "br",
+                "customers",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3b1b00b3-3a11-4711-a642-33d91d60f004",
+              "name": "A paginated list of customers.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "payments",
+                    "br",
+                    "customers",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 2298,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"cce06e27-29d9-8db6-1b21-0c61afba5e8a\",\n      \"name\": \"string\",\n      \"email\": \"string\",\n      \"identifier\": {\n        \"type\": \"CPF\",\n        \"number\": \"string\"\n      },\n      \"created_at\": \"1987-12-29T10:41:10.141Z\"\n    },\n    {\n      \"id\": \"c55c7f82-36fb-d676-4559-97ef84066494\",\n      \"name\": \"string\",\n      \"email\": \"string\",\n      \"identifier\": {\n        \"type\": \"CPF\",\n        \"number\": \"string\"\n      },\n      \"created_at\": \"1970-08-28T16:04:21.509Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "10a3bb6c-dd2c-450f-ac10-6a1dc77c8ed7",
+          "name": "Create a customer",
+          "request": {
+            "name": "Create a customer",
+            "description": {},
+            "url": {
+              "path": [
+                "payments",
+                "br",
+                "customers",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"identifier\": {\n    \"type\": \"<string>\",\n    \"number\": \"<string>\"\n  },\n  \"email\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b2744c74-1092-4fbb-b914-a55a300f4900",
+              "name": "The customer was created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "payments",
+                    "br",
+                    "customers",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"identifier\": {\n    \"type\": \"CPF\",\n    \"number\": \"<string>\"\n  },\n  \"email\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"4dd63a5e-f052-bc64-cbd0-c40cfaac1ee0\",\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"identifier\": {\n    \"type\": \"CPF\",\n    \"number\": \"string\"\n  },\n  \"created_at\": \"1974-10-23T15:06:32.266Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d085320e-fd53-4da2-9d75-dba2b5da67d9",
+          "name": "List all payment institutions",
+          "request": {
+            "name": "List all payment institutions",
+            "description": {},
+            "url": {
+              "path": [
+                "payments",
+                "br",
+                "payment-institutions",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3ce73245-7792-4ce3-8621-9d9f22550e0a",
+              "name": "A list of institutions available for payments.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "payments",
+                    "br",
+                    "payment-institutions",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"display_name\": \"string\",\n    \"status\": \"string\",\n    \"logo\": \"string\"\n  },\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"display_name\": \"string\",\n    \"status\": \"string\",\n    \"logo\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "639f47cf-c3c6-4c2b-a901-0c131883c544",
+    "name": "Belvo Accounts Payments (Brazil) API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}

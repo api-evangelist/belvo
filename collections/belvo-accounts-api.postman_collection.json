@@ -1,0 +1,483 @@
+{
+  "item": [
+    {
+      "id": "fe41d964-3ba5-4363-bfac-e33d560797e5",
+      "name": "Accounts",
+      "description": {
+        "content": "Bank accounts held inside a Link.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8f137679-b125-4952-bc80-7b578f841108",
+          "name": "List all accounts",
+          "request": {
+            "name": "List all accounts",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "accounts",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of items per page (max 1000)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number of results to return."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "212e2ad5-d230-4b99-80a6-bc1f6191c965",
+              "name": "A paginated list of accounts.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "accounts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"count\": 3222,\n  \"next\": \"string\",\n  \"previous\": \"string\",\n  \"results\": [\n    {\n      \"id\": \"07cd01f8-979e-988a-2ec1-5f2b13ba7747\",\n      \"link\": \"9e3a9208-e766-fadc-194e-fe6b3b05f66c\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 1762.3957810731727,\n        \"available\": 7725.396279243168\n      },\n      \"created_at\": \"1985-07-21T15:04:51.922Z\"\n    },\n    {\n      \"id\": \"8a79632c-18a6-c0f8-d486-b3b345289619\",\n      \"link\": \"a7f1ad1f-c7bf-2189-c8bb-e1751d490436\",\n      \"institution\": {\n        \"name\": \"string\",\n        \"type\": \"string\"\n      },\n      \"category\": \"CHECKING_ACCOUNT\",\n      \"type\": \"string\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"currency\": \"MXN\",\n      \"balance\": {\n        \"current\": 2135.2204127975747,\n        \"available\": 3957.0174864907804\n      },\n      \"created_at\": \"1987-07-07T09:16:52.900Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b7ebf583-461a-46f8-8bff-f7cb3eeded01",
+          "name": "Retrieve accounts for a Link",
+          "request": {
+            "name": "Retrieve accounts for a Link",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "accounts",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2e9977cd-ef0c-402a-a150-e4ec14008e6b",
+              "name": "The accounts found for the Link.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "accounts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"ab41b030-33f1-60a3-2039-c9f1139967e4\",\n    \"link\": \"5ebe6052-dcde-cc45-96bc-280c89605ed3\",\n    \"institution\": {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    \"category\": \"CHECKING_ACCOUNT\",\n    \"type\": \"string\",\n    \"name\": \"string\",\n    \"number\": \"string\",\n    \"currency\": \"MXN\",\n    \"balance\": {\n      \"current\": 1404.0202582390536,\n      \"available\": 7786.365086757741\n    },\n    \"created_at\": \"1962-02-27T19:10:06.943Z\"\n  },\n  {\n    \"id\": \"ae4dc7ce-fcb4-4b5c-99a2-cae9eb8a88cb\",\n    \"link\": \"b6857c9d-ea0f-d51c-69d7-eb374a03beed\",\n    \"institution\": {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    \"category\": \"CHECKING_ACCOUNT\",\n    \"type\": \"string\",\n    \"name\": \"string\",\n    \"number\": \"string\",\n    \"currency\": \"MXN\",\n    \"balance\": {\n      \"current\": 4949.723378540561,\n      \"available\": 5183.411843613925\n    },\n    \"created_at\": \"1961-01-20T11:43:15.319Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7b711d31-c278-484d-a322-087fce92afa3",
+              "name": "The accounts were retrieved.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "accounts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"link\": \"<uuid>\",\n  \"save_data\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"ab41b030-33f1-60a3-2039-c9f1139967e4\",\n    \"link\": \"5ebe6052-dcde-cc45-96bc-280c89605ed3\",\n    \"institution\": {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    \"category\": \"CHECKING_ACCOUNT\",\n    \"type\": \"string\",\n    \"name\": \"string\",\n    \"number\": \"string\",\n    \"currency\": \"MXN\",\n    \"balance\": {\n      \"current\": 1404.0202582390536,\n      \"available\": 7786.365086757741\n    },\n    \"created_at\": \"1962-02-27T19:10:06.943Z\"\n  },\n  {\n    \"id\": \"ae4dc7ce-fcb4-4b5c-99a2-cae9eb8a88cb\",\n    \"link\": \"b6857c9d-ea0f-d51c-69d7-eb374a03beed\",\n    \"institution\": {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    \"category\": \"CHECKING_ACCOUNT\",\n    \"type\": \"string\",\n    \"name\": \"string\",\n    \"number\": \"string\",\n    \"currency\": \"MXN\",\n    \"balance\": {\n      \"current\": 4949.723378540561,\n      \"available\": 5183.411843613925\n    },\n    \"created_at\": \"1961-01-20T11:43:15.319Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "44d81335-ad18-4306-bddd-b90983ff4ec5",
+          "name": "Get an account's details",
+          "request": {
+            "name": "Get an account's details",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "accounts",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "78f9d662-47ba-40fd-a6d8-06c6cab6ca48",
+              "name": "The requested account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "accounts",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"7a69828c-010f-e640-ba66-ca60479c848b\",\n  \"link\": \"4ba19079-2e09-5260-ad51-18e0a7cd8872\",\n  \"institution\": {\n    \"name\": \"string\",\n    \"type\": \"string\"\n  },\n  \"category\": \"CHECKING_ACCOUNT\",\n  \"type\": \"string\",\n  \"name\": \"string\",\n  \"number\": \"string\",\n  \"currency\": \"MXN\",\n  \"balance\": {\n    \"current\": 981.5896879333708,\n    \"available\": 3658.108183111943\n  },\n  \"created_at\": \"1965-02-06T03:09:50.368Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ab347a85-d298-4e36-aadd-69f93adf443d",
+          "name": "Delete an account",
+          "request": {
+            "name": "Delete an account",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "accounts",
+                ":id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The unique identifier of the resource."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0b507364-29c0-4ee3-83a2-8e917246e42e",
+              "name": "The account was deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "accounts",
+                    ":id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The unique identifier of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.belvo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b935b8f5-ed76-40a9-81cd-7e5969ebb2c0",
+    "name": "Belvo Accounts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.\n\nContact Support:\n Name: Belvo Support\n Email: support@belvo.com",
+      "type": "text/plain"
+    }
+  }
+}
