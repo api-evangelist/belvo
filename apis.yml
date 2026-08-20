@@ -38,6 +38,8 @@ apis:
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -173,6 +175,8 @@ apis:
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
+  - institutions
+  tags_raw:
   - Institutions
   properties:
   - type: OpenAPI
@@ -398,6 +402,8 @@ apis:
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
@@ -443,6 +449,8 @@ apis:
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
