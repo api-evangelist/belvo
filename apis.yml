@@ -6,6 +6,18 @@ description: Belvo is a Latin American open-finance API platform that lets compa
   connect to bank, fiscal, and employment institutions across Mexico, Brazil, and
   Colombia to aggregate accounts, balances, transactions, owners, and income data,
   and to initiate account-to-account payments over Brazil's Pix / Open Finance rails.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
