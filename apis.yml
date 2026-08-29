@@ -503,6 +503,9 @@ apis:
   - type: Review
     url: review.yml
 common:
+- type: CapabilityMap
+  url: capabilities/belvo-capability-edges.yml
+  name: Belvo Business Capability Map
 - type: AgenticAccess
   url: agentic-access/belvo-agentic-access.yml
 - type: VulnerabilityDisclosure

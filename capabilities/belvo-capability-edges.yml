@@ -1,0 +1,26 @@
+slug: belvo
+provider: Belvo
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Payments (Brazil)
+  spec_file: belvo-payments-brazil-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.85
+  evidence: POST /payments/br/payment-intents/ 'Create a payment intent'; schemas PaymentIntent, PaymentIntentRequest,
+    PaymentInstitution; vendor 'initiate account-to-account payments over Pix and the Open Finance network'
+  reason: Endpoints capture and initiate account-to-account payment instructions over Pix rails, with
+    customer and payment-institution records. Payment initiation is the plain reading; some overlap with
+    real-time payment rails (BC-1340.50).
