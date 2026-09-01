@@ -187,7 +187,7 @@ apis:
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
-  - institutions
+  - Institutions
   tags_raw:
   - Institutions
   properties:
