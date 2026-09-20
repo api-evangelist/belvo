@@ -504,6 +504,8 @@ apis:
   - type: Review
     url: review.yml
 common:
+- type: Pricing
+  url: https://belvo.com/plans-and-pricing/
 - type: CapabilityMap
   url: capabilities/belvo-capability-edges.yml
   name: Belvo Business Capability Map
