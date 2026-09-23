@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Belvo Accounts Links API
+  title: Belvo Links API
   description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
   termsOfService: https://belvo.com/terms-and-conditions/
   contact:
@@ -100,21 +100,6 @@ paths:
           description: The Link was deleted.
 components:
   parameters:
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
     ResourceId:
       name: id
       in: path
@@ -123,51 +108,22 @@ components:
       schema:
         type: string
         format: uuid
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
   schemas:
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-    Link:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        institution:
-          type: string
-        access_mode:
-          type: string
-          enum:
-          - single
-          - recurrent
-        status:
-          type: string
-          enum:
-          - valid
-          - invalid
-          - unconfirmed
-          - token_required
-        created_at:
-          type: string
-          format: date-time
-        external_id:
-          type: string
-          nullable: true
-        institution_user_id:
-          type: string
-          nullable: true
-        last_accessed_at:
-          type: string
-          format: date-time
-          nullable: true
     Error:
       type: array
       items:
@@ -179,6 +135,19 @@ components:
             type: string
           code:
             type: string
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
     LinkRequest:
       type: object
       required:
@@ -203,15 +172,6 @@ components:
           type: string
         username_type:
           type: string
-    PaginatedLinks:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Link'
     LinkPatchRequest:
       type: object
       required:
@@ -226,6 +186,51 @@ components:
         link:
           type: string
           format: uuid
+    Link:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        institution:
+          type: string
+        access_mode:
+          type: string
+          enum:
+          - single
+          - recurrent
+        status:
+          type: string
+          enum:
+          - valid
+          - invalid
+          - unconfirmed
+          - token_required
+        created_at:
+          type: string
+          format: date-time
+        external_id:
+          type:
+          - string
+          - 'null'
+        institution_user_id:
+          type:
+          - string
+          - 'null'
+        last_accessed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    PaginatedLinks:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Link'
   responses:
     Error:
       description: An error occurred.

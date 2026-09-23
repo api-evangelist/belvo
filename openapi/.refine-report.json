@@ -1,16 +1,7 @@
 {
   "provider": "belvo",
   "sources": [
-    "belvo-accounts-api-openapi.yml",
-    "belvo-balances-api-openapi.yml",
-    "belvo-incomes-api-openapi.yml",
-    "belvo-institutions-api-openapi.yml",
-    "belvo-links-api-openapi.yml",
-    "belvo-owners-api-openapi.yml",
-    "belvo-payments-brazil-api-openapi.yml",
-    "belvo-recurring-expenses-api-openapi.yml",
-    "belvo-transactions-api-openapi.yml",
-    "belvo-webhooks-api-openapi.yml"
+    "_original/belvo-openapi.yml"
   ],
   "outputs": [
     "belvo-accounts-api-openapi.yml",
@@ -27,6 +18,21 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "belvo-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "belvo-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-balances-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-incomes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-institutions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-links-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-owners-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-payments-brazil-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-recurring-expenses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-transactions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "belvo-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

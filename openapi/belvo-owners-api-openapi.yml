@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Belvo Accounts Owners API
+  title: Belvo Owners API
   description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
   termsOfService: https://belvo.com/terms-and-conditions/
   contact:
@@ -64,23 +64,63 @@ paths:
                 items:
                   $ref: '#/components/schemas/Owner'
 components:
-  parameters:
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
   schemas:
+    Owner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+        first_name:
+          type:
+          - string
+          - 'null'
+        last_name:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+        phone_number:
+          type:
+          - string
+          - 'null'
+        address:
+          type:
+          - string
+          - 'null'
+        document_id:
+          type:
+          - object
+          - 'null'
+          properties:
+            document_type:
+              type: string
+            document_number:
+              type: string
+        collected_at:
+          type: string
+          format: date-time
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
     PaginatedOwners:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -102,54 +142,22 @@ components:
         save_data:
           type: boolean
           default: true
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-    Owner:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        link:
-          type: string
-          format: uuid
-        display_name:
-          type: string
-        first_name:
-          type: string
-          nullable: true
-        last_name:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        phone_number:
-          type: string
-          nullable: true
-        address:
-          type: string
-          nullable: true
-        document_id:
-          type: object
-          nullable: true
-          properties:
-            document_type:
-              type: string
-            document_number:
-              type: string
-        collected_at:
-          type: string
-          format: date-time
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
   securitySchemes:
     basicAuth:
       type: http

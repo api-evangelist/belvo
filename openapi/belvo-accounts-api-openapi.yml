@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   title: Belvo Accounts API
   description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
@@ -88,21 +88,6 @@ paths:
           description: The account was deleted.
 components:
   parameters:
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
     ResourceId:
       name: id
       in: path
@@ -111,30 +96,35 @@ components:
       schema:
         type: string
         format: uuid
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
   schemas:
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
     Pagination:
       type: object
       properties:
         count:
           type: integer
         next:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         previous:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
     Account:
       type: object
       properties:
@@ -182,6 +172,18 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Account'
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
   securitySchemes:
     basicAuth:
       type: http

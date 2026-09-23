@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Belvo Accounts Recurring Expenses API
+  title: Belvo Recurring Expenses API
   description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
   termsOfService: https://belvo.com/terms-and-conditions/
   contact:
@@ -64,55 +64,20 @@ paths:
                 items:
                   $ref: '#/components/schemas/RecurringExpense'
 components:
-  parameters:
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
   schemas:
-    PaginatedRecurringExpenses:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/RecurringExpense'
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
     Pagination:
       type: object
       properties:
         count:
           type: integer
         next:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         previous:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
     RecurringExpense:
       type: object
       properties:
@@ -192,6 +157,43 @@ components:
         created_at:
           type: string
           format: date-time
+    PaginatedRecurringExpenses:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/RecurringExpense'
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
   securitySchemes:
     basicAuth:
       type: http

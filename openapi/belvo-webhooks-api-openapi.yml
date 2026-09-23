@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Belvo Accounts Webhooks API
+  title: Belvo Webhooks API
   description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
   termsOfService: https://belvo.com/terms-and-conditions/
   contact:
@@ -76,32 +76,6 @@ paths:
         '204':
           description: The webhook was deleted.
 components:
-  schemas:
-    WebhookRequest:
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          type: string
-        authorization_header:
-          type: string
-    Webhook:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        url:
-          type: string
-        authorization_header:
-          type: string
-          nullable: true
-        enabled:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
   parameters:
     ResourceId:
       name: id
@@ -111,6 +85,33 @@ components:
       schema:
         type: string
         format: uuid
+  schemas:
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+        authorization_header:
+          type:
+          - string
+          - 'null'
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    WebhookRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+        authorization_header:
+          type: string
   securitySchemes:
     basicAuth:
       type: http
