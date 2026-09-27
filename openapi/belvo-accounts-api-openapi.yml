@@ -96,13 +96,6 @@ components:
       schema:
         type: string
         format: uuid
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
     PageSize:
       name: page_size
       in: query
@@ -111,20 +104,35 @@ components:
         type: integer
         default: 100
         maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
   schemas:
-    Pagination:
+    PaginatedAccounts:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+    RetrieveRequest:
       type: object
+      required:
+      - link
       properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
     Account:
       type: object
       properties:
@@ -163,27 +171,19 @@ components:
         created_at:
           type: string
           format: date-time
-    PaginatedAccounts:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Account'
-    RetrieveRequest:
+    Pagination:
       type: object
-      required:
-      - link
       properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
   securitySchemes:
     basicAuth:
       type: http

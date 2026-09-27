@@ -65,28 +65,6 @@ paths:
                   $ref: '#/components/schemas/Income'
 components:
   schemas:
-    PaginatedIncomes:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Income'
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
     Income:
       type: object
       properties:
@@ -161,14 +139,29 @@ components:
         save_data:
           type: boolean
           default: true
+    PaginatedIncomes:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Income'
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
   parameters:
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
     PageSize:
       name: page_size
       in: query
@@ -177,6 +170,13 @@ components:
         type: integer
         default: 100
         maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
   securitySchemes:
     basicAuth:
       type: http

@@ -65,37 +65,27 @@ paths:
                   $ref: '#/components/schemas/Balance'
 components:
   schemas:
-    Pagination:
+    PaginatedBalances:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Balance'
+    RetrieveRequest:
       type: object
+      required:
+      - link
       properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
-    Balance:
-      type: object
-      properties:
-        id:
+        link:
           type: string
           format: uuid
-        account:
-          $ref: '#/components/schemas/Account'
-        value_date:
-          type: string
-          format: date
-        current_balance:
-          type: number
-        currency:
-          type: string
-        collected_at:
-          type: string
-          format: date-time
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
     Account:
       type: object
       properties:
@@ -134,6 +124,37 @@ components:
         created_at:
           type: string
           format: date-time
+    Balance:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        account:
+          $ref: '#/components/schemas/Account'
+        value_date:
+          type: string
+          format: date
+        current_balance:
+          type: number
+        currency:
+          type: string
+        collected_at:
+          type: string
+          format: date-time
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
     RetrieveBalancesRequest:
       allOf:
       - $ref: '#/components/schemas/RetrieveRequest'
@@ -147,35 +168,7 @@ components:
           date_to:
             type: string
             format: date
-    PaginatedBalances:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Balance'
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
   parameters:
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
     PageSize:
       name: page_size
       in: query
@@ -184,6 +177,13 @@ components:
         type: integer
         default: 100
         maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
   securitySchemes:
     basicAuth:
       type: http

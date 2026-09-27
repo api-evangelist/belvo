@@ -149,6 +149,53 @@ components:
         created_at:
           type: string
           format: date-time
+    PaymentInstitution:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        display_name:
+          type: string
+        status:
+          type: string
+        logo:
+          type:
+          - string
+          - 'null'
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+        identifier:
+          type: object
+          properties:
+            type:
+              type: string
+              example: CPF
+            number:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+    PaginatedPaymentIntents:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/PaymentIntent'
     PaginatedCustomers:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -158,6 +205,40 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Customer'
+    CustomerRequest:
+      type: object
+      required:
+      - name
+      - identifier
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        identifier:
+          type: object
+          required:
+          - type
+          - number
+          properties:
+            type:
+              type: string
+              example: CPF
+            number:
+              type: string
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
     PaymentIntentRequest:
       type: object
       required:
@@ -194,87 +275,6 @@ components:
           type: array
           items:
             type: string
-    PaginatedPaymentIntents:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/PaymentIntent'
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
-    Customer:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        email:
-          type:
-          - string
-          - 'null'
-        identifier:
-          type: object
-          properties:
-            type:
-              type: string
-              example: CPF
-            number:
-              type: string
-        created_at:
-          type: string
-          format: date-time
-    CustomerRequest:
-      type: object
-      required:
-      - name
-      - identifier
-      properties:
-        name:
-          type: string
-        email:
-          type: string
-        identifier:
-          type: object
-          required:
-          - type
-          - number
-          properties:
-            type:
-              type: string
-              example: CPF
-            number:
-              type: string
-    PaymentInstitution:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        display_name:
-          type: string
-        status:
-          type: string
-        logo:
-          type:
-          - string
-          - 'null'
   parameters:
     ResourceId:
       name: id

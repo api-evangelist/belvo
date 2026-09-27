@@ -99,31 +99,37 @@ paths:
         '204':
           description: The Link was deleted.
 components:
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the resource.
-      schema:
-        type: string
-        format: uuid
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
+  responses:
+    Error:
+      description: An error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    LinkPatchRequest:
+      type: object
+      required:
+      - id
+      - token
+      properties:
+        id:
+          type: string
+          format: uuid
+        token:
+          type: string
+        link:
+          type: string
+          format: uuid
+    PaginatedLinks:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Link'
     Error:
       type: array
       items:
@@ -135,6 +141,42 @@ components:
             type: string
           code:
             type: string
+    Link:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        institution:
+          type: string
+        access_mode:
+          type: string
+          enum:
+          - single
+          - recurrent
+        status:
+          type: string
+          enum:
+          - valid
+          - invalid
+          - unconfirmed
+          - token_required
+        created_at:
+          type: string
+          format: date-time
+        external_id:
+          type:
+          - string
+          - 'null'
+        institution_user_id:
+          type:
+          - string
+          - 'null'
+        last_accessed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
     Pagination:
       type: object
       properties:
@@ -172,72 +214,30 @@ components:
           type: string
         username_type:
           type: string
-    LinkPatchRequest:
-      type: object
-      required:
-      - id
-      - token
-      properties:
-        id:
-          type: string
-          format: uuid
-        token:
-          type: string
-        link:
-          type: string
-          format: uuid
-    Link:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        institution:
-          type: string
-        access_mode:
-          type: string
-          enum:
-          - single
-          - recurrent
-        status:
-          type: string
-          enum:
-          - valid
-          - invalid
-          - unconfirmed
-          - token_required
-        created_at:
-          type: string
-          format: date-time
-        external_id:
-          type:
-          - string
-          - 'null'
-        institution_user_id:
-          type:
-          - string
-          - 'null'
-        last_accessed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-    PaginatedLinks:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Link'
-  responses:
-    Error:
-      description: An error occurred.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
   securitySchemes:
     basicAuth:
       type: http

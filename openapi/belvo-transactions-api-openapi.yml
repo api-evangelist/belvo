@@ -99,6 +99,14 @@ paths:
                 $ref: '#/components/schemas/Transaction'
 components:
   parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
     ResourceId:
       name: id
       in: path
@@ -114,15 +122,57 @@ components:
       schema:
         type: integer
         default: 1
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
   schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        institution:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+        category:
+          type: string
+          example: CHECKING_ACCOUNT
+        type:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        currency:
+          type: string
+          example: MXN
+        balance:
+          type: object
+          properties:
+            current:
+              type: number
+            available:
+              type: number
+        created_at:
+          type: string
+          format: date-time
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
     Pagination:
       type: object
       properties:
@@ -136,21 +186,6 @@ components:
           type:
           - string
           - 'null'
-    RetrieveTransactionsRequest:
-      allOf:
-      - $ref: '#/components/schemas/RetrieveRequest'
-      - type: object
-        required:
-        - date_from
-        properties:
-          date_from:
-            type: string
-            format: date
-          date_to:
-            type: string
-            format: date
-          account:
-            type: string
     Transaction:
       type: object
       properties:
@@ -198,44 +233,21 @@ components:
         created_at:
           type: string
           format: date-time
-    Account:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        link:
-          type: string
-          format: uuid
-        institution:
-          type: object
-          properties:
-            name:
-              type: string
-            type:
-              type: string
-        category:
-          type: string
-          example: CHECKING_ACCOUNT
-        type:
-          type: string
-        name:
-          type: string
-        number:
-          type: string
-        currency:
-          type: string
-          example: MXN
-        balance:
-          type: object
-          properties:
-            current:
-              type: number
-            available:
-              type: number
-        created_at:
-          type: string
-          format: date-time
+    RetrieveTransactionsRequest:
+      allOf:
+      - $ref: '#/components/schemas/RetrieveRequest'
+      - type: object
+        required:
+        - date_from
+        properties:
+          date_from:
+            type: string
+            format: date
+          date_to:
+            type: string
+            format: date
+          account:
+            type: string
     PaginatedTransactions:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -245,18 +257,6 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Transaction'
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
   securitySchemes:
     basicAuth:
       type: http

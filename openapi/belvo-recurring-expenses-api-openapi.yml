@@ -64,20 +64,23 @@ paths:
                 items:
                   $ref: '#/components/schemas/RecurringExpense'
 components:
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
   schemas:
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
     RecurringExpense:
       type: object
       properties:
@@ -157,15 +160,6 @@ components:
         created_at:
           type: string
           format: date-time
-    PaginatedRecurringExpenses:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/RecurringExpense'
     RetrieveRequest:
       type: object
       required:
@@ -178,22 +172,28 @@ components:
         save_data:
           type: boolean
           default: true
-  parameters:
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
+    PaginatedRecurringExpenses:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/RecurringExpense'
   securitySchemes:
     basicAuth:
       type: http

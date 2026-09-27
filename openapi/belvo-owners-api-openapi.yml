@@ -65,6 +65,31 @@ paths:
                   $ref: '#/components/schemas/Owner'
 components:
   schemas:
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
     Owner:
       type: object
       properties:
@@ -108,19 +133,6 @@ components:
         collected_at:
           type: string
           format: date-time
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
     PaginatedOwners:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -130,26 +142,7 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Owner'
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
   parameters:
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
     PageSize:
       name: page_size
       in: query
@@ -158,6 +151,13 @@ components:
         type: integer
         default: 100
         maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
   securitySchemes:
     basicAuth:
       type: http
