@@ -98,94 +98,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Transaction'
 components:
-  parameters:
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the resource.
-      schema:
-        type: string
-        format: uuid
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
   schemas:
-    Account:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        link:
-          type: string
-          format: uuid
-        institution:
-          type: object
-          properties:
-            name:
-              type: string
-            type:
-              type: string
-        category:
-          type: string
-          example: CHECKING_ACCOUNT
-        type:
-          type: string
-        name:
-          type: string
-        number:
-          type: string
-        currency:
-          type: string
-          example: MXN
-        balance:
-          type: object
-          properties:
-            current:
-              type: number
-            available:
-              type: number
-        created_at:
-          type: string
-          format: date-time
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
     Transaction:
       type: object
       properties:
@@ -248,6 +161,18 @@ components:
             format: date
           account:
             type: string
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
     PaginatedTransactions:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -257,6 +182,81 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Transaction'
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        link:
+          type: string
+          format: uuid
+        institution:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+        category:
+          type: string
+          example: CHECKING_ACCOUNT
+        type:
+          type: string
+        name:
+          type: string
+        number:
+          type: string
+        currency:
+          type: string
+          example: MXN
+        balance:
+          type: object
+          properties:
+            current:
+              type: number
+            available:
+              type: number
+        created_at:
+          type: string
+          format: date-time
+  parameters:
+    PageSize:
+      name: page_size
+      in: query
+      description: Number of items per page (max 1000).
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     basicAuth:
       type: http

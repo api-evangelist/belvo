@@ -88,14 +88,6 @@ paths:
           description: The account was deleted.
 components:
   parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the resource.
-      schema:
-        type: string
-        format: uuid
     PageSize:
       name: page_size
       in: query
@@ -111,16 +103,15 @@ components:
       schema:
         type: integer
         default: 1
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
   schemas:
-    PaginatedAccounts:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Account'
     RetrieveRequest:
       type: object
       required:
@@ -133,6 +124,19 @@ components:
         save_data:
           type: boolean
           default: true
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
     Account:
       type: object
       properties:
@@ -171,19 +175,15 @@ components:
         created_at:
           type: string
           format: date-time
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
+    PaginatedAccounts:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
   securitySchemes:
     basicAuth:
       type: http

@@ -86,6 +86,15 @@ components:
         type: string
         format: uuid
   schemas:
+    WebhookRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+        authorization_header:
+          type: string
     Webhook:
       type: object
       properties:
@@ -103,15 +112,6 @@ components:
         created_at:
           type: string
           format: date-time
-    WebhookRequest:
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          type: string
-        authorization_header:
-          type: string
   securitySchemes:
     basicAuth:
       type: http

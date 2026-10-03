@@ -65,15 +65,50 @@ paths:
                   $ref: '#/components/schemas/Balance'
 components:
   schemas:
-    PaginatedBalances:
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
+    Balance:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        account:
+          $ref: '#/components/schemas/Account'
+        value_date:
+          type: string
+          format: date
+        current_balance:
+          type: number
+        currency:
+          type: string
+        collected_at:
+          type: string
+          format: date-time
+    RetrieveBalancesRequest:
       allOf:
-      - $ref: '#/components/schemas/Pagination'
+      - $ref: '#/components/schemas/RetrieveRequest'
       - type: object
+        required:
+        - date_from
         properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Balance'
+          date_from:
+            type: string
+            format: date
+          date_to:
+            type: string
+            format: date
     RetrieveRequest:
       type: object
       required:
@@ -86,6 +121,15 @@ components:
         save_data:
           type: boolean
           default: true
+    PaginatedBalances:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Balance'
     Account:
       type: object
       properties:
@@ -124,50 +168,6 @@ components:
         created_at:
           type: string
           format: date-time
-    Balance:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        account:
-          $ref: '#/components/schemas/Account'
-        value_date:
-          type: string
-          format: date
-        current_balance:
-          type: number
-        currency:
-          type: string
-        collected_at:
-          type: string
-          format: date-time
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
-    RetrieveBalancesRequest:
-      allOf:
-      - $ref: '#/components/schemas/RetrieveRequest'
-      - type: object
-        required:
-        - date_from
-        properties:
-          date_from:
-            type: string
-            format: date
-          date_to:
-            type: string
-            format: date
   parameters:
     PageSize:
       name: page_size
