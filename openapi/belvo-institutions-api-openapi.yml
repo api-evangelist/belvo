@@ -52,6 +52,15 @@ paths:
                 $ref: '#/components/schemas/Institution'
 components:
   schemas:
+    PaginatedInstitutions:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Institution'
     Institution:
       type: object
       properties:
@@ -85,15 +94,6 @@ components:
           type: array
           items:
             type: string
-    PaginatedInstitutions:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Institution'
     Pagination:
       type: object
       properties:
@@ -108,6 +108,13 @@ components:
           - string
           - 'null'
   parameters:
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
     PageSize:
       name: page_size
       in: query
@@ -116,13 +123,6 @@ components:
         type: integer
         default: 100
         maximum: 1000
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
     ResourceId:
       name: id
       in: path

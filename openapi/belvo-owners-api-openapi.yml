@@ -108,6 +108,15 @@ components:
         collected_at:
           type: string
           format: date-time
+    PaginatedOwners:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Owner'
     RetrieveRequest:
       type: object
       required:
@@ -120,15 +129,6 @@ components:
         save_data:
           type: boolean
           default: true
-    PaginatedOwners:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Owner'
     Pagination:
       type: object
       properties:
@@ -143,6 +143,13 @@ components:
           - string
           - 'null'
   parameters:
+    Page:
+      name: page
+      in: query
+      description: The page number of results to return.
+      schema:
+        type: integer
+        default: 1
     PageSize:
       name: page_size
       in: query
@@ -151,13 +158,6 @@ components:
         type: integer
         default: 100
         maximum: 1000
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
   securitySchemes:
     basicAuth:
       type: http

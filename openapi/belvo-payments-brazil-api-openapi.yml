@@ -114,6 +114,15 @@ paths:
                   $ref: '#/components/schemas/PaymentInstitution'
 components:
   schemas:
+    PaginatedCustomers:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Customer'
     CustomerRequest:
       type: object
       required:
@@ -135,24 +144,92 @@ components:
               example: CPF
             number:
               type: string
-    PaginatedCustomers:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Customer'
-    PaginatedPaymentIntents:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/PaymentIntent'
+    PaymentInstitution:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        display_name:
+          type: string
+        status:
+          type: string
+        logo:
+          type:
+          - string
+          - 'null'
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+        identifier:
+          type: object
+          properties:
+            type:
+              type: string
+              example: CPF
+            number:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
+    PaymentIntent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        currency:
+          type: string
+          example: BRL
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - REQUIRES_ACTION
+          - PROCESSING
+          - SUCCEEDED
+          - CANCELLED
+          - FAILED
+        provider:
+          type: string
+        next_action:
+          type:
+          - object
+          - 'null'
+          properties:
+            type:
+              type: string
+            redirect_url:
+              type: string
+        created_at:
+          type: string
+          format: date-time
     PaymentIntentRequest:
       type: object
       required:
@@ -189,92 +266,15 @@ components:
           type: array
           items:
             type: string
-    PaymentIntent:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        amount:
-          type: string
-        currency:
-          type: string
-          example: BRL
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - REQUIRES_ACTION
-          - PROCESSING
-          - SUCCEEDED
-          - CANCELLED
-          - FAILED
-        provider:
-          type: string
-        next_action:
-          type:
-          - object
-          - 'null'
-          properties:
-            type:
-              type: string
-            redirect_url:
-              type: string
-        created_at:
-          type: string
-          format: date-time
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
-    Customer:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        email:
-          type:
-          - string
-          - 'null'
-        identifier:
-          type: object
-          properties:
-            type:
-              type: string
-              example: CPF
-            number:
-              type: string
-        created_at:
-          type: string
-          format: date-time
-    PaymentInstitution:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        display_name:
-          type: string
-        status:
-          type: string
-        logo:
-          type:
-          - string
-          - 'null'
+    PaginatedPaymentIntents:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/PaymentIntent'
   parameters:
     ResourceId:
       name: id
