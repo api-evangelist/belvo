@@ -10,6 +10,7 @@ checked:
 - https://data.directory.openbankingbrasil.org.br/participants
 - https://monid.ai/tools/belvo
 - https://n8n.io/integrations/belvo/
+- https://openid.net/developers/certified-openid-connect-implementations/
 - https://zapier.com/apps/belvo/integrations
 summary: null
 marketplace_apps: []
@@ -39,4 +40,32 @@ edges:
     - resources
     detected_by: sweep-standard-registers.py
     detected: '2026-10-12'
+- partner_name: OpenID Foundation certification
+  partner: null
+  partner_match: domain
+  type: contract
+  channel: network-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://openid.net/developers/certified-openid-connect-implementations/
+  contract_reference:
+    register: OpenID Foundation certified implementations
+    spec_file: null
+    role: certified-op
+    registered_name: Belvo Instituicao de Pagamento Ltda.
+    products:
+    - Belvo Open Finance v1.0
+    matched_domain: belvo.com
+    api_families:
+    - BR-OB Adv. OP DCR
+    - BR-OB Adv. OP w/ Private Key, PAR
+    - fapi1-op-brazil-open-banking
+    - fapi1-op-brazil-open-finance-fapi-br-v2
+    - fapi1-rp-brazil-open-banking
+    - fapi1-rp-brazil-open-finance-fapi-br-v2
+    api_families_basis: conformance profiles / certification levels passed
+    detected_by: sweep-identity.py
+    detected: '2026-10-13'
+  detected_by: sweep-identity.py
+  detected: '2026-10-13'
 templates: []
