@@ -15,31 +15,6 @@ checked:
 summary: null
 marketplace_apps: []
 edges:
-- partner_name: Open Finance Brasil
-  partner: null
-  type: contract
-  channel: regulator-register
-  relationship: standard-participant
-  direction: partner-built
-  evidence: https://data.directory.openbankingbrasil.org.br/participants
-  contract_reference:
-    register: Open Finance Brasil directory (Banco Central do Brasil)
-    spec_file: null
-    role: participant
-    registered_name: Belvo Instituicao de Pagamento Ltda.
-    register_id: 5883e379-43b1-4184-8304-df32a018620e
-    matched_domain: belvo.com
-    api_families:
-    - admin
-    - channels_electronic-channels
-    - channels_phone-channels
-    - consents
-    - customers-personal
-    - discovery_outages
-    - discovery_status
-    - resources
-    detected_by: sweep-standard-registers.py
-    detected: '2026-10-12'
 - partner_name: OpenID Foundation certification
   partner: null
   partner_match: domain
@@ -68,4 +43,29 @@ edges:
     detected: '2026-10-13'
   detected_by: sweep-identity.py
   detected: '2026-10-13'
+- partner_name: Open Finance Brasil
+  partner: null
+  type: contract
+  channel: regulator-register
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://data.directory.openbankingbrasil.org.br/participants
+  contract_reference:
+    register: Open Finance Brasil directory (Banco Central do Brasil)
+    spec_file: null
+    role: participant
+    registered_name: Belvo Instituicao de Pagamento Ltda.
+    register_id: 5883e379-43b1-4184-8304-df32a018620e
+    matched_domain: belvo.com
+    api_families:
+    - admin
+    - channels_electronic-channels
+    - channels_phone-channels
+    - consents
+    - customers-personal
+    - discovery_outages
+    - discovery_status
+    - resources
+    detected_by: sweep-standard-registers.py
+    detected: '2026-10-14'
 templates: []
