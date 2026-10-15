@@ -59,3 +59,75 @@
     detected: '2026-10-14'
   status: not-a-workflow
   arazzo: null
+- slug: belvo-open-finance-brasil-functional-certification
+  label: Open Finance Brasil functional certification
+  partner_name: Open Finance Brasil functional certification
+  category: open finance conformance (Brazil)
+  type: register
+  channel: regulator-register
+  evidence: https://data.directory.openbankingbrasil.org.br/participants
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Open Finance Brasil directory, per-family CertificationStatus (submissions in github.com/OpenBanking-Brasil/conformance)
+    spec_file: null
+    standard: Open Finance Brasil
+    role: certified-participant
+    registrations:
+    - registered_name: Belvo Instituicao de Pagamento Ltda.
+      register_id: 5883e379-43b1-4184-8304-df32a018620e
+      cnpj: '43215815000109'
+      matched_domain: belvo.com
+      matched_by: domain
+    certified_products:
+    - product: customer-data
+      families:
+      - consents
+      - customers-personal
+      - resources
+      status: Self-Certified
+      expires: '2027-08-21'
+      certification_uri: https://github.com/OpenBanking-Brasil/conformance/blob/main/submissions/functional/personal/2.2.0/43215815_v1_personal_v2.2.0_22-11-2024.json
+    - product: open-data
+      families:
+      - channels_electronic-channels
+      - channels_phone-channels
+      status: Self-Certified
+      expires: '2027-10-14'
+      certification_uri: https://web.conformance.directory.openbankingbrasil.org.br/plan-detail.html?plan=12dg4Idg8ipog&public=true
+    signal_note: one entry per PRODUCT TYPE, lapsed flagged; family counts are context, never read
+    detected_by: sweep-latam-open-finance.py
+    detected: '2026-10-15'
+  status: not-a-workflow
+  arazzo: null
+- slug: belvo-pix-banco-central-do-brasil
+  label: Pix (Banco Central do Brasil)
+  partner_name: Pix (Banco Central do Brasil)
+  category: instant payments (Brazil)
+  type: register
+  channel: regulator-register
+  evidence: https://www.bcb.gov.br/estabilidadefinanceira/participantespix
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Pix participants (Banco Central do Brasil, https://www.bcb.gov.br/content/estabilidadefinanceira/participantes_pix/lista-participantes-instituicoes-em-adesao-pix-20261015.csv)
+    spec_file: null
+    standard: Pix
+    role: pix-participant
+    registrations:
+    - registered_name: BELVO IP
+      ispb: ''
+      cnpj: 43.215.815/0001-09
+      institution_type: Instituição de Pagamento
+      spi_participation: ''
+      pix_participation: Facultativa
+      pix_modality: Iniciador
+      payment_initiation: true
+      matched_domain: belvo.com
+      matched_by: domain
+      identity: Open Finance Brasil directory, same CNPJ 43215815000109 ('Belvo Instituicao de Pagamento Ltda.')
+    signal_note: 'participation only: the domain comes from a labelled lookup (registrations[].identity)'
+    detected_by: sweep-latam-open-finance.py
+    detected: '2026-10-15'
+  status: not-a-workflow
+  arazzo: null
