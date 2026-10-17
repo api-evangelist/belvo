@@ -65,6 +65,71 @@ paths:
                   $ref: '#/components/schemas/Balance'
 components:
   schemas:
+    RetrieveBalancesRequest:
+      allOf:
+      - $ref: '#/components/schemas/RetrieveRequest'
+      - type: object
+        required:
+        - date_from
+        properties:
+          date_from:
+            type: string
+            format: date
+          date_to:
+            type: string
+            format: date
+    PaginatedBalances:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            items:
+              $ref: '#/components/schemas/Balance'
+    RetrieveRequest:
+      type: object
+      required:
+      - link
+      properties:
+        link:
+          type: string
+          format: uuid
+          description: The Link UUID to retrieve data for.
+        save_data:
+          type: boolean
+          default: true
+    Balance:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        account:
+          $ref: '#/components/schemas/Account'
+        value_date:
+          type: string
+          format: date
+        current_balance:
+          type: number
+        currency:
+          type: string
+        collected_at:
+          type: string
+          format: date-time
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
     Account:
       type: object
       properties:
@@ -103,71 +168,6 @@ components:
         created_at:
           type: string
           format: date-time
-    Balance:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        account:
-          $ref: '#/components/schemas/Account'
-        value_date:
-          type: string
-          format: date
-        current_balance:
-          type: number
-        currency:
-          type: string
-        collected_at:
-          type: string
-          format: date-time
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
-          type: string
-          format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
-    RetrieveBalancesRequest:
-      allOf:
-      - $ref: '#/components/schemas/RetrieveRequest'
-      - type: object
-        required:
-        - date_from
-        properties:
-          date_from:
-            type: string
-            format: date
-          date_to:
-            type: string
-            format: date
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
-    PaginatedBalances:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Balance'
   parameters:
     Page:
       name: page

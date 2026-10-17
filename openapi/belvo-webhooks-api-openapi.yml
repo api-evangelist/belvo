@@ -76,16 +76,16 @@ paths:
         '204':
           description: The webhook was deleted.
 components:
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the resource.
-      schema:
-        type: string
-        format: uuid
   schemas:
+    WebhookRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+        authorization_header:
+          type: string
     Webhook:
       type: object
       properties:
@@ -103,15 +103,15 @@ components:
         created_at:
           type: string
           format: date-time
-    WebhookRequest:
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          type: string
-        authorization_header:
-          type: string
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the resource.
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     basicAuth:
       type: http

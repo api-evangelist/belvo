@@ -124,41 +124,6 @@ components:
         type: string
         format: uuid
   schemas:
-    Error:
-      type: array
-      items:
-        type: object
-        properties:
-          request_id:
-            type: string
-          message:
-            type: string
-          code:
-            type: string
-    LinkRequest:
-      type: object
-      required:
-      - institution
-      - username
-      - password
-      properties:
-        institution:
-          type: string
-          example: erebor_mx_retail
-        username:
-          type: string
-        password:
-          type: string
-        access_mode:
-          type: string
-          enum:
-          - single
-          - recurrent
-          default: single
-        external_id:
-          type: string
-        username_type:
-          type: string
     LinkPatchRequest:
       type: object
       required:
@@ -173,19 +138,6 @@ components:
         link:
           type: string
           format: uuid
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
     Link:
       type: object
       properties:
@@ -222,6 +174,54 @@ components:
           - string
           - 'null'
           format: date-time
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+        previous:
+          type:
+          - string
+          - 'null'
+    LinkRequest:
+      type: object
+      required:
+      - institution
+      - username
+      - password
+      properties:
+        institution:
+          type: string
+          example: erebor_mx_retail
+        username:
+          type: string
+        password:
+          type: string
+        access_mode:
+          type: string
+          enum:
+          - single
+          - recurrent
+          default: single
+        external_id:
+          type: string
+        username_type:
+          type: string
+    Error:
+      type: array
+      items:
+        type: object
+        properties:
+          request_id:
+            type: string
+          message:
+            type: string
+          code:
+            type: string
     PaginatedLinks:
       allOf:
       - $ref: '#/components/schemas/Pagination'
