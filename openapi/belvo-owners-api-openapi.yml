@@ -1,165 +1,4128 @@
 openapi: 3.2.0
 info:
-  title: Belvo Owners API
-  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
-  termsOfService: https://belvo.com/terms-and-conditions/
+  title: Belvo API Docs Owners API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
   contact:
-    name: Belvo Support
-    email: support@belvo.com
+    name: Need help?
     url: https://developers.belvo.com
-  version: '1.0'
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
 servers:
-- url: https://api.belvo.com
-  description: Production
 - url: https://sandbox.belvo.com
   description: Sandbox
 security:
 - basicAuth: []
 tags:
 - name: Owners
-  description: Identity of the Link owner.
+  description: 'An **owner** represents the person who has access to a Link and is the owner of all the accounts inside the Link.
+
+
+    You can use this endpoint in order to get useful information about your client, such as:
+
+
+    - their full name
+
+    - key contact information
+
+    - information about the ID document they used when opening the account'
 paths:
   /api/owners/:
     get:
-      operationId: listOwners
       tags:
       - Owners
-      summary: List all owners
+      operationId: ListOwners
+      summary: List owners
+      description: '## ▶️ Usage
+
+
+        With the List Owners method, you can:
+
+
+        1. List owners related to a specific `link.id` (using the `link` query parameter).
+
+        2. Get the details of a specific `owners.id` (using the `id` query parameter).
+
+        3. **[Not Recommended]** List all owners related to your Belvo account (without using any query parameters).
+
+
+        ## 📖 Pagination
+
+
+        This method returns a paginated response (default: 100 items per page). You can use the `page_size` query parameter to increase the number of items returned to a maximum of 1000 items. You can use the `page` query parameter to navigate through the results. For more details on how to navigate Belvo''s paginated responses, see our Pagination Tips article.
+
+
+        ## 🔦 Filtering Responses
+
+
+        Please see the query list below for a list of fields that you can filter your responses by. For more information on how to use filters, see our Filtering responses article.
+
+
+        ## 🚨 Deprecated Fields
+
+
+        This resource may return deprecated fields. In the response documentation you may see that a field has been marked as **deprecated**. This means that this field is no longer maintained by the Belvo team. You may still receive data for this field depending on the institution, however, you should not rely on this field.'
       parameters:
-      - $ref: '#/components/parameters/PageSize'
-      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/link'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/link__in'
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/email'
+      - $ref: '#/components/parameters/display_name__icontains'
       responses:
         '200':
-          description: A paginated list of owners.
+          description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedOwners'
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: "An array of either:\n\n  - Owner Individual (OFDA Brazil) objects\n  - Owner Business (OFDA Brazil) objects\n  - Owner Standard (Multi-Region) objects\n  \n  > \U0001F6A7 One schema type per response\n  >\n  > The response will contain an array of **one** of the schema types described above. In other words, there **will not** be a mix of schema types in the response.\n"
+                      items:
+                        oneOf:
+                        - $ref: '#/components/schemas/OwnerIndividualOpenFinanceBrazil'
+                        - $ref: '#/components/schemas/OwnerBusinessOpenFinanceBrazil'
+                        - $ref: '#/components/schemas/Owner'
+              examples:
+                OwnerIndividualOfdaPaginated:
+                  $ref: '#/components/examples/OwnerOfdaIndividualPaginated'
+                OwnerBusinessOfdaPaginated:
+                  $ref: '#/components/examples/OwnerOfdaBusinessPaginated'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
     post:
-      operationId: retrieveOwners
       tags:
       - Owners
-      summary: Retrieve owners for a Link
+      operationId: RetrieveOwners
+      summary: Retrieve owners for a link
+      description: 'Retrieve owner information from a specific link.
+
+
+        {% admonition type="info" %}
+
+        This resource may return deprecated fields. Please check the response documentation for more information.
+
+        {% /admonition %}'
+      parameters:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RetrieveRequest'
+              type: object
+              required:
+              - link
+              properties:
+                link:
+                  $ref: '#/components/schemas/link_request'
+                token:
+                  $ref: '#/components/schemas/token'
+                save_data:
+                  $ref: '#/components/schemas/save_data'
       responses:
         '200':
-          description: The owners found for the Link.
+          description: Ok (when `save_data=false`)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Owner'
+                  oneOf:
+                  - $ref: '#/components/schemas/OwnerIndividualOpenFinanceBrazil'
+                  - $ref: '#/components/schemas/OwnerBusinessOpenFinanceBrazil'
+                  - $ref: '#/components/schemas/Owner'
+              examples:
+                OwnerIndividualOfda:
+                  $ref: '#/components/examples/OwnerOfdaIndividual'
+                OwnerBusinessOfda:
+                  $ref: '#/components/examples/OwnerOfdaBusiness'
         '201':
-          description: The owners were retrieved.
+          description: Created (when `save_data=true`)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Owner'
+                  oneOf:
+                  - $ref: '#/components/schemas/OwnerIndividualOpenFinanceBrazil'
+                  - $ref: '#/components/schemas/OwnerBusinessOpenFinanceBrazil'
+                  - $ref: '#/components/schemas/Owner'
+              examples:
+                OwnerIndividualOfda:
+                  $ref: '#/components/examples/OwnerOfdaIndividual'
+                OwnerBusinessOfda:
+                  $ref: '#/components/examples/OwnerOfdaBusiness'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    patch:
+      tags:
+      - Owners
+      operationId: PatchOwners
+      summary: Complete an owners request
+      description: 'Used to resume an Owner retrieve session that was paused because an MFA
+
+        token was required by the institution.
+
+
+        {% admonition type="info" %}
+
+        This resource may return deprecated fields. Please check the response documentation for more information.
+
+        {% /admonition %}'
+      parameters:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBody'
+      responses:
+        '200':
+          description: Ok (when `save_data=false`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/OwnerIndividualOpenFinanceBrazil'
+                  - $ref: '#/components/schemas/OwnerBusinessOpenFinanceBrazil'
+              examples:
+                OwnerIndividualOfda:
+                  $ref: '#/components/examples/OwnerOfdaIndividual'
+                OwnerBusinessOfda:
+                  $ref: '#/components/examples/OwnerOfdaBusiness'
+        '201':
+          description: Created (when `save_data=true`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/OwnerIndividualOpenFinanceBrazil'
+                  - $ref: '#/components/schemas/OwnerBusinessOpenFinanceBrazil'
+              examples:
+                OwnerIndividualOfda:
+                  $ref: '#/components/examples/OwnerOfdaIndividual'
+                OwnerBusinessOfda:
+                  $ref: '#/components/examples/OwnerOfdaBusiness'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/owners/{id}/:
+    get:
+      tags:
+      - Owners
+      operationId: DetailOwner
+      summary: Get an owner's details
+      description: 'Get the details of a specific owner.
+
+
+        {% admonition type="info" %}
+
+        This resource may return deprecated fields. Please check the response documentation for more information.
+
+        {% /admonition %}'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `owner.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/OwnerIndividualOpenFinanceBrazil'
+                - $ref: '#/components/schemas/OwnerBusinessOpenFinanceBrazil'
+                - $ref: '#/components/schemas/Owner'
+              examples:
+                OwnerIndividualOfdaDetails:
+                  $ref: '#/components/examples/OwnerOfdaIndividuaDetail'
+                OwnerBusinessOfdaDetails:
+                  $ref: '#/components/examples/OwnerOfdaBusinessDetail'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+    delete:
+      tags:
+      - Owners
+      operationId: DestroyOwner
+      summary: Delete an owner
+      description: Delete a specific owner from your Belvo account.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `owner.id` that you want to delete.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
 components:
   parameters:
-    Page:
-      name: page
+    omit:
+      name: omit
       in: query
-      description: The page number of results to return.
+      description: Omit certain fields from being returned in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
       schema:
-        type: integer
-        default: 1
-    PageSize:
+        type: string
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    link:
+      name: link
+      in: query
+      description: 'The `link.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding the `link.id` filter in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    page_size:
       name: page_size
       in: query
-      description: Number of items per page (max 1000).
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
       schema:
         type: integer
+        format: int32
         default: 100
+        minimum: 1
         maximum: 1000
+        example: 100
+    id:
+      name: id
+      in: query
+      description: Return information only for this resource `id`.
+      schema:
+        type: string
+        format: uuid
+        example: 24ccab1d-3a86-4136-a6eb-e04bf52b356f
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    link__in:
+      name: link__in
+      in: query
+      description: Return results only for these `link.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 5722d0ba-69d7-42dc-8ff5-33767b83c5d6
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    display_name__icontains:
+      name: display_name__icontains
+      in: query
+      description: Return owners whose full display name partially matches your query. For example, `mar` will return results for Mark, Maria, Neymar, Remarque, and so on.
+      schema:
+        type: string
+        minLength: 3
+        example: Daniela
+    fields:
+      name: fields
+      in: query
+      description: Return only the specified fields in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    email:
+      name: email
+      in: query
+      description: Returns owners whose email address match your query.
+      schema:
+        type: string
+        format: email
+        example: lopes.d@gmail.com
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
   schemas:
-    RetrieveRequest:
+    OwnerIndividualFinancialProfile:
+      type:
+      - object
+      - 'null'
+      required:
+      - company_id
+      - occupation_code
+      - occupation_description
+      - informed_income
+      - patrimony
+      description: Information regarding the financial profile of the individual.
+      properties:
+        company_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 14
+          pattern: ^\d{14}$
+          description: 'The identifier of the company where the individual is employed.
+
+            '
+          example: '50685362000135'
+        occupation_code:
+          $ref: '#/components/schemas/EnumOwnerIndividualFinancialProfileOccupationCode'
+        occupation_description:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: '[\w\W\s]*'
+          description: 'Information regarding the individual''s occupation.
+
+            '
+          example: '01'
+        informed_income:
+          $ref: '#/components/schemas/OwnerIndividualInformedIncome'
+        patrimony:
+          $ref: '#/components/schemas/OwnerIndividualPatrimony'
+    EnumOwnerInformedIncomeFrequency:
+      type:
+      - string
+      - 'null'
+      enum:
+      - DAILY
+      - WEEKLY
+      - FORTNIGHTLY
+      - MONTHLY
+      - BIMONTHLY
+      - QUARTERLY
+      - BIANNUALLY
+      - ANNUALLY
+      - OTHERS
+      description: "Indicates how often the individual receives their salary. We return one of the following values:\n\n  - `DAILY`\n  - `WEEKLY`\n  - `FORTNIGHTLY`\n  - `MONTHLY`\n  - `BIMONTHLY`\n  - `QUARTERLY`\n  - `BIANNUALLY`\n  - `ANNUALLY`\n  - `OTHERS`\n"
+      example: MONTHLY
+    OwnerIndividualFinancialRelation:
+      type:
+      - object
+      - 'null'
+      required:
+      - start_date
+      - product_services
+      - product_services_additional_info
+      - procurators
+      - products
+      description: Details regarding any additional relationship the individual has with the institution (for example, other accounts or products they have with the institution).
+      properties:
+        start_date:
+          type: string
+          format: date-time
+          maxLength: 20
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])T(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)Z$
+          description: 'The ISO-8601 timestamp when the financial relationship between the individual and the institution started.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '2021-05-21T08:30:00Z'
+        product_services:
+          type: array
+          minItems: 1
+          description: 'A list of products that the individual has with the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            type: string
+            description: 'The name of the product, according to the institution.
+
+              '
+            example: CONTA_DEPOSITO_A_VISTA
+        product_services_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: ^[\w\W]*$
+          description: 'Additional information regarding the products that the individual has.
+
+            '
+          example: Joint account with Robin
+        procurators:
+          type: array
+          description: Information regarding any individuals or companies that can act on behalf of the owner.
+          items:
+            $ref: '#/components/schemas/OwnerProcurators'
+        products:
+          type: array
+          description: Details regarding any additional products that the individual has with the institution.
+          items:
+            $ref: '#/components/schemas/OwnerIndividualProducts'
+        salary_portability_requests:
+          type: array
+          description: "Details regarding any salary portability requests that the individual has made with the institution.\n\nA salary portability is a request to transfer the individual's salary from their employer's 'payroll' bank account to another bank account.\n\n> \U0001F4D8 \n>\n> Please note that the receiving bank account cannot terminate a salary portability (or be informed that it has been termnated). Only the employer's payroll bank is able to provide this information. As such, the portabilities listed here may not be up-to-date.\n"
+          items:
+            $ref: '#/components/schemas/OwnerIndividualSalaryPortabilityRequests'
+        payroll_accounts:
+          type: array
+          description: 'Details regarding any payroll bank accounts that are associated with the individual. That is, each time the indivudal has a new employer that they receive a salary from, it should be listed here.
+
+
+            > 📘
+
+            >
+
+            > Past employers may not close the payroll account for the indiviual. As such, the payroll accounts listed here may not be up-to-date.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerIndividualPayrollAccounts'
+    EnumOwnerPartyPersonType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - INDIVIDUAL
+      - COMPANY
+      description: "The type of person that is an ownership party of the account. We return one of the following values:\n\n  - `INDIVIDUAL`\n  - `COMPANY`\n  \n"
+      example: INDIVIDUAL
+    EnumOwnerMaritalStatus:
+      type:
+      - string
+      - 'null'
+      enum:
+      - SINGLE
+      - MARRIED
+      - WIDOWED
+      - SEPARATED
+      - DIVORCED
+      - CIVIL_UNION
+      - OTHER
+      description: "The individual's marital status. We return one of the following values:\n\n  - `SINGLE`\n  - `MARRIED`\n  - `WIDOWED`\n  - `SEPARATED`\n  - `DIVORCED`\n  - `CIVIL_UNION`\n  - `OTHER`\n"
+      example: SINGLE
+    OwnerAddresses:
+      type:
+      - object
+      - 'null'
+      required:
+      - is_main
+      - address
+      - additional_info
+      - district_name
+      - town
+      - town_code
+      - state
+      - postcode
+      - country_name
+      - country_code
+      - latitude
+      - longitude
+      description: Detailed information regarding the owner's addresses.
+      properties:
+        is_main:
+          type: boolean
+          description: 'Boolean to indicate if this is the user''s main address.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: true
+        address:
+          type: string
+          maxLength: 150
+          pattern: ^[\w\W\s]{0,150}$
+          description: 'The user''s address.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: Av Naburo Ykesaki, 1270
+        additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 150
+          pattern: ^[\w\W\s]{0,150}$
+          description: 'Additional information regarding the user''s address.
+
+            '
+          example: In between two palm trees
+        district_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+          pattern: ^[\w\W\s]{0,50}$
+          description: 'The distrct of the address.
+
+            '
+          example: CENTRO
+        town:
+          type: string
+          maxLength: 50
+          pattern: ^[\w\W\s]{0,50}$
+          description: 'The user''s town.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: Brasilia
+        town_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 7
+          pattern: \d{7}$
+          description: 'The seven-digit code for the town, if applicable.
+
+
+            For Brazil, this is the IBGE town code.
+
+            '
+          example: '3550308'
+        state:
+          type:
+          - string
+          - 'null'
+          maxLength: 2
+          pattern: ^[\w\W\s]{0,2}$
+          description: 'The state that the address is located in.
+
+            '
+          example: SP
+        postcode:
+          type: string
+          maxLength: 8
+          pattern: ^\d{8}$
+          description: 'The postcode of the address.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '17500001'
+        country_name:
+          type: string
+          maxLength: 80
+          pattern: ^[\w\W\s]{0,80}$
+          description: 'The name of the country.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: Brasil
+        country_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^([A-Z]{3})$
+          description: 'The three-letter country code (ISO-3166 Alpha 3 compliant).
+
+            '
+          example: BRA
+        latitude:
+          type:
+          - string
+          - 'null'
+          maxLength: 13
+          pattern: ^-?\d{1,2}\.\d{1,9}$
+          description: 'The geographic latitude coordinate.
+
+            '
+          example: '-23.5475000'
+        longitude:
+          type:
+          - string
+          - 'null'
+          maxLength: 13
+          pattern: ^-?\d{1,3}\.\d{1,8}$
+          description: 'The geographic longitude coordinate.
+
+            '
+          example: '-46.6361100'
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    OwnerIndividualPatrimony:
+      type:
+      - object
+      - 'null'
+      required:
+      - amount
+      - currency
+      - year
+      description: Information regarding the individual's reported assets (if available).
+      properties:
+        amount:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The reported assets of the individual.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network when the `patrimony` object is available.
+
+            '
+          example: 45391.89
+        currency:
+          type: string
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network when the `patrimony` object is available.
+
+            '
+          example: BRL
+        year:
+          type: integer
+          format: int32
+          maximum: 2090
+          minimum: 1700
+          description: "The year that the reported assets applied. \n\n> **Non-nullable:** A value must be returned by Brazil's open finance network when the `patrimony` object is available.\n"
+          example: 2020
+    EnumOwnerPartyDocumentType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - CPF
+      - CNPJ
+      - OTHER_TRAVEL_DOCUMENT
+      - PASSPORT
+      description: "The type of ID document the party provided when being added to the account. We return one of the following values:\n\n  - `CPF`\n  - `CNPJ`\n  - `OTHER_TRAVEL_DOCUMENT`\n  - `PASSPORT`\n"
+      example: CPF
+    EnumOwnerIndividualFinancialProfileOccupationCode:
+      type:
+      - string
+      - 'null'
+      enum:
+      - BRAZIL_PUBLIC_OFFICE
+      - BRAZIL_OCCUPATION_CODE
+      - OTHER
+      - null
+      description: "The area of employment of the individual. We return one of the following values:\n\n  - `BRAZIL_PUBLIC_OFFICE`\n  - `BRAZIL_OCCUPATION_CODE`\n  - `OTHER`\n  - `null`\n"
+      example: BRAZIL_OCCUPATION_CODE
+    OwnerIndividualSalaryPortabilityRequests:
+      type: object
+      description: Details regarding the salary portability request.
+      properties:
+        employer_name:
+          type: string
+          maxLength: 80
+          pattern: ^(?!\s)[\w\W\s]*[^\s]$
+          description: The name of the employer.
+          example: ACME Inc.
+        employer_id_number:
+          type: string
+          minLength: 11
+          maxLength: 14
+          pattern: ^\d{14}$|^\d{11}$
+          description: The CPF or CNPJ of the employer.
+          example: 12345678901
+        employer_bank_id_number:
+          type: string
+          minLength: 14
+          maxLength: 14
+          pattern: ^\d{14}$
+          description: The CNPJ of the employer's bank.
+          example: 12345678901234
+        employer_bank_code:
+          type: string
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{8}$
+          description: The bank ISPB (*Identificador de Sistema de Pagamentos Brasileiro*s) code of the employer's bank.
+          example: 12345678
+        portability_approval_date:
+          type: string
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: The date the portability request was approved, in `YYYY-MM-DD` format.
+          example: '2024-04-01'
+    EnumOwnerGender:
+      type:
+      - string
+      - 'null'
+      enum:
+      - FEMALE
+      - MALE
+      - OTHER
+      description: "The individual's gender. We return on of the following values:\n\n  - `FEMALE`\n  - `MALE`\n  - `OTHER`\n  \n"
+      example: FEMALE
+    OwnerParties:
+      type:
+      - object
+      - 'null'
+      required:
+      - person_type
+      - type
+      - display_name
+      - social_name
+      - trade_name
+      - start_date
+      - percentage_type
+      - document_type
+      - document_number
+      - document_issue_date
+      - document_expiration_date
+      - document_country
+      - document_additional_info
+      description: Detailed information regarding the parties allowed to act on the owner's behalf.
+      properties:
+        person_type:
+          $ref: '#/components/schemas/EnumOwnerPartyPersonType'
+        type:
+          $ref: '#/components/schemas/EnumOwnerPartyType'
+        display_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The full name of the individual, as provided by the institution. Only applicable if the `person_type` is `INDIVIDUAL`.
+
+            '
+          example: Jack Oswald White
+        social_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The social name of the individual, as generally accepted by the country. Only applicable if the `person_type` is `INDIVIDUAL`.
+
+            '
+          example: O Piadista
+        company_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The full (official) name of the business. Only applicable if the `person_type` is `COMPANY`.
+
+            '
+          example: Wayne Enterprises
+        trade_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The trade name of the business. Only applicable if the `person_type` is `COMPANY`.
+
+            '
+          example: WayneCorp
+        start_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date that the party was added to the account, in `YYYY-MM-DD` format.
+
+            '
+          example: '2021-07-15'
+        percentage_type:
+          type:
+          - number
+          - 'null'
+          format: float
+          minLength: 8
+          maxLength: 8
+          pattern: ^[01]\.\d{6}$
+          description: 'The party''s equity interest.
+
+            '
+          example: 0.51
+        document_type:
+          $ref: '#/components/schemas/EnumOwnerPartyDocumentType'
+        document_number:
+          type: string
+          maxLength: 40
+          pattern: ^[\w\W\s]{0,40}$
+          description: 'The ID document''s number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: DL-7896829-7
+        document_issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document was issued, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-01-01'
+        document_expiration_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document expires, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-01-01'
+        document_country:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^(\w{3}){1}$
+          description: 'The three-letter country code that issued the document (in ISO-3166 Alpha 3 format).
+
+            '
+          example: CAN
+        document_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: ^[\w\W\s]{0,100}$
+          description: 'Additional information regarding the document.
+
+            '
+          example: Confirmed CPF with their driver's licence.
+    OwnerProcurators:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - civil_name
+      - social_name
+      - document_number
+      description: Information regarding any individuals or companies that can act on behalf of the owner.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumOwnerProcuratorType'
+        civil_name:
+          type: string
+          maxLength: 70
+          pattern: ^[\w\W]*$
+          description: 'The representatives''s full name.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `procurators` field is available.
+
+            '
+          example: Alfred Thaddeus Pennyworth
+        social_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 70
+          pattern: ^[\w\W]*$
+          description: 'The person''s social name.
+
+            '
+          example: Alfred Pennyworth
+        document_number:
+          type: string
+          maxLength: 11
+          pattern: ^\d{11}$
+          description: 'The document number of the representative.
+
+
+            **Note**: For individuals, this is Brazil''s CPF number. For businesses, this is Brazil''s CNPJ number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `procurators` field is available.
+
+            '
+          example: '73677831148'
+    OwnerFiliations:
       type: object
       required:
+      - type
+      - civil_name
+      - social_name
+      description: Information regarding any familial relationships of the individual.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumOwnerFiliationType'
+        civil_name:
+          type: string
+          maxLength: 70
+          pattern: ^[\w\W\s]{0,70}$
+          description: 'The person''s full name.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: Bruce Wayne
+        social_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 70
+          pattern: ^[\w\W\s]{0,70}$
+          description: 'The person''s social name.
+
+            '
+          example: The Dark Knight
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    OwnerIndividualPayrollAccounts:
+      type: object
+      description: Details regarding the payroll bank account.
+      properties:
+        employer_name:
+          type: string
+          maxLength: 80
+          pattern: ^(?!\s)[\w\W\s]*[^\s]$
+          description: The name of the employer.
+          example: ACME Inc.
+        employer_id_number:
+          type: string
+          minLength: 11
+          maxLength: 14
+          pattern: ^\d{14}$|^\d{11}$
+          description: The CPF or CNPJ of the employer.
+          example: 12345678901
+        employer_bank_id_number:
+          type: string
+          minLength: 14
+          maxLength: 14
+          pattern: ^\d{14}$
+          description: The CNPJ of the employer's bank.
+          example: 12345678901234
+        employer_bank_code:
+          type: string
+          minLength: 8
+          maxLength: 8
+          pattern: ^[0-9]{8}$
+          description: The bank ISPB (*Identificador de Sistema de Pagamentos Brasileiro*s) code of the employer's bank.
+          example: 12345678
+        account_opening_date:
+          type: string
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: The date that the salary bank account was opened, in `YYYY-MM-DD` format.
+          example: '2024-04-01'
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumOwnerIndividualDocumentIdType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - DRIVERS_LICENSE
+      - PASSPORT
+      - ID_CARD
+      - FISCAL_ID
+      - FOREIGNER_REGISTRATION_CARD
+      - OTHER
+      - null
+      description: "The type of ID document. We return one of the following values:\n\n  - `DRIVERS_LICENSE`\n  - `PASSPORT`\n  - `ID_CARD`\n  - `FISCAL_ID`\n  - `FOREIGNER_REGISTRATION_CARD`\n  - `OTHER`\n  - `null`\n  \n"
+      example: DRIVERS_LICENSE
+    OwnerIndividualProducts:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - subtype
+      - agency
+      - clearing_code
+      - number
+      - check_digit
+      description: Details regarding any additional products that the individual has with the institution.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumOwnerIndividualProductType'
+        subtype:
+          type:
+          - string
+          - 'null'
+          description: 'The subtype of the product that the individual has at the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `products` field is available.
+
+            '
+          example: CONJUNTA_SIMPLES
+        agency:
+          type:
+          - string
+          - 'null'
+          maxLength: 4
+          pattern: ^\d{1,4}$
+          description: 'The branch code where the product was opened.
+
+            '
+          example: '6272'
+        clearing_code:
+          type: string
+          maxLength: 3
+          pattern: ^\d{3}$
+          description: 'The banking clearing code for the product.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `products` field is available.
+
+            '
+          example: '001'
+        number:
+          type: string
+          maxLength: 20
+          pattern: ^\d{8,20}$
+          description: 'The account number of the product.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `procurators` field is available.
+
+            '
+          example: '24550245'
+        check_digit:
+          type: string
+          maxLength: 2
+          pattern: '[\w\W\s]*'
+          description: 'The check digit of the product''s number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `products` field is available.
+
+            '
+          example: '7'
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumOwnerPhoneNumberType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - LANDLINE
+      - MOBILE
+      - OTHER
+      - null
+      description: "The type of phone number. We return one of the following values:\n\n  - `LANDLINE`\n  - `MOBILE`\n  - `OTHER`\n  - `null`\n"
+      example: MOBILE
+    PatchBody:
+      type: object
+      description: A JSON object containing a session UUID and a MFA token
+      required:
+      - session
       - link
       properties:
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'The session you want to resume. You need to use the `session` value
+
+            that is provided in the 428 Token Required response that you receive
+
+            after you make your POST request.
+
+            '
+          example: 6e7b283c6efa449c9c028a16b5c249fa
+        token:
+          $ref: '#/components/schemas/token'
         link:
           type: string
           format: uuid
-          description: The Link UUID to retrieve data for.
+          description: 'The `link.id` you want to resume. Must be the same `link.id` as the
+
+            one you receive in the 428 Token Required response that contains the
+
+            `session` ID.
+
+            '
+          example: 683005d6-f45c-4adb-b289-f1a12f50f80c
         save_data:
-          type: boolean
-          default: true
-    Owner:
+          $ref: '#/components/schemas/save_data'
+    EnumOwnerProcuratorType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - LEGAL_REPRESENTATIVE
+      - ATTORNEY
+      - null
+      description: "The type of representative that can access and make changes to the account. We return one of the following values:\n\n  - `LEGAL_REPRESENTATIVE`\n  - `ATTORNEY`\n  - `null`\n  \n"
+      example: LEGAL_REPRESENTATIVE
+    token:
+      type: string
+      description: The MFA token generated by the institution which is required to continue a session.
+      example: 1234ab
+    collected_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp when the data point was collected.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    NotFoundError:
       type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    OwnerBusinessEconomicActivies:
+      type:
+      - object
+      - 'null'
+      required:
+      - is_main
+      - code
+      description: Details regarding the reported economic activities of the business.
+      properties:
+        is_main:
+          type: boolean
+          description: 'Boolean to indicate whether this is the business''s main economic activity.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `economic_activities` field is available.
+
+            '
+          example: true
+        code:
+          type: string
+          minLength: 2
+          maxLength: 7
+          pattern: ^\d{2,7}$
+          description: 'The code of the economic activity, as given by the country.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `economic_activities` field is available.
+
+            '
+          example: '8599604'
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    OwnerIndividualOpenFinanceBrazil:
+      type: object
+      title: Owner Individual (OFDA Brazil)
+      x-tags:
+      - Owners
+      required:
+      - id
+      - link
+      - internal_identification
+      - collected_at
+      - created_at
+      - display_name
+      - social_name
+      - birth_date
+      - marital_status
+      - marital_status_additional_info
+      - gender
+      - companies_id
+      - is_local_resident
+      - document_id
+      - additional_documents
+      - nationalities
+      - email
+      - emails
+      - address
+      - addresses
+      - phone_number
+      - phone_numbers
+      - filiations
+      - financial_profile
+      - financial_relation
       properties:
         id:
-          type: string
-          format: uuid
+          $ref: '#/components/schemas/id'
         link:
-          type: string
-          format: uuid
+          $ref: '#/components/schemas/link'
+        internal_identification:
+          type:
+          - string
+          - 'null'
+          description: The institution's internal identifier for the owner.
+          example: 7e5838e4
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
         display_name:
           type: string
-        first_name:
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The full name of the individual, as provided by the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: Jack Oswald White
+        social_name:
           type:
           - string
           - 'null'
-        last_name:
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The social name of the individual, as generally accepted by the country.
+
+            '
+          example: O Piadista
+        birth_date:
+          type: string
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The individual''s date of birth, in `YYYY-MM-DD` format.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '1988-07-15'
+        marital_status:
+          $ref: '#/components/schemas/EnumOwnerMaritalStatus'
+        marital_status_additional_info:
           type:
           - string
           - 'null'
+          maxLength: 50
+          pattern: ^[\w\W]{0,50}$
+          description: 'Additional information about the individual''s marital status.
+
+            '
+          example: It's complicated
+        gender:
+          $ref: '#/components/schemas/EnumOwnerGender'
+        companies_id:
+          type: array
+          minItems: 1
+          description: 'The institutions responsible for the creation and verification of the owner.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            type: string
+            maxLength: 14
+            pattern: ^\d{14}$
+            description: 'The institutions responsible for the creation and verification of the owner.
+
+              '
+            example: '01773247000103'
+        is_local_resident:
+          type: boolean
+          description: 'Boolean to indicate if the individual is a local resident of the country.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: true
+        document_id:
+          $ref: '#/components/schemas/OwnerDocumentIdOpenFinanceBrazil'
+        additional_documents:
+          type: array
+          description: 'Detailed information regarding additional documents provided to prove the individuals ID.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/OwnerIndividualDocumentIds'
+        nationalities:
+          type:
+          - array
+          - 'null'
+          minItems: 1
+          description: 'Detailed information regarding the individual''s nationalities.
+
+
+            Only required to be returned when `is_local_resident` is set to `false`.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerNationalities'
         email:
           type:
           - string
           - 'null'
-        phone_number:
-          type:
-          - string
-          - 'null'
+          format: email
+          maxLength: 320
+          description: 'The account owner''s registered email address.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: johndoe@belvo.com
+        emails:
+          type: array
+          minItems: 0
+          description: 'Additional list of emails the owner provided.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerEmails'
         address:
           type:
           - string
           - 'null'
-        document_id:
+          description: 'The account owner''s registered address.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: Carrer de la Llacuna, 162, 08018 Barcelona
+        addresses:
+          type: array
+          minItems: 1
+          description: 'Detailed information regarding the owner''s addresses.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerAddresses'
+        phone_number:
           type:
-          - object
+          - string
           - 'null'
+          description: 'The account owner''s registered phone number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: +52-XXX-XXX-XXXX
+        phone_numbers:
+          type: array
+          minItems: 0
+          description: 'Detailed information regarding the owner''s phone numbers.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerPhoneNumbers'
+        filiations:
+          type: array
+          minItems: 1
+          description: 'Information regarding any familial relationships of the individual.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerFiliations'
+        financial_profile:
+          $ref: '#/components/schemas/OwnerIndividualFinancialProfile'
+        financial_relation:
+          $ref: '#/components/schemas/OwnerIndividualFinancialRelation'
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TokenRequiredResponse:
+      type: object
+      description: MFA Token Required
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`token_required`) that allows you to classify and handle the error programmatically.
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#428-token_required" target="_blank">428 token_required errors</a>.
+
+            '
+          example: token_required
+        message:
+          type: string
+          description: "A short description of the error. \nFor `token_required` errors, the description is:\n  \n  - `A MFA token is required by the institution to login`.\n"
+          example: A MFA token is required by the institution to login
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'A 32-character unique ID of the login session (matching a regex pattern of: `[a-f0-9]{32}`).
+
+            '
+          example: 2675b703b9d4451f8d4861a3eee54449
+        expiry:
+          type: integer
+          format: int32
+          description: Session duration time in seconds.
+          example: 9600
+        link:
+          type: string
+          format: uuid
+          description: 'Unique identifier created by Belvo, used to reference the current
+
+            Link.
+
+            '
+          example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        token_generation_data:
+          type: object
+          description: Details on how to generate the token.
           properties:
-            document_type:
+            instructions:
               type: string
-            document_number:
+              description: Instructions for token generation.
+              example: Use this code to generate the token
+            type:
               type: string
+              description: 'Type of the data to generate the token (QR code, numeric
+
+                challenge).
+
+                '
+              example: numeric
+            value:
+              type: string
+              description: Value to use to generate the token.
+              example: '12345'
+            expects_user_input:
+              type: boolean
+              description: 'Indicates whether the user needs to provide input in order to complete the authentication.
+
+                When set to `false`, your user may need to:
+
+                - confirm the login on another device
+
+                - scan a QR code
+
+                You will still need to make a PATCH call to complete the request.
+
+                '
+              example: true
+              default: true
+    EnumOwnerPartyType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - MEMBER
+      - ADMINISTRATOR
+      description: 'The access type that the `person_type` has to the account. We return one of the following values:
+
+
+        - `MEMBER` indicates that the `person_type` has read access to the account.
+
+        - `ADMINISTRATOR` indicates that the `person_type` can perform all actions for the account (including transfers).
+
+        '
+      example: MEMBER
+    Owner:
+      type: object
+      title: Owner Standard (Multi-Region)
+      x-tags:
+      - Owners
+      required:
+      - id
+      - link
+      - internal_identification
+      - display_name
+      - email
+      - phone_number
+      - address
+      - collected_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        link:
+          $ref: '#/components/schemas/link'
+        internal_identification:
+          type:
+          - string
+          - 'null'
+          description: The institution's internal identifier for the owner.
+          example: 7e5838e4
         collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        display_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          description: The full name of the owner, as provided by the bank.
+          example: John Doe
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 256
+          description: The account owner's registered email address.
+          example: johndoe@belvo.com
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The account owner's registered phone number.
+          example: +52-XXX-XXX-XXXX
+        address:
+          type:
+          - string
+          - 'null'
+          description: The accounts owners registered address.
+          example: Carrer de la Llacuna, 162, 08018 Barcelona
+        document_id:
+          $ref: '#/components/schemas/OwnerDocumentId'
+        business_name:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+
+            *The name of the business.*
+
+            '
+          example: null
+        first_name:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+
+            *The first name of the account owner.*
+
+            '
+          example: null
+        last_name:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+
+            *The last name of the account owner.*
+
+            '
+          example: null
+        second_last_name:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+
+            *The second last name of the account owner.*
+
+            '
+          example: null
+    link_request:
+      type: string
+      format: uuid
+      description: The `link.id` you want to retrieve information for.
+      example: c81a1dea-6dd6-4999-8b9f-541ee8197058
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    OwnerBusinessProducts:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - subtype
+      - agency
+      - clearing_code
+      - number
+      - check_digit
+      description: Details regarding any additional products that the individual has with the institution.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumOwnerBusinessProductType'
+        subtype:
+          type: string
+          description: 'The subtype of the product that the business has at the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `products` field is available.
+
+            '
+          example: CONJUNTA_SIMPLES
+        agency:
+          type:
+          - string
+          - 'null'
+          maxLength: 4
+          pattern: ^\d{1,4}$
+          description: 'The branch code where the product was opened.
+
+            '
+          example: '6272'
+        clearing_code:
+          type: string
+          maxLength: 3
+          pattern: ^\d{3}$
+          description: 'The banking clearing code for the product.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `products` field is available.
+
+            '
+          example: '001'
+        number:
+          type: string
+          maxLength: 20
+          pattern: ^\d{8,20}$
+          description: 'The account number of the product.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `products` field is available.
+
+            '
+          example: '24550245'
+        check_digit:
+          type: string
+          maxLength: 2
+          pattern: ^[\w\W\s]{0,2}$
+          description: 'The check digit of the product''s number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `products` field is available.
+
+            '
+          example: '7'
+    EnumOwnerBusinessProductType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - SAVINGS_ACCOUNT
+      - CHECKING_ACCOUNT
+      - null
+      description: "The additional products the business has at the institution. We return one of the following values:\n\n  - `SAVINGS_ACCOUNT`\n  - `CHECKING_ACCOUNT`\n  - `null`\n  \n"
+      example: SAVINGS_ACCOUNT
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    OwnerBusinessFinancialRelation:
+      type:
+      - object
+      - 'null'
+      required:
+      - start_date
+      - product_services
+      - procurators
+      - products
+      description: Details regarding any additional relationship the business has with the institution (for example, other accounts or products they have with the institution).
+      properties:
+        start_date:
           type: string
           format: date-time
-    Pagination:
+          maxLength: 20
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])T(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)Z$
+          description: 'The ISO-8601 timestamp when the financial relationship between the business and the institution started.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '2021-05-21T08:30:00Z'
+        product_services:
+          type: array
+          minItems: 1
+          description: 'A list of products that the business has with the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            type: string
+            description: 'The name of the product, according to the institution.
+
+              '
+            example: CONTA_DEPOSITO_A_VISTA
+        procurators:
+          type: array
+          description: Information regarding any individuals or companies that can act on behalf of the owner.
+          items:
+            $ref: '#/components/schemas/OwnerProcurators'
+        products:
+          type: array
+          description: Details regarding any additional products that the business has with the institution.
+          items:
+            $ref: '#/components/schemas/OwnerBusinessProducts'
+    OwnerDocumentId:
+      type:
+      - object
+      - 'null'
+      required:
+      - document_type
+      - document_number
+      description: Information regarding the identification document the owner provided to the bank.
+      properties:
+        document_type:
+          type:
+          - string
+          - 'null'
+          description: 'The type of document the owner provided to the institution to open the account. Common document types are:
+
+
+            🇧🇷 Brazil
+
+            - `CPF` (*Cadastro de Pessoas Físicas*)
+
+            - `CNPJ`(*Cadastro Nacional de Pessoas Jurídicas*)
+
+
+            🇨🇴 Colombia
+
+            - `CC`(*Cédula de Ciudadanía*)
+
+            - `NIT` (*Número de Identificación Tributaria*)
+
+
+            🇲🇽 Mexico
+
+            - `CURP` (*Clave Única de Registro de Población*)
+
+            - `NSS` (*Número de Seguridad Social*)
+
+            - `RFC` (*Registro Federal de Contribuyentes*)
+
+            '
+          example: CPF
+        document_number:
+          type:
+          - string
+          - 'null'
+          description: The document's identification number.
+          example: 235578435-S
+    OwnerIndividualDocumentIds:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - type_additional_info
+      - number
+      - check_digit
+      - issue_date
+      - expiration_date
+      - country_of_issuance
+      - additional_info
+      description: Detailed information regarding additional documents provided to prove the individuals ID.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumOwnerIndividualDocumentIdType'
+        type_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 70
+          pattern: ^[\w\W\s]{0,70}$
+          description: 'Additional information regarding the document type.
+
+
+            > Note: For Business ID documents, this field must return a value from Brazil''s open finance network.
+
+            '
+          example: Learner's licence
+        number:
+          type: string
+          maxLength: 40
+          pattern: ^[\w\W\s]{0,40}$
+          description: 'The ID document''s number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: DL-7896829-7
+        check_digit:
+          type: string
+          maxLength: 2
+          pattern: ^[\w\W\s]{0,2}$
+          description: 'The check digit of the ID document.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '7'
+        issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document was issued, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-01-01'
+        expiration_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document expires, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-01-01'
+        country_of_issuance:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^[\w]{3}$
+          description: 'The three-letter country code that issued the document (in ISO-3166 Alpha 3 format).
+
+
+            This field must be returned when the `type` is `PASSPORT`.
+
+            '
+          example: CAN
+        additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: ^[\w\W\s]{0,100}$
+          description: 'Additional information about the ID document.
+
+            '
+          example: The document has water damage
+    OwnerIndividualNationalityDocumentId:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - type_additional_info
+      - number
+      - issue_date
+      - expiration_date
+      - country_of_issuance
+      - additional_info
+      description: Detailed information regarding additional documents provided to prove the individuals ID.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumOwnerIndividualDocumentIdType'
+        number:
+          type: string
+          maxLength: 40
+          pattern: ^[\w\W\s]{0,40}$
+          description: 'The ID document''s number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: DL-7896829-7
+        issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document was issued, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-01-01'
+        expiration_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document expires, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-01-01'
+        country_of_issuance:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^[\w]{3}$
+          description: 'The three-letter country code that issued the document (in ISO-3166 Alpha 3 format).
+
+
+            This field must be returned when the `type` is `PASSPORT`.
+
+            '
+          example: CAN
+        additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: ^[\w\W\s]{0,100}$
+          description: 'Additional information about the ID document.
+
+            '
+          example: The document has water damage
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    OwnerBusinessFinancialProfile:
+      type:
+      - object
+      - 'null'
+      required:
+      - economic_activities
+      - informed_revenue
+      - patrimony
+      description: Information regarding the financial profile of the individual.
+      properties:
+        economic_activities:
+          type: array
+          description: Details regarding the reported economic activities of the business.
+          items:
+            $ref: '#/components/schemas/OwnerBusinessEconomicActivies'
+        informed_revenue:
+          $ref: '#/components/schemas/OwnerBusinessInformedRevenue'
+        patrimony:
+          $ref: '#/components/schemas/OwnerBusinessPatrimony'
+    OwnerBusinessOpenFinanceBrazil:
+      type: object
+      title: Owner Business (OFDA Brazil)
+      x-tags:
+      - Owners
+      required:
+      - id
+      - link
+      - internal_identification
+      - collected_at
+      - created_at
+      - company_name
+      - trade_name
+      - incorporation_date
+      - companies_id
+      - document_id
+      - additional_documents
+      - email
+      - emails
+      - address
+      - addresses
+      - phone_number
+      - phone_numbers
+      - parties
+      - financial_profile
+      - financial_relation
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        link:
+          $ref: '#/components/schemas/link'
+        internal_identification:
+          type:
+          - string
+          - 'null'
+          description: The institution's internal identifier for the owner.
+          example: 7e5838e4
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        company_name:
+          type: string
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The full (official) name of the business, as provided by the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: Wayne Enterprises
+        trade_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          pattern: ^[\w\W]{0,128}$
+          description: 'The trade name of the business.
+
+            '
+          example: WayneCorp
+        incorporation_date:
+          type: string
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date that the business was incorporated, in `YYYY-MM-DD` format.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '1988-07-15'
+        companies_id:
+          type: array
+          minItems: 1
+          description: 'The institutions responsible for the creation and verification of the owner.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            type: string
+            maxLength: 14
+            pattern: ^\d{14}$
+            description: 'The institutions responsible for the creation and verification of the owner.
+
+              '
+            example: '01773247000103'
+        document_id:
+          $ref: '#/components/schemas/OwnerDocumentIdOpenFinanceBrazil'
+        additional_documents:
+          type: array
+          minItems: 1
+          description: 'Detailed information regarding additional documents provided to prove the business''s ID.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerBusinessDocumentIds'
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 256
+          description: The account owner's registered email address.
+          example: johndoe@belvo.com
+        emails:
+          type: array
+          minItems: 0
+          description: Additional list of emails the owner provided.
+          items:
+            $ref: '#/components/schemas/OwnerEmails'
+        address:
+          type:
+          - string
+          - 'null'
+          description: The accounts owners registered address.
+          example: Carrer de la Llacuna, 162, 08018 Barcelona
+        addresses:
+          type: array
+          minItems: 1
+          description: Detailed information regarding the owner's addresses.
+          items:
+            $ref: '#/components/schemas/OwnerAddresses'
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The account owner's registered phone number.
+          example: +52-XXX-XXX-XXXX
+        phone_numbers:
+          type: array
+          minItems: 0
+          description: Detailed information regarding the owner's `phone_number`s.
+          items:
+            $ref: '#/components/schemas/OwnerPhoneNumbers'
+        parties:
+          type: array
+          minItems: 1
+          description: 'Detailed information regarding the parties allowed to act on the owner''s behalf.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            $ref: '#/components/schemas/OwnerParties'
+        financial_profile:
+          $ref: '#/components/schemas/OwnerBusinessFinancialProfile'
+        financial_relation:
+          $ref: '#/components/schemas/OwnerBusinessFinancialRelation'
+    EnumOwnerFiliationType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - MOTHER
+      - FATHER
+      - null
+      description: "The familial relationship. We return one of the following values:\n\n  - `MOTHER`\n  - `FATHER`\n  - `null`\n  \n"
+      example: MOTHER
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
       type: object
       properties:
         count:
           type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
         next:
           type:
           - string
           - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
         previous:
           type:
           - string
           - 'null'
-    PaginatedOwners:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    save_data:
+      type: boolean
+      default: true
+      description: 'Indicates whether or not to persist the data in Belvo. By default, this is set to `true` and we return a 201 Created response.
+
+
+        When set to `false`, the data won''t be persisted and we return a 200 OK response.
+
+        '
+      example: true
+    OwnerEmails:
+      type:
+      - object
+      - 'null'
+      required:
+      - is_main
+      - email
+      description: Additional list of emails the owner provided.
+      properties:
+        is_main:
+          type: boolean
+          description: 'Boolean to indicate if this is the user''s main email address.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: true
+        email:
+          type: string
+          maxLength: 320
+          pattern: ^[\w\W\s]{0,320}$
+          description: 'The user''s email address.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: homen_morcego@gmail.com
+    OwnerBusinessDocumentIds:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - type_additional_info
+      - number
+      - check_digit
+      - issue_date
+      - expiration_date
+      - country_of_issuance
+      - additional_info
+      description: Detailed information regarding additional documents provided to prove the business's ID.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumOwnerIndividualDocumentIdType'
+        type_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 70
+          pattern: ^[\w\W\s]{0,70}$
+          description: 'Additional information regarding the document type.
+
+
+            > Note: For Business ID documents, this field must return a value from Brazil''s open finance network.
+
+            '
+          example: EIN
+        number:
+          type: string
+          maxLength: 40
+          pattern: ^[\w\W]{0,40}$
+          description: 'The ID document''s number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: DL-7896829-7
+        check_digit:
+          type: string
+          maxLength: 2
+          pattern: ^[\w\W\s]{0,2}$
+          description: 'The check digit of the ID document.
+
+
+            > **Note**: This field is not applicable for Business ID documents and will return `null`.
+
+            '
+          example: null
+        issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document was issued, in `YYYY-MM-DD` format.
+
+
+            > **Note**: This field is not applicable for Business ID documents and will return `null`.
+
+            '
+          example: null
+        expiration_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date the the ID document expires, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-01-01'
+        country_of_issuance:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^(\w{3}){1}$
+          description: 'The three-letter country code that issued the document (in ISO-3166 Alpha 3 format).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: CAN
+        additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: ^[\w\W\s]{0,100}$
+          description: 'Additional information about the ID document.
+
+
+            > **Note**: This field is not applicable for Business ID documents and will return `null`.
+
+            '
+          example: null
+    OwnerDocumentIdOpenFinanceBrazil:
+      type: object
+      required:
+      - document_type
+      - document_number
+      description: 'Information regarding the identification document the owner provided to the bank.
+
+
+        > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+        '
+      properties:
+        document_type:
+          type: string
+          description: 'The type of document the owner provided to the institution to open the account. Common document types are:
+
+
+            🇧🇷 Brazil
+
+            - `CPF` (*Cadastro de Pessoas Físicas*)
+
+            - `CNPJ`(*Cadastro Nacional de Pessoas Jurídicas*)
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: CPF
+        document_number:
+          type: string
+          description: 'The document''s identification number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 235578435-S
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    OwnerBusinessPatrimony:
+      type:
+      - object
+      - 'null'
+      required:
+      - amount
+      - currency
+      - date
+      description: Information regarding the individual's reported assets.
+      properties:
+        amount:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The reported assets of the business.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `patrimony` field is available.
+
+            '
+          example: 45391.89
+        currency:
+          type: string
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `patrimony` field is available.
+
+            '
+          example: BRL
+        date:
+          type: string
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date that the reported assets applied, in `YYYY-MM-DD` format.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `patrimony` field is available.
+
+            '
+          example: '2022-12-12'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    OwnerPhoneNumbers:
+      type:
+      - object
+      - 'null'
+      required:
+      - is_main
+      - type
+      - additional_info
+      - number
+      - country_code
+      - area_code
+      - extension
+      description: Detailed information regarding the owners's `phone_number`s.
+      properties:
+        is_main:
+          type: boolean
+          description: 'Boolean to indicate if this is the user''s main phone number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: true
+        type:
+          $ref: '#/components/schemas/EnumOwnerPhoneNumberType'
+        additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: ^[\w\W\s]{0,100}$
+          description: 'Additional information about the phone number.
+
+            '
+          example: This is their work mobile number.
+        number:
+          type: string
+          maxLength: 11
+          pattern: ^([0-9]{8,11})$
+          description: 'The phone number (not including the country, area, or extension codes).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '29875132'
+        country_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 4
+          pattern: ^\d{1,4}$
+          description: 'The country dialling code. For example: `351` (no `+`).
+
+            '
+          example: '351'
+        area_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 2
+          pattern: ^\d{1,2}$
+          description: 'The area dialling code.
+
+            '
+          example: '21'
+        extension:
+          type:
+          - string
+          - 'null'
+          maxLength: 5
+          pattern: ^\d{1,5}$
+          description: 'The extension code.
+
+            '
+          example: '932'
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumOwnerIndividualProductType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - SAVINGS_ACCOUNT
+      - CHECKING_ACCOUNT
+      - null
+      description: "The additional products the individual has at the institution. We return one of the following values:\n\n  - `SAVINGS_ACCOUNT`\n  - `CHECKING_ACCOUNT`\n  - `null`\n"
+      example: SAVINGS_ACCOUNT
+    link:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: The `link.id` the data belongs to.
+      example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+    OwnerNationalities:
+      type: object
+      required:
+      - info
+      - documents
+      description: Detailed information regarding the individual's nationalities.
+      properties:
+        info:
+          type:
+          - string
+          - 'null'
+          pattern: ^\S[\s\S]*$
+          maxLength: 40
+          description: 'The nationality of the individual.
+
+            '
+          example: CAN
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/OwnerIndividualNationalityDocumentId'
+    EnumOwnerBusinessInformedRevenueFrequency:
+      type:
+      - string
+      - 'null'
+      enum:
+      - DAILY
+      - WEEKLY
+      - FORTNIGHTLY
+      - MONTHLY
+      - BIMONTHLY
+      - QUARTERLY
+      - BIANNUALLY
+      - ANNUALLY
+      - OTHERS
+      - null
+      description: "Indicates how often the business declares their revenue. We return one of the following values:\n  \n  - `DAILY`\n  - `WEEKLY`\n  - `FORTNIGHTLY`\n  - `MONTHLY`\n  - `BIMONTHLY`\n  - `QUARTERLY`\n  - `BIANNUALLY`\n  - `ANNUALLY`\n  - `OTHERS`\n  - `null`\n"
+      example: MONTHLY
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+    OwnerBusinessInformedRevenue:
+      type:
+      - object
+      - 'null'
+      required:
+      - frequency
+      - frequency_additional_info
+      - amount
+      - currency
+      - year
+      description: Information regarding the business's reported revenue.
+      properties:
+        frequency:
+          $ref: '#/components/schemas/EnumOwnerBusinessInformedRevenueFrequency'
+        frequency_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: '[\w\W\s]*'
+          description: 'Additional information regarding the frequency.
+
+            '
+          example: Recently switched from weekly to monthly.
+        amount:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The reported revenue of the business.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `informed_revenue` field is available.
+
+            '
+          example: 45391.89
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `informed_revenue` field is available.
+
+            '
+          example: BRL
+        year:
+          type: integer
+          format: int32
+          minimum: 1700
+          maximum: 2090
+          description: 'The year when revenue was last declared.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `informed_revenue` field is available.
+
+            '
+          example: 2022
+    OwnerIndividualInformedIncome:
+      type: object
+      required:
+      - frequency
+      - amount
+      - currency
+      - date
+      description: 'Information regarding the individual''s reported income.
+
+
+        > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+        '
+      properties:
+        frequency:
+          $ref: '#/components/schemas/EnumOwnerInformedIncomeFrequency'
+        amount:
+          type: number
+          format: float
+          minLength: 1
+          maxLength: 20
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The reported income that the individual receives.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 45391.89
+        currency:
+          type: string
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: BRL
+        date:
+          type: string
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'Date when the individual last received their salary.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '2020-03-19'
+  examples:
+    OwnerOfdaBusinessDetail:
+      summary: Business OFDA Brazil
+      description: Example of a business (OFDA Brazil).
+      value:
+        id: c749315b-eec2-435d-a458-06912878564f
+        link: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        internal_identification: 7e5838e4
+        collected_at: '2019-09-27T13:01:41.941Z'
+        created_at: '2022-02-09T08:45:50.406032Z'
+        company_name: Wayne Enterprises
+        trade_name: WayneCorp
+        incorporation_date: '1988-07-15'
+        companies_id:
+        - '01773247000103'
+        document_id:
+          document_type: CPF
+          document_number: 235578435-S
+        additional_documents:
+        - type: EIN
+          number: DL-7896829-7
+          expiration_date: '2019-01-01'
+          country_of_issuance: CAN
+        email: johndoe@belvo.com
+        emails:
+        - is_main: true
+          email: homen_morcego@gmail.com
+        address: Carrer de la Llacuna, 162, 08018 Barcelona
+        addresses:
+        - is_main: true
+          address: Av Naburo Ykesaki, 1270
+          additional_info: In between two palm trees
+          district_name: CENTRO
+          town: Brasilia
+          town_code: '3550308'
+          state: SP
+          postcode: '17500001'
+          country_name: Brasil
+          country_code: BRA
+          latitude: '-23.5475000'
+          longitude: '-46.6361100'
+        phone_number: +52-XXX-XXX-XXXX
+        phone_numbers:
+        - is_main: true
+          type: MOBILE
+          additional_info: This is their work mobile number.
+          number: '29875132'
+          country_code: '351'
+          area_code: '21'
+          extension: '932'
+        parties:
+        - person_type: INDIVIDUAL
+          type: MEMBER
+          display_name: Jack Oswald White
+          social_name: O Piadista
+          company_name: Wayne Enterprises
+          trade_name: WayneCorp
+          start_date: '2021-07-15'
+          percentage_type: 0.51
+          document_type: CPF
+          document_number: DL-7896829-7
+          document_issue_date: '2019-01-01'
+          document_expiration_date: '2019-01-01'
+          document_country: CAN
+          document_additional_info: Confirmed CPF with their driver's licence.
+        financial_profile:
+          economic_activities:
+          - is_main: true
+            code: '8599604'
+          informed_revenue:
+            frequency: MONTHLY
+            frequency_additional_info: Recently switched from weekly to monthly.
+            amount: 45391.89
+            currency: BRL
+            year: 2022
+          patrimony:
+            amount: 45391.89
+            currency: BRL
+            date: '2022-12-12'
+        financial_relation:
+          start_date: '2021-05-21T08:30:00Z'
+          product_services:
+          - CONTA_DEPOSITO_A_VISTA
+          procurators:
+          - type: LEGAL_REPRESENTATIVE
+            civil_name: Alfred Thaddeus Pennyworth
+            social_name: Alfred Pennyworth
+            document_number: '73677831148'
+          products:
+          - type: SAVINGS_ACCOUNT
+            subtype: CONJUNTA_SIMPLES
+            agency: '6272'
+            clearing_code: '001'
+            number: '24550245'
+            check_digit: '7'
+    OwnerOfdaIndividuaDetail:
+      summary: Individual OFDA Brazil
+      description: Example of an individual (OFDA Brazil).
+      value:
+        id: c749315b-eec2-435d-a458-06912878564f
+        link: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        internal_identification: 7e5838e4
+        collected_at: '2019-09-27T13:01:41.941Z'
+        created_at: '2022-02-09T08:45:50.406032Z'
+        display_name: Jack Oswald White
+        social_name: O Piadista
+        birth_date: '1988-07-15'
+        marital_status: SINGLE
+        marital_status_additional_info: It's complicated
+        gender: MALE
+        companies_id:
+        - '01773247000103'
+        is_local_resident: true
+        document_id:
+          document_type: CPF
+          document_number: 235578435-S
+        additional_documents:
+        - type: DRIVERS_LICENSE
+          type_additional_info: Learner's licence
+          number: DL-7896829-7
+          check_digit: '7'
+          issue_date: '2019-01-01'
+          expiration_date: '2019-01-01'
+          country_of_issuance: CAN
+          additional_info: The document has water damage
+        nationalities:
+        - info: CAN
+          documents:
+          - type: DRIVERS_LICENSE
+            number: DL-7896829-7
+            issue_date: '2019-01-01'
+            expiration_date: '2019-01-01'
+            country_of_issuance: CAN
+            additional_info: The document has water damage
+        email: johndoe@belvo.com
+        emails:
+        - is_main: true
+          email: homen_morcego@gmail.com
+        address: Carrer de la Llacuna, 162, 08018 Barcelona
+        addresses:
+        - is_main: true
+          address: Av Naburo Ykesaki, 1270
+          additional_info: In between two palm trees
+          district_name: CENTRO
+          town: Brasilia
+          town_code: '3550308'
+          state: SP
+          postcode: '17500001'
+          country_name: Brasil
+          country_code: BRA
+          latitude: '-23.5475000'
+          longitude: '-46.6361100'
+        phone_number: +52-XXX-XXX-XXXX
+        phone_numbers:
+        - is_main: true
+          type: MOBILE
+          additional_info: This is their work mobile number.
+          number: '29875132'
+          country_code: '351'
+          area_code: '21'
+          extension: '932'
+        filiations:
+        - type: MOTHER
+          civil_name: Bruce Wayne
+          social_name: The Dark Knight
+        financial_profile:
+          company_id: '50685362000135'
+          occupation_code: BRAZIL_OCCUPATION_CODE
+          occupation_description: '01'
+          informed_income:
+            frequency: MONTHLY
+            amount: 45391.89
+            currency: BRL
+            date: '2020-03-19'
+          patrimony:
+            amount: 45391.89
+            currency: BRL
+            year: 2020
+        financial_relation:
+          start_date: '2021-05-21T08:30:00Z'
+          product_services:
+          - CONTA_DEPOSITO_A_VISTA
+          product_services_additional_info: Joint account with Robin
+          procurators:
+          - type: LEGAL_REPRESENTATIVE
+            civil_name: Alfred Thaddeus Pennyworth
+            social_name: Alfred Pennyworth
+            document_number: '73677831148'
+          products:
+          - type: SAVINGS_ACCOUNT
+            subtype: CONJUNTA_SIMPLES
+            agency: '6272'
+            clearing_code: '001'
+            number: '24550245'
+            check_digit: '7'
+    OwnerOfdaIndividualPaginated:
+      summary: Individual OFDA Brazil
+      description: Example of an individual (OFDA Brazil).
+      value:
+        count: 108
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: c749315b-eec2-435d-a458-06912878564f
+          link: 30cb4806-6e00-48a4-91c9-ca55968576c8
+          internal_identification: 7e5838e4
+          collected_at: '2019-09-27T13:01:41.941Z'
+          created_at: '2022-02-09T08:45:50.406032Z'
+          display_name: Jack Oswald White
+          social_name: O Piadista
+          birth_date: '1988-07-15'
+          marital_status: SINGLE
+          marital_status_additional_info: It's complicated
+          gender: MALE
+          companies_id:
+          - '01773247000103'
+          is_local_resident: true
+          document_id:
+            document_type: CPF
+            document_number: 235578435-S
+          additional_documents:
+          - type: DRIVERS_LICENSE
+            type_additional_info: Learner's licence
+            number: DL-7896829-7
+            check_digit: '7'
+            issue_date: '2019-01-01'
+            expiration_date: '2019-01-01'
+            country_of_issuance: CAN
+            additional_info: The document has water damage
+          nationalities:
+          - info: CAN
+            documents:
+            - type: DRIVERS_LICENSE
+              number: DL-7896829-7
+              issue_date: '2019-01-01'
+              expiration_date: '2019-01-01'
+              country_of_issuance: CAN
+              additional_info: The document has water damage
+          email: johndoe@belvo.com
+          emails:
+          - is_main: true
+            email: homen_morcego@gmail.com
+          address: Carrer de la Llacuna, 162, 08018 Barcelona
+          addresses:
+          - is_main: true
+            address: Av Naburo Ykesaki, 1270
+            additional_info: In between two palm trees
+            district_name: CENTRO
+            town: Brasilia
+            town_code: '3550308'
+            state: SP
+            postcode: '17500001'
+            country_name: Brasil
+            country_code: BRA
+            latitude: '-23.5475000'
+            longitude: '-46.6361100'
+          phone_number: +52-XXX-XXX-XXXX
+          phone_numbers:
+          - is_main: true
+            type: MOBILE
+            additional_info: This is their work mobile number.
+            number: '29875132'
+            country_code: '351'
+            area_code: '21'
+            extension: '932'
+          filiations:
+          - type: MOTHER
+            civil_name: Bruce Wayne
+            social_name: The Dark Knight
+          financial_profile:
+            company_id: '50685362000135'
+            occupation_code: BRAZIL_OCCUPATION_CODE
+            occupation_description: '01'
+            informed_income:
+              frequency: MONTHLY
+              amount: 45391.89
+              currency: BRL
+              date: '2020-03-19'
+            patrimony:
+              amount: 45391.89
+              currency: BRL
+              year: 2020
+          financial_relation:
+            start_date: '2021-05-21T08:30:00Z'
+            product_services:
+            - CONTA_DEPOSITO_A_VISTA
+            product_services_additional_info: Joint account with Robin
+            procurators:
+            - type: LEGAL_REPRESENTATIVE
+              civil_name: Alfred Thaddeus Pennyworth
+              social_name: Alfred Pennyworth
+              document_number: '73677831148'
+            products:
+            - type: SAVINGS_ACCOUNT
+              subtype: CONJUNTA_SIMPLES
+              agency: '6272'
+              clearing_code: '001'
+              number: '24550245'
+              check_digit: '7'
+    OwnerOfdaIndividual:
+      summary: Individual OFDA Brazil
+      description: Example of an individual (OFDA Brazil).
+      value:
+      - id: c749315b-eec2-435d-a458-06912878564f
+        link: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        internal_identification: 7e5838e4
+        collected_at: '2019-09-27T13:01:41.941Z'
+        created_at: '2022-02-09T08:45:50.406032Z'
+        display_name: Jack Oswald White
+        social_name: O Piadista
+        birth_date: '1988-07-15'
+        marital_status: SINGLE
+        marital_status_additional_info: It's complicated
+        gender: MALE
+        companies_id:
+        - '01773247000103'
+        is_local_resident: true
+        document_id:
+          document_type: CPF
+          document_number: 235578435-S
+        additional_documents:
+        - type: DRIVERS_LICENSE
+          type_additional_info: Learner's licence
+          number: DL-7896829-7
+          check_digit: '7'
+          issue_date: '2019-01-01'
+          expiration_date: '2019-01-01'
+          country_of_issuance: CAN
+          additional_info: The document has water damage
+        nationalities:
+        - info: CAN
+          documents:
+          - type: DRIVERS_LICENSE
+            number: DL-7896829-7
+            issue_date: '2019-01-01'
+            expiration_date: '2019-01-01'
+            country_of_issuance: CAN
+            additional_info: The document has water damage
+        email: johndoe@belvo.com
+        emails:
+        - is_main: true
+          email: homen_morcego@gmail.com
+        address: Carrer de la Llacuna, 162, 08018 Barcelona
+        addresses:
+        - is_main: true
+          address: Av Naburo Ykesaki, 1270
+          additional_info: In between two palm trees
+          district_name: CENTRO
+          town: Brasilia
+          town_code: '3550308'
+          state: SP
+          postcode: '17500001'
+          country_name: Brasil
+          country_code: BRA
+          latitude: '-23.5475000'
+          longitude: '-46.6361100'
+        phone_number: +52-XXX-XXX-XXXX
+        phone_numbers:
+        - is_main: true
+          type: MOBILE
+          additional_info: This is their work mobile number.
+          number: '29875132'
+          country_code: '351'
+          area_code: '21'
+          extension: '932'
+        filiations:
+        - type: MOTHER
+          civil_name: Bruce Wayne
+          social_name: The Dark Knight
+        financial_profile:
+          company_id: '50685362000135'
+          occupation_code: BRAZIL_OCCUPATION_CODE
+          occupation_description: '01'
+          informed_income:
+            frequency: MONTHLY
+            amount: 45391.89
+            currency: BRL
+            date: '2020-03-19'
+          patrimony:
+            amount: 45391.89
+            currency: BRL
+            year: 2020
+        financial_relation:
+          start_date: '2021-05-21T08:30:00Z'
+          product_services:
+          - CONTA_DEPOSITO_A_VISTA
+          product_services_additional_info: Joint account with Robin
+          procurators:
+          - type: LEGAL_REPRESENTATIVE
+            civil_name: Alfred Thaddeus Pennyworth
+            social_name: Alfred Pennyworth
+            document_number: '73677831148'
+          products:
+          - type: SAVINGS_ACCOUNT
+            subtype: CONJUNTA_SIMPLES
+            agency: '6272'
+            clearing_code: '001'
+            number: '24550245'
+            check_digit: '7'
+    OwnerOfdaBusinessPaginated:
+      summary: Business OFDA Brazil
+      description: Example of a business (OFDA Brazil).
+      value:
+        count: 108
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: c749315b-eec2-435d-a458-06912878564f
+          link: 30cb4806-6e00-48a4-91c9-ca55968576c8
+          internal_identification: 7e5838e4
+          collected_at: '2019-09-27T13:01:41.941Z'
+          created_at: '2022-02-09T08:45:50.406032Z'
+          company_name: Wayne Enterprises
+          trade_name: WayneCorp
+          incorporation_date: '1988-07-15'
+          companies_id:
+          - '01773247000103'
+          document_id:
+            document_type: CPF
+            document_number: 235578435-S
+          additional_documents:
+          - type: EIN
+            number: DL-7896829-7
+            expiration_date: '2019-01-01'
+            country_of_issuance: CAN
+          email: johndoe@belvo.com
+          emails:
+          - is_main: true
+            email: homen_morcego@gmail.com
+          address: Carrer de la Llacuna, 162, 08018 Barcelona
+          addresses:
+          - is_main: true
+            address: Av Naburo Ykesaki, 1270
+            additional_info: In between two palm trees
+            district_name: CENTRO
+            town: Brasilia
+            town_code: '3550308'
+            state: SP
+            postcode: '17500001'
+            country_name: Brasil
+            country_code: BRA
+            latitude: '-23.5475000'
+            longitude: '-46.6361100'
+          phone_number: +52-XXX-XXX-XXXX
+          phone_numbers:
+          - is_main: true
+            type: MOBILE
+            additional_info: This is their work mobile number.
+            number: '29875132'
+            country_code: '351'
+            area_code: '21'
+            extension: '932'
+          parties:
+          - person_type: INDIVIDUAL
+            type: MEMBER
+            display_name: Jack Oswald White
+            social_name: O Piadista
+            company_name: Wayne Enterprises
+            trade_name: WayneCorp
+            start_date: '2021-07-15'
+            percentage_type: 0.51
+            document_type: CPF
+            document_number: DL-7896829-7
+            document_issue_date: '2019-01-01'
+            document_expiration_date: '2019-01-01'
+            document_country: CAN
+            document_additional_info: Confirmed CPF with their driver's licence.
+          financial_profile:
+            economic_activities:
+            - is_main: true
+              code: '8599604'
+            informed_revenue:
+              frequency: MONTHLY
+              frequency_additional_info: Recently switched from weekly to monthly.
+              amount: 45391.89
+              currency: BRL
+              year: 2022
+            patrimony:
+              amount: 45391.89
+              currency: BRL
+              date: '2022-12-12'
+          financial_relation:
+            start_date: '2021-05-21T08:30:00Z'
+            product_services:
+            - CONTA_DEPOSITO_A_VISTA
+            procurators:
+            - type: LEGAL_REPRESENTATIVE
+              civil_name: Alfred Thaddeus Pennyworth
+              social_name: Alfred Pennyworth
+              document_number: '73677831148'
+            products:
+            - type: SAVINGS_ACCOUNT
+              subtype: CONJUNTA_SIMPLES
+              agency: '6272'
+              clearing_code: '001'
+              number: '24550245'
+              check_digit: '7'
+    OwnerOfdaBusiness:
+      summary: Business OFDA Brazil
+      description: Example of a business (OFDA Brazil).
+      value:
+      - id: c749315b-eec2-435d-a458-06912878564f
+        link: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        internal_identification: 7e5838e4
+        collected_at: '2019-09-27T13:01:41.941Z'
+        created_at: '2022-02-09T08:45:50.406032Z'
+        company_name: Wayne Enterprises
+        trade_name: WayneCorp
+        incorporation_date: '1988-07-15'
+        companies_id:
+        - '01773247000103'
+        document_id:
+          document_type: CPF
+          document_number: 235578435-S
+        additional_documents:
+        - type: EIN
+          number: DL-7896829-7
+          expiration_date: '2019-01-01'
+          country_of_issuance: CAN
+        email: johndoe@belvo.com
+        emails:
+        - is_main: true
+          email: homen_morcego@gmail.com
+        address: Carrer de la Llacuna, 162, 08018 Barcelona
+        addresses:
+        - is_main: true
+          address: Av Naburo Ykesaki, 1270
+          additional_info: In between two palm trees
+          district_name: CENTRO
+          town: Brasilia
+          town_code: '3550308'
+          state: SP
+          postcode: '17500001'
+          country_name: Brasil
+          country_code: BRA
+          latitude: '-23.5475000'
+          longitude: '-46.6361100'
+        phone_number: +52-XXX-XXX-XXXX
+        phone_numbers:
+        - is_main: true
+          type: MOBILE
+          additional_info: This is their work mobile number.
+          number: '29875132'
+          country_code: '351'
+          area_code: '21'
+          extension: '932'
+        parties:
+        - person_type: INDIVIDUAL
+          type: MEMBER
+          display_name: Jack Oswald White
+          social_name: O Piadista
+          company_name: Wayne Enterprises
+          trade_name: WayneCorp
+          start_date: '2021-07-15'
+          percentage_type: 0.51
+          document_type: CPF
+          document_number: DL-7896829-7
+          document_issue_date: '2019-01-01'
+          document_expiration_date: '2019-01-01'
+          document_country: CAN
+          document_additional_info: Confirmed CPF with their driver's licence.
+        financial_profile:
+          economic_activities:
+          - is_main: true
+            code: '8599604'
+          informed_revenue:
+            frequency: MONTHLY
+            frequency_additional_info: Recently switched from weekly to monthly.
+            amount: 45391.89
+            currency: BRL
+            year: 2022
+          patrimony:
+            amount: 45391.89
+            currency: BRL
+            date: '2022-12-12'
+        financial_relation:
+          start_date: '2021-05-21T08:30:00Z'
+          product_services:
+          - CONTA_DEPOSITO_A_VISTA
+          procurators:
+          - type: LEGAL_REPRESENTATIVE
+            civil_name: Alfred Thaddeus Pennyworth
+            social_name: Alfred Pennyworth
+            document_number: '73677831148'
+          products:
+          - type: SAVINGS_ACCOUNT
+            subtype: CONJUNTA_SIMPLES
+            agency: '6272'
+            clearing_code: '001'
+            number: '24550245'
+            check_digit: '7'
+  responses:
+    428_token_required_error:
+      description: MFA Token Required
+      content:
+        application/json:
+          schema:
             type: array
             items:
-              $ref: '#/components/schemas/Owner'
+              $ref: '#/components/schemas/TokenRequiredResponse'
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
   securitySchemes:
     basicAuth:
       type: http
       scheme: basic
-      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

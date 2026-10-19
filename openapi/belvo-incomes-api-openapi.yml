@@ -1,184 +1,1515 @@
 openapi: 3.2.0
 info:
-  title: Belvo Incomes API
-  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
-  termsOfService: https://belvo.com/terms-and-conditions/
+  title: Belvo API Docs Incomes API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
   contact:
-    name: Belvo Support
-    email: support@belvo.com
+    name: Need help?
     url: https://developers.belvo.com
-  version: '1.0'
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
 servers:
-- url: https://api.belvo.com
-  description: Production
 - url: https://sandbox.belvo.com
   description: Sandbox
 security:
 - basicAuth: []
 tags:
 - name: Incomes
-  description: Income insights derived from account activity.
+  description: 'Use the Incomes endpoint to gather insights on an account''s income sources for the past 365 days. The endpoint is particularly useful when you want to verify a person''s income.
+
+
+    > 📘 Info
+
+    >
+
+    > The incomes resource is **only** available for Checking and Savings accounts associated with banking links.'
 paths:
   /api/incomes/:
     get:
-      operationId: listIncomes
       tags:
       - Incomes
-      summary: List all incomes
+      operationId: ListIncomes
+      summary: List incomes
+      description: '## ▶️ Usage
+
+
+        With the List Incomes method, you can:
+
+
+        1. List incomes related to a specific `link.id` (using the `link` query parameter).
+
+        2. Get the details of a specific `income.id` (using the `id` query parameter).
+
+        3. **[Not Recommended]** List all incomes related to your Belvo account (without using any query parameters).
+
+
+        ## 📖 Pagination
+
+
+        This method returns a paginated response (default: 100 items per page). You can use the `page_size` query parameter to increase the number of items returned to a maximum of 1000 items. You can use the `page` query parameter to navigate through the results. For more details on how to navigate Belvo''s paginated responses, see our Pagination Tips article.
+
+
+        ## 🔦 Filtering Responses
+
+
+        Please see the query list below for a list of fields that you can filter your responses by. For more information on how to use filters, see our Filtering responses article.'
       parameters:
-      - $ref: '#/components/parameters/PageSize'
-      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/link'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/link__in'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/account'
+      - $ref: '#/components/parameters/account__in'
       responses:
         '200':
-          description: A paginated list of income records.
+          description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedIncomes'
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of income objects.
+                      items:
+                        $ref: '#/components/schemas/Income'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
     post:
-      operationId: retrieveIncomes
       tags:
       - Incomes
-      summary: Retrieve incomes for a Link
+      operationId: RetrieveIncome
+      summary: Retrieve incomes for a link
+      description: 'Retrieve income insights for checking and savings accounts from a
+
+        specific link. You can receive insights for a period of up to 365 days,
+
+        depending on the transaction history available for each institution.'
+      parameters:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RetrieveRequest'
+              type: object
+              required:
+              - link
+              properties:
+                link:
+                  $ref: '#/components/schemas/link_request'
+                allowed_income_types:
+                  type: array
+                  description: The categories of the incomes you want to get information for.
+                  items:
+                    $ref: '#/components/schemas/EnumInvoiceAllowedIncomeTypesRequest'
+                minimum_confidence_level:
+                  $ref: '#/components/schemas/EnumIncomeMinimumConfidenceLevelRequest'
+                date_from:
+                  $ref: '#/components/schemas/date_from'
+                date_to:
+                  $ref: '#/components/schemas/date_to'
+                token:
+                  $ref: '#/components/schemas/token'
+                save_data:
+                  $ref: '#/components/schemas/save_data'
       responses:
         '200':
-          description: The income insights found for the Link.
+          description: Ok (when `save_data=false`)
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Income'
+                $ref: '#/components/schemas/Income'
         '201':
-          description: The income insights were retrieved.
+          description: Created (when `save_data=true`)
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Income'
-components:
-  parameters:
-    Page:
-      name: page
-      in: query
-      description: The page number of results to return.
-      schema:
-        type: integer
-        default: 1
-    PageSize:
-      name: page_size
-      in: query
-      description: Number of items per page (max 1000).
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-  schemas:
-    RetrieveRequest:
-      type: object
-      required:
-      - link
-      properties:
-        link:
+                $ref: '#/components/schemas/Income'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/incomes/{id}/:
+    get:
+      tags:
+      - Incomes
+      operationId: DetailIncome
+      summary: Get an income's details
+      description: Get the details of a specific income.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `income.id` you want to get detailed information about.
+        schema:
           type: string
           format: uuid
-          description: The Link UUID to retrieve data for.
-        save_data:
-          type: boolean
-          default: true
-    PaginatedIncomes:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Income'
-    Pagination:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Income'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    delete:
+      tags:
+      - Incomes
+      operationId: DestroyIncomes
+      summary: Delete an income
+      description: Delete a specific income from your Belvo account.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: the `income.id` that you want to delete
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  parameters:
+    fields:
+      name: fields
+      in: query
+      description: Return only the specified fields in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    omit:
+      name: omit
+      in: query
+      description: Omit certain fields from being returned in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    account:
+      name: account
+      in: query
+      description: 'The `account.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding either the `link.id` or the `account.id` filters in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    link:
+      name: link
+      in: query
+      description: 'The `link.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding the `link.id` filter in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    account__in:
+      name: account__in
+      in: query
+      description: Return results only for these `account.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 85b77707-90ef-46fd-9059-5a757f24247a
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    link__in:
+      name: link__in
+      in: query
+      description: Return results only for these `link.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 5722d0ba-69d7-42dc-8ff5-33767b83c5d6
+  schemas:
+    EnumIncomeStreamFrequency:
+      type: string
+      enum:
+      - MONTHLY
+      - FORTNIGHTLY
+      - WEEKLY
+      - IRREGULAR
+      - SINGLE
+      description: "How often the income is received.\n\nWe return one of the following enum values:\n\n  - `MONTHLY` - For transactions that occur once per month.\n  - `FORTNIGHTLY` - For transactions that occur once every two weeks.\n  - `WEEKLY` - For transactions that occur once per week.\n  - `IRREGULAR` - For transactions that do not occur on a defined frequency pattern.\n  - `SINGLE` - For transactions that occur only once and do not repeat.\n"
+      example: MONTHLY
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    save_data:
+      type: boolean
+      default: true
+      description: 'Indicates whether or not to persist the data in Belvo. By default, this is set to `true` and we return a 201 Created response.
+
+
+        When set to `false`, the data won''t be persisted and we return a 200 OK response.
+
+        '
+      example: true
+    EnumIncomeStreamType:
+      type: string
+      enum:
+      - SALARY
+      - GOVERNMENT
+      - INTEREST
+      - RENT
+      - RETIREMENT
+      - FREELANCE
+      - ALTERNATIVE_INCOME
+      - TRANSFER
+      - DEPOSIT
+      - UNKNOWN
+      description: "The type of income used in the calculations.\n\nWe return one of the following enum values:\n\n  - `SALARY`\n  - `GOVERNMENT`\n  - `INTEREST`\n  - `RENT`\n  - `RETIREMENT`\n  - `FREELANCE`\n  - `ALTERNATIVE_INCOME`\n  - `TRANSFER`\n  - `DEPOSIT`\n  - `UNKNOWN`\n"
+      example: SALARY
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    IncomeStreamsBody:
+      type: object
+      required:
+      - account_id
+      - income_type
+      - frequency
+      - monthly_average
+      - average_income_amount
+      - last_income_amount
+      - currency
+      - last_income_description
+      - last_income_date
+      - stability
+      - regularity
+      - trend
+      - lookback_periods
+      - full_periods
+      - periods_with_income
+      - number_of_incomes
+      - confidence
+      description: 'A list of income streams for the account.
+
+
+        For each income stream, we provide additional insights such as:
+
+        - Frequency, stability, and confidence level of the income transactions.
+
+        - Key metrics about the transaction amounts.
+
+        ℹ️ If no income sources are found, we return an empty array.
+
+        '
+      properties:
+        account_id:
+          type: string
+          description: Unique ID for the bank account to be verified for income streams.
+          example: EBACA-89077589
+        income_type:
+          $ref: '#/components/schemas/EnumIncomeStreamType'
+        frequency:
+          $ref: '#/components/schemas/EnumIncomeStreamFrequency'
+        monthly_average:
+          type: number
+          format: float
+          description: 'The average amount of income received from the source over `periods_with_income`.
+
+            '
+          example: 2500
+        monthly_median:
+          type: number
+          format: float
+          description: 'The median amount of income received from the source over within a natural month.
+
+            '
+          example: 2200
+        average_income_amount:
+          type: number
+          format: float
+          description: 'The average income transaction amount from the source.
+
+            '
+          example: 2500
+        last_income_amount:
+          type: number
+          format: float
+          description: 'The amount of the most recent income received from the source.
+
+            '
+          example: 2500
+        currency:
+          type: string
+          description: "The three-letter currency code of the income. For example:\n\n  • \U0001F1E7\U0001F1F7 BRL (Brazilian Real)\n  • \U0001F1E8\U0001F1F4 COP (Colombian Peso)\n  • \U0001F1F2\U0001F1FD MXN (Mexican Peso)\n  \n"
+          example: BRL
+        last_income_description:
+          type: string
+          description: "The description of the most recent income from the stream. \n"
+          example: Salário
+        last_income_date:
+          type: string
+          format: date
+          description: 'The date when the most recent income from the stream was received, in `YYYY-MM-DD` format.
+
+            '
+          example: '2023-02-09'
+        stability:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The stability of the income based on its amount, with a range from 0 to 1, where 1 represents perfect stability.
+
+
+            **Note:** For transactions with `frequency`=`SINGLE`, this value returns `null`.
+
+            '
+          example: 1
+        regularity:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The regularity of the income based in its frequency, with a range from 0 to 1, where 1 represents perfect regularity.
+
+
+            **Note:** For transactions with `frequency`=`SINGLE`, this value returns `null`.
+
+            '
+          example: 1
+        trend:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: "The income trend during a period of time calculated between last income and first income received, where:\n  - a negative float means that the income trend is decreasing during the time period.\n  - a positive float means that the income trend is increasing during the time period.\n\n**Note:** For transactions with `frequency`=`SINGLE`, this value returns `null`.\n"
+          example: 0
+        lookback_periods:
+          type: integer
+          format: int32
+          description: 'Number of period units (based on *rolling months*) used to generate insights and calculations.
+
+
+            **Note:** A *rolling month* is a period of 30 days. For example, 2023-01-15 to 2023-02-15.
+
+            '
+          example: 9
+        full_periods:
+          type: integer
+          format: int32
+          description: 'Number of period units (based on *rolling months*) with data to perform calculations.
+
+
+            **Note:** A *rolling month* is a period of 30 days. For example, 2023-01-15 to 2023-02-15.
+
+            '
+          example: 9
+        periods_with_income:
+          type: integer
+          format: int32
+          description: 'Number of period units (based on *rolling months*) with at least one income available.
+
+
+            **Note:** A *rolling month* is a period of 30 days. For example, 2023-01-15 to 2023-02-15.
+
+            '
+          example: 9
+        number_of_incomes:
+          type: integer
+          format: int32
+          description: 'Number of income transactions over the `lookback_periods`.
+
+            '
+          example: 9
+        confidence:
+          $ref: '#/components/schemas/EnumIncomeStreamConfidence'
+    EnumIncomeStreamConfidence:
+      type: string
+      enum:
+      - HIGH
+      - MEDIUM
+      - LOW
+      description: "Belvo's level of confidence for future incomes.\n\nWe return one of the following enum values:\n\n  - `HIGH`\n  - `MEDIUM`\n  - `LOW`\n"
+      example: HIGH
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    date_from:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date from which you want to start getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_from` cannot be greater than `date_to`.
+
+        '
+      example: '2020-08-05'
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumIncomeMinimumConfidenceLevelRequest:
+      type: string
+      enum:
+      - HIGH
+      - MEDIUM
+      - LOW
+      description: "The minimum confidence level of the incomes you want to get information for.\n\nYou can send through one of the following values:\n\n  - `HIGH`\n  - `MEDIUM`\n  - `LOW`\n"
+      example: HIGH
+    link_request:
+      type: string
+      format: uuid
+      description: The `link.id` you want to retrieve information for.
+      example: c81a1dea-6dd6-4999-8b9f-541ee8197058
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    token:
+      type: string
+      description: The MFA token generated by the institution which is required to continue a session.
+      example: 1234ab
+    EnumInvoiceAllowedIncomeTypesRequest:
+      type: string
+      enum:
+      - SALARY
+      - GOVERNMENT
+      - INTEREST
+      - RENT
+      - RETIREMENT
+      - FREELANCE
+      - ALTERNATIVE_INCOME
+      - TRANSFER
+      - DEPOSIT
+      - UNKNOWN
+      description: "The categories of the incomes you want to get information for. \n\nYou can send through one or more of the following values:\n  - `SALARY`\n  - `GOVERNMENT`\n  - `INTEREST`\n  - `RENT`\n  - `RETIREMENT`\n  - `FREELANCE`\n  - `ALTERNATIVE_INCOME`\n  - `TRANSFER`\n  - `DEPOSIT`\n  - `UNKNOWN`\n"
+      example: SALARY
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumIncomeSourceType:
+      type: string
+      enum:
+      - BANK
+      description: "The type of source we generate income insights from.\nWe return one of the following enum values:\n\n  - `BANK`\n"
+      example: BANK
+    link:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: The `link.id` the data belongs to.
+      example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    Income:
+      type: object
+      description: Income insights
+      title: Income Object
+      x-tags:
+      - Incomes
+      required:
+      - id
+      - link
+      - created_at
+      - income_streams
+      - income_source_type
+      - first_transaction_date
+      - last_transaction_date
+      - best_working_day_to_charge
+      - good_working_days_to_charge
+      - number_of_income_streams
+      - monthly_average
+      - monthly_average_regular
+      - monthly_average_irregular
+      - monthly_average_low_confidence
+      - monthly_average_medium_confidence
+      - monthly_average_high_confidence
+      - total_income_amount
+      - total_regular_income_amount
+      - total_low_confidence
+      - total_medium_confidence
+      - total_high_confidence
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        link:
+          $ref: '#/components/schemas/link'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        income_streams:
+          type: array
+          description: An array of enriched income stream objects.
+          items:
+            $ref: '#/components/schemas/IncomeStreamsBody'
+        income_source_type:
+          $ref: '#/components/schemas/EnumIncomeSourceType'
+        first_transaction_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'The date when the first transaction occurred, in `YYYY-MM-DD` format.
+
+            '
+          example: '2022-06-09'
+        last_transaction_date:
+          type: string
+          format: date
+          description: 'The date when when the last transaction occurred, in `YYYY-MM-DD` format.
+
+            '
+          example: '2023-02-09'
+        best_working_day_to_charge:
+          type: integer
+          format: int32
+          description: 'The best working day of the month to charge the user.
+
+            '
+          example: 22
+        good_working_days_to_charge:
+          type: array
+          minItems: 0
+          maxItems: 3
+          items:
+            type: integer
+            format: int32
+          description: 'Additional working days that have been identified as good days to charge the user.
+
+            '
+          example:
+          - 17
+          - 7
+          - 2
+        number_of_income_streams:
+          type: integer
+          format: int32
+          description: 'Number of total income streams analized.
+
+            '
+          example: 1
+        monthly_average:
+          type: number
+          format: float
+          description: 'Average amount of income received per month across all the accounts for the specific user.
+
+            '
+          example: 2500
+        monthly_average_regular:
+          type: number
+          format: float
+          description: 'Average amount of regular income (with a frequency of `MONTHLY`, `FORTNIGHTLY`, or `WEEKLY`) received per month for the specific user.
+
+            '
+          example: 2500
+        monthly_average_irregular:
+          type: number
+          format: float
+          description: 'Average amount of irregular income (with a frequency of `SINGLE` or `IRREGULAR`) received per month for the specific user.
+
+            '
+          example: 0
+        monthly_average_low_confidence:
+          type: number
+          format: float
+          description: 'Average amount of income received per month for the specific user with `LOW` confidence.
+
+            '
+          example: 0
+        monthly_average_medium_confidence:
+          type: number
+          format: float
+          description: 'Average amount of income received per month for the specific user with `MEDIUM` confidence.
+
+            '
+          example: 0
+        monthly_average_high_confidence:
+          type: number
+          format: float
+          description: 'Average amount of income received per month for the specific user with `HIGH` confidence.
+
+            '
+          example: 2500
+        total_income_amount:
+          type: number
+          format: float
+          description: 'Total amount of all income received for the specific user.
+
+            '
+          example: 22500
+        total_regular_income_amount:
+          type: number
+          format: float
+          description: 'Total amount of regular income (with a frequency of `MONTHLY`, `FORTNIGHTLY`, `WEEKLY`) for the specific user.
+
+            '
+          example: 22500
+        total_irregular_income_amount:
+          type: number
+          format: float
+          description: 'Total amount of irregular income (with a frequency of `SINGLE` or `IRREGULAR`) for the specific user.
+
+            '
+          example: 0
+        total_low_confidence:
+          type: number
+          format: float
+          description: 'Total amount of income for the specific user with `LOW` confidence.
+
+            '
+          example: 0
+        total_medium_confidence:
+          type: number
+          format: float
+          description: 'Total amount of income for the specific user with `MEDIUM` confidence.
+
+            '
+          example: 0
+        total_high_confidence:
+          type: number
+          format: float
+          description: 'Total amount of income for the specific user with `HIGH` confidence.
+
+            '
+          example: 22500
+    date_to:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date you want to stop getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_to` cannot be greater than today''s date (in other words, no future dates).
+
+        '
+      example: '2020-10-05'
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
       type: object
       properties:
         count:
           type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
         next:
           type:
           - string
           - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
         previous:
           type:
           - string
           - 'null'
-    Income:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        account:
-          $ref: '#/components/schemas/Account'
-        currency:
-          type: string
-        income_summary:
-          type: object
-          properties:
-            monthly_average:
-              type: number
-            number_of_income_streams:
-              type: integer
-            number_of_income_transactions:
-              type: integer
-            regular_income:
-              type: boolean
-        collected_at:
-          type: string
-          format: date-time
-    Account:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        link:
-          type: string
-          format: uuid
-        institution:
-          type: object
-          properties:
-            name:
-              type: string
-            type:
-              type: string
-        category:
-          type: string
-          example: CHECKING_ACCOUNT
-        type:
-          type: string
-        name:
-          type: string
-        number:
-          type: string
-        currency:
-          type: string
-          example: MXN
-        balance:
-          type: object
-          properties:
-            current:
-              type: number
-            available:
-              type: number
-        created_at:
-          type: string
-          format: date-time
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+  responses:
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
   securitySchemes:
     basicAuth:
       type: http
       scheme: basic
-      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

@@ -322,51 +322,6 @@ apis:
     url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
   - type: Review
     url: review.yml
-- aid: belvo:belvo-payments-brazil-api
-  name: Belvo Payments (Brazil) API
-  description: Pix / Open Finance payment initiation in Brazil.
-  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
-  baseURL: https://api.belvo.com/api
-  tags:
-  - Payments (Brazil)
-  properties:
-  - type: OpenAPI
-    url: openapi/belvo-payments-brazil-api-openapi.yml
-  - type: Documentation
-    url: https://developers.belvo.com/docs/links
-  - type: APIReference
-    url: https://developers.belvo.com/apis/belvoopenapispec/links
-  - type: PostmanCollection
-    url: collections/belvo.postman_collection.json
-  - type: OpenCollection
-    url: collections/belvo.opencollection.json
-  - type: Documentation
-    url: https://developers.belvo.com/docs/accounts
-  - type: APIReference
-    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
-  - type: Documentation
-    url: https://developers.belvo.com/docs/transactions
-  - type: APIReference
-    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
-  - type: Documentation
-    url: https://developers.belvo.com/docs/owners
-  - type: APIReference
-    url: https://developers.belvo.com/apis/belvoopenapispec/owners
-  - type: Documentation
-    url: https://developers.belvo.com/docs/institutions
-  - type: APIReference
-    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
-  - type: Documentation
-    url: >-
-      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
-  - type: APIReference
-    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
-  - type: Documentation
-    url: https://developers.belvo.com/docs/webhooks
-  - type: APIReference
-    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
-  - type: Review
-    url: review.yml
 - aid: belvo:belvo-recurring-expenses-api
   name: Belvo Recurring Expenses API
   description: Regular subscription and utility payments.
@@ -459,18 +414,1419 @@ apis:
     url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
   - type: Review
     url: review.yml
-- aid: belvo:belvo-webhooks-api
-  name: Belvo Webhooks API
-  description: Asynchronous event notifications.
+- aid: belvo:belvo-bank-accounts-brazil-api
+  name: Belvo Bank Accounts (Brazil) API
+  description: >-
+    To receive inflow payments to your organization's bank account, you must register the bank accounts
+    (individual and business) using Belvo's Payments API.
+
+
+    - **Individual** bank accounts must be created for each payer (your customer).
+
+    - **Business** bank accounts need to be created for the beneficiary of the payment (your organization).
+
+
+    {% admonition type="info" name="Resource Versioning" %}
+      This endpoint supports resource-level versioning. By including the header `X-Belvo-API-Resource-Version:
+    Payments-BR.V2`, you can access the latest (V2) request and response formats. If the header is not
+    provided, the default (V1) format will be used. See the API documentation for details on the differences
+    between versions.
+    {% /admonition %}
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
-  - Webhook
-  tags_raw:
-  - Webhooks
+  - Bank Accounts (Brazil)
   properties:
   - type: OpenAPI
-    url: openapi/belvo-webhooks-api-openapi.yml
+    url: openapi/belvo-bank-accounts-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-bills-api
+  name: Belvo Bills API
+  description: A **bill** refers to the credit card bill a user receives for a given account.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Bills
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-bills-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-biometric-payments-widget-access-token-brazil-api
+  name: Belvo Biometric payments Widget Access Token (Brazil) API
+  description: >-
+    Use the Biometric payments widget token request to create an access token for Biometric payments.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Biometric payments Widget Access Token (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-biometric-payments-widget-access-token-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-charges-brazil-api
+  name: Belvo Charges (Brazil) API
+  description: >-
+    You can use the Charges resource to get details over a single charge or to list all charges associated
+    with a payment intent.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Charges (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-charges-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-consents-api
+  name: Belvo Consents API
+  description: >-
+    A consent is a permission given by the end user to access their financial data in the Open Finance
+    Network in Brazil.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Consents
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-consents-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-current-employments-mexico-api
+  name: Belvo Current Employments Mexico API
+  description: >-
+    The Current Employments resource provides real-time access to the current employment status of individuals
+    in Mexico. This resource offers detailed information about whether an individual is currently employed
+    or unemployed, along with their active employment records.
+
+
+    ## Key Features
+
+
+    - **Real-time Employment Status**: Get up-to-date information about an individual's current employment
+    situation
+
+    - **Current vs Historical**: Unlike Employment Records, this resource focuses specifically on current
+    employment status rather than historical employment data
+
+    - **Comprehensive Employment Details**: When employed, receive detailed information including employer
+    details, salary information, and employment duration
+
+    - **Unemployment Status**: Clear indication when an individual is currently unemployed
+
+
+    When an individual is **employed**, you will receive:
+
+    - Personal identification data (name, birth date, NSS, CURP)
+
+    - Current employment status
+
+    - Employer information (name, RFC, ID)
+
+    - Employment location (state)
+
+    - Duration of employment (days employed)
+
+    - Salary information (base and monthly salary)
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Current Employments Mexico
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-current-employments-mexico-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-customers-brazil-api
+  name: Belvo Customers (Brazil) API
+  description: >-
+    A **customer** is the payer that's going to push funds into your bank account. You need to create
+    a customer in order to receive inflow payments to your organization's bank account.
+
+
+    {% admonition type="info" name="Resource Versioning" %}
+      This endpoint supports resource-level versioning. By including the header `X-Belvo-API-Resource-Version:
+    Payments-BR.V2`, you can access the latest (V2) request and response formats. If the header is not
+    provided, the default (V1) format will be used. See the API documentation for details on the differences
+    between versions.
+    {% /admonition %}
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Customers (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-customers-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-debt-reports-chile-api
+  name: Belvo Debt Reports Chile API
+  description: The Debt Reports Chile API from Belvo — 2 operation(s) for debt reports chile.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Debt Reports Chile
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-debt-reports-chile-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-employment-metrics-api
+  name: Belvo Employment Metrics API
+  description: The Employment Metrics API from Belvo — 2 operation(s) for employment metrics.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Employment Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-employment-metrics-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-employment-records-mexico-api
+  name: Belvo Employment Records Mexico API
+  description: >-
+    Our employment records resource for Mexico lets you get a comprehensive view of your user’s current
+    social security contributions and employment history.
+
+
+    With Belvo's employment records resource for Mexico, you can access information about your user's
+    current social security contributions and employment history. For the each user, we return the:
+
+
+    - personal data
+
+    - work history
+
+    - historical and current daily base salary
+
+    - and more!
+
+
+    At the moment, the employment records resource is available for:
+
+
+    - 🇲🇽 Mexico (IMSS)
+
+    - 🇲🇽 Mexico (ISSSTE)
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Employment Records Mexico
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-employment-records-mexico-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-employments-brazil-api
+  name: Belvo Employments Brazil API
+  description: >-
+    Our employments resource for Brazil lets you get a comprehensive view of your user's current employment
+    history and salary information.
+
+
+    For each user, we return the:
+
+
+    - work history (including occupations and employer data)
+
+    - historical and current salary information (per employer)
+
+
+    At the moment, the employments resource is available for:
+
+
+    - 🇧🇷 Brazil (INSS)
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Employments Brazil
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-employments-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-enrollments-brazil-api
+  name: Belvo Enrollments (Brazil) API
+  description: The Enrollments (Brazil) API from Belvo — 3 operation(s) for enrollments (brazil).
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Enrollments (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-enrollments-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-exchanges-api
+  name: Belvo Exchanges API
+  description: >-
+    An exchange is a currency exchange operation in the Brazilian Open Finance Network. The resource contains
+    details of foreign exchange operations, including exchange rates, amounts in local and foreign currencies,
+    and settlement information. Each exchange operation can have associated history events that record
+    any modifications to the original contract.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Exchanges
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-exchanges-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-financial-statements-api
+  name: Belvo Financial Statements API
+  description: The Financial Statements API from Belvo — 2 operation(s) for financial statements.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Financial Statements
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-financial-statements-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-investment-transactions-brazil-api
+  name: Belvo Investment Transactions Brazil API
+  description: >-
+    The Investment Transactions Brazil API from Belvo — 2 operation(s) for investment transactions brazil.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Investment Transactions Brazil
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-investment-transactions-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-investments-brazil-api
+  name: Belvo Investments Brazil API
+  description: The Investments Brazil API from Belvo — 2 operation(s) for investments brazil.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Investments Brazil
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-investments-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-invoices-api
+  name: Belvo Invoices API
+  description: The Invoices API from Belvo — 2 operation(s) for invoices.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-invoices-chile-api
+  name: Belvo Invoices Chile API
+  description: The Invoices Chile API from Belvo — 2 operation(s) for invoices chile.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Invoices Chile
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-invoices-chile-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-payment-authorizations-brazil-api
+  name: Belvo Payment Authorizations (Brazil) API
+  description: >-
+    A Payment Authorization is the consent that your user gives you to charge (debit money from) their
+    accounts. You need to perform one Payment Authorization per ‘contract’ (for example, if your company
+    does both electricity and water but they are billed separately, then you will create two separate
+    Payment Authorizations).
+
+
+    Once the user confirms the authorization, you will need to listen for a a `PAYMENT_AUTHORIZATION`
+    webhook with the status set to `AUTHORIZED`. Once you receive this webhook, the authorization process
+    is complete, and you will be able to charge your user.
+
+
+    {% admonition type="info" name="What is a charge?" %}
+
+    A **charge** represents the individual payment (debit) that your customer will make.
+
+    {% /admonition %}
+
+
+    {% admonition type="danger" name="Version Header" %}
+      The Payment Authorization resource requires that you send through the `X-Belvo-API-Resource-Version`
+    header set to `Payments-BR.V2`.
+    {% /admonition %}
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Payment Authorizations (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-payment-authorizations-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-payment-institutions-brazil-api
+  name: Belvo Payment Institutions (Brazil) API
+  description: >-
+    A **payment institution** is an entity that Belvo can access information from. You can see a complete
+    list of institutions available for payments by making a List request to this endpoint.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Payment Institutions (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-payment-institutions-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-payment-intents-brazil-api
+  name: Belvo Payment Intents (Brazil) API
+  description: >-
+    A **payment intent** is a single point of access to create payments using any payment method offered
+    by Belvo.
+
+
+    A payment intent captures all payment information (such as the amount to be charged, the description
+    of the payment, the provider, and so on) and guides your customers through the payment flow.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Payment Intents (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-payment-intents-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-payment-transactions-brazil-api
+  name: Belvo Payment Transactions (Brazil) API
+  description: >-
+    Each time you receive an inflow payment from your customer, a **transaction** is created in the Belvo
+    database.
+
+
+    You can use the Payment Transactions resource in order to get useful information about a transaction
+    as well as the specific charge associated with it.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Payment Transactions (Brazil)
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-payment-transactions-brazil-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-risk-insights-api
+  name: Belvo Risk Insights API
+  description: The Risk Insights API from Belvo — 2 operation(s) for risk insights.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Risk Insights
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-risk-insights-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-tax-compliance-status-api
+  name: Belvo Tax compliance status API
+  description: The Tax compliance status API from Belvo — 2 operation(s) for tax compliance status.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Tax compliance status
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-tax-compliance-status-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-tax-retentions-api
+  name: Belvo Tax retentions API
+  description: The Tax retentions API from Belvo — 2 operation(s) for tax retentions.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Tax retentions
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-tax-retentions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-tax-returns-api
+  name: Belvo Tax returns API
+  description: The Tax returns API from Belvo — 2 operation(s) for tax returns.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Tax returns
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-tax-returns-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-tax-status-api
+  name: Belvo Tax status API
+  description: The Tax status API from Belvo — 2 operation(s) for tax status.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Tax status
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-tax-status-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-tax-status-chile-api
+  name: Belvo Tax Status Chile API
+  description: The Tax Status Chile API from Belvo — 2 operation(s) for tax status chile.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Tax Status Chile
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-tax-status-chile-api-openapi.yml
+  - type: Documentation
+    url: https://developers.belvo.com/docs/links
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/links
+  - type: PostmanCollection
+    url: collections/belvo.postman_collection.json
+  - type: OpenCollection
+    url: collections/belvo.opencollection.json
+  - type: Documentation
+    url: https://developers.belvo.com/docs/accounts
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/accounts
+  - type: Documentation
+    url: https://developers.belvo.com/docs/transactions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/transactions
+  - type: Documentation
+    url: https://developers.belvo.com/docs/owners
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/owners
+  - type: Documentation
+    url: https://developers.belvo.com/docs/institutions
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/institutions
+  - type: Documentation
+    url: >-
+      https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide
+  - type: APIReference
+    url: https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)
+  - type: Documentation
+    url: https://developers.belvo.com/docs/webhooks
+  - type: APIReference
+    url: https://developers.belvo.com/developer_resources/resources-webhooks-aggregation
+  - type: Review
+    url: review.yml
+- aid: belvo:belvo-widget-access-token-api
+  name: Belvo Widget Access Token API
+  description: The Widget Access Token API from Belvo — 1 operation(s) for widget access token.
+  humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
+  baseURL: https://api.belvo.com/api
+  tags:
+  - Widget Access Token
+  properties:
+  - type: OpenAPI
+    url: openapi/belvo-widget-access-token-api-openapi.yml
   - type: Documentation
     url: https://developers.belvo.com/docs/links
   - type: APIReference

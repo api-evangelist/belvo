@@ -1,0 +1,1434 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Widget Access Token API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Widget Access Token
+paths:
+  /api/token/:
+    post:
+      tags:
+      - Widget Access Token
+      summary: Generate a widget access token
+      operationId: GenerateWidgetAccessToken
+      description: Generate a widget access token for our Hosted Widget.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/WidgetTokenRequestBankingBrazil'
+              - $ref: '#/components/schemas/WidgetTokenRequestEmploymentBrazil'
+              - $ref: '#/components/schemas/WidgetTokenRequestEmploymentMexico'
+              - $ref: '#/components/schemas/WidgetTokenRequestFiscalMexico'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetToken'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  schemas:
+    WidgetToken:
+      type: object
+      properties:
+        access:
+          type: string
+          description: The access token to be used to authenticate the widget.
+          example: jwt_test_ey..........
+        refresh:
+          type: string
+          description: The refresh token to be used to authenticate the widget.
+          example: jwt_test_ey..........
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    fetch_resources_employment_mexico:
+      type: array
+      description: "An array of resources that you would like to receive a historical update for.\n\nFor **Employment Records Mexico** (IMSS and ISSSTE), you can select the following resources:\n  - `EMPLOYMENT_RECORDS`\n\nAdditionally, you can opt-in to the following Employment Record specific resources (contact your representative as additional costs apply):\n  - `CURRENT_EMPLOYMENTS` (IMSS only)\n  - `EMPLOYMENT_METRICS` (IMSS only)\n"
+      items:
+        type: string
+        enum:
+        - EMPLOYMENT_RECORDS
+        - CURRENT_EMPLOYMENTS
+        - EMPLOYMENT_METRICS
+      example:
+      - EMPLOYMENT_RECORDS
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    fetch_resources_ofda_brazil:
+      type: array
+      description: "An array of resources that you would like to receive a historical update for.\n\n{% admonition type=\"warning\" name=\"Wait for Webhooks Before Retrieving Data\" %}\n  After requesting resources using `fetch_resources`, you **must** wait for the historical update webhook from Belvo before retrieving the data. Making requests before receiving the webhook (GET or POST) will return empty or incomplete results.\n{% /admonition %}\n\nFor OFDA Brazil, you can select the following resources:\n  - `ACCOUNTS`\n  - `OWNERS`\n  - `TRANSACTIONS`\n  - `BILLS`\n\nAdditionally, you can opt-in to the following Open Finance specific resources (contact your representative as additional costs apply):\n  - `INVESTMENTS`\n  - `INVESTMENT_TRANSACTIONS`\n  - `EXCHANGES`\n\nFor OFDA, you can enable Enrichment resources for extended insights (contact your representative as additional costs apply):\n  - `INCOMES`\n  - `RECURRING_EXPENSES`\n  - `RISK_INSIGHTS`\n\n{% admonition type=\"info\" name=\"Enrichment Resources Require Transaction Data\" %}\n  To calculate enrichment resources (`INCOMES`, `RECURRING_EXPENSES`, `RISK_INSIGHTS`), you must also include `ACCOUNTS` and `TRANSACTIONS` in your `fetch_resources` array. Without these foundational resources, enrichment calculations will be incomplete or may not be generated.\n{% /admonition %}\n"
+      items:
+        type: string
+        enum:
+        - ACCOUNTS
+        - TRANSACTIONS
+        - OWNERS
+        - BILLS
+        - INVESTMENTS
+        - INVESTMENT_TRANSACTIONS
+        - EXCHANGES
+        - INCOMES
+        - RECURRING_EXPENSES
+        - RISK_INSIGHTS
+      example:
+      - ACCOUNTS
+      - TRANSACTIONS
+      - OWNERS
+      - BILLS
+    WidgetTokenRequestBankingBrazil:
+      type: object
+      title: OFDA 🇧🇷 Brazil Access Token
+      required:
+      - id
+      - password
+      - scopes
+      - stale_in
+      - fetch_resources
+      - widget
+      properties:
+        id:
+          type: string
+          description: Your Belvo secretId.
+        password:
+          type: string
+          description: Your Belvo secretPassword.
+        scopes:
+          type: string
+          description: 'The scopes parameter contains a list of permissions that allow your to create a link for the user. This is a required parameter and must be sent exactly as shown.
+
+            '
+          example: read_institutions,write_links,read_consents,write_consents,write_consent_callback,delete_consents
+        fetch_resources:
+          $ref: '#/components/schemas/fetch_resources_ofda_brazil'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+        widget:
+          type: object
+          description: "The `widget` object contains additional information about how to set up the widget, including custom branding, your terms and conditions, callback URLs, and information about the user you want to extract data for. \n"
+          required:
+          - openfinance_feature
+          - callback_urls
+          - branding
+          - consent
+          properties:
+            openfinance_feature:
+              type: string
+              description: The `openfinance_feature` parameter indicates that the end user will go through the OFDA flow. It must be set to `consent_link_creation`
+              example: consent_link_creation
+            callback_urls:
+              type: object
+              description: 'In the `callback_urls` object, you **must** add links to where your user should be redirected to in the following cases:
+
+
+                - success (your user successfully connected their accounts)
+
+                - exit (your user exited the widget before they completed the process)
+
+                - event (an error occurred during the connection process)
+
+
+                For more information, check out the <a href="https://developers.belvo.com/docs/hosted-widget-ofda#callback_urls" target="_blank">callback_urls</a> section in our Hosted Widget (OFDA) guide.
+
+
+                > 📘 Callback Events
+
+                >
+
+                > Belvo will also send additional event information depending on the event. For more information, please make sure to check out the <a href="https://developers.belvo.com/docs/hosted-widget-ofda#3-handling-callback-events" target="_blank">Handling callback events</a> section of the Hosted Widget (OFDA) guide.
+
+                '
+              required:
+              - success
+              - exit
+              - event
+              properties:
+                success:
+                  type: string
+                  description: The URL your user is redirected to when they successfully connects their account.
+                  example: your_deeplink_here://success
+                exit:
+                  type: string
+                  description: The URL your user is redirected to when they exit the process before connecting their account.
+                  example: your_deeplink_here://exit
+                event:
+                  type: string
+                  description: The URL your user is redirected to when they encounter an error while connecting their account.
+                  example: your_deeplink_here://error
+            branding:
+              type: object
+              description: 'In the `branding` object, you **must** add your:
+
+                - <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-a-company-icon" target="_blank">company_icon</a>
+
+                - <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-a-company-logo" target="_blank">company_logo</a>
+
+                - <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-your-company-name" target="_blank">company_name</a>
+
+                - <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a>
+
+
+                You can also optionally add a custom background color for when the widget opens, as well as disable Belvo''s messaging regarding how many accounts have been connected.
+
+
+                For more information about the branding and customization options of the widget, check out our <a href="https://developers.belvo.com/docs/branding-and-customization-ofda" target="_blank">dedicated guide</a>.
+
+                '
+              required:
+              - company_icon
+              - company_logo
+              - company_name
+              - company_terms_url
+              properties:
+                company_icon:
+                  type: string
+                  format: uri
+                  description: You can add your company icon to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-a-company-icon" target="_blank">company_icon</a> section of our Branding and customization (OFDA) guide.
+                  example: https://mysite.com/icon.svg
+                company_logo:
+                  type: string
+                  format: uri
+                  description: You can add your company logo to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-a-company-logo" target="_blank">company_icon</a> section of our Branding and customization (OFDA) guide.
+                  example: https://mysite.com/logo.svg
+                company_name:
+                  type: string
+                  description: You can add your company name to be displayed when the widget first starts. By default, it'll just display "Link your account". When you add your company name, the message will follow the format "[company_name] uses Belvo to connect your account". For more information, see the <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-your-company-name" target="_blank">company_name</a> section of our Branding and customization (OFDA) guide.
+                  example: ACME
+                company_terms_url:
+                  type: string
+                  format: uri
+                  description: You can add a link to your privacy policy (or terms and conditions) on the initial screen of the widget that, when clicked, will redirect your users to the linked webpage. This helps your users better understand what your use case is regarding the data you are requesting. For more information, see the <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a> section of our Branding and customization (OFDA) guide.
+                  example: https://belvo.com/terms-service/
+                overlay_background_color:
+                  type: string
+                  description: You can add a custom overlay color for when the widget loads in your desktop application. For more information, see the <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#add-a-custom-overlay-color" target="_blank">overlay_background_color</a> section of our Branding and customization (OFDA) guide.
+                  example: '#F0F2F4'
+                social_proof:
+                  type: boolean
+                  description: You can choose to hide the "Mais de 5 milhões de usuários já conectaram com segurança suas contas." message that appears when your user selects their institution in the widget. For more information, see the <a href="https://developers.belvo.com/docs/branding-and-customization-ofda#hide-messaging-in-the-institution-select-screen" target="_blank">social_proof</a> section of our Branding and customization (OFDA) guide.
+                  example: true
+                show_belvo_middle_logo:
+                  type: boolean
+                  description: You can choose to display the Belvo logo between your company logo and the institution logo on the initial connect screen. When set to `true`, the Belvo logo will be displayed. Defaults to `false`. For more information, see the <a href="https://developers.belvo.com/products/aggregation_brazil/ofda-widget-branding-and-customization#show_belvo_middle_logo" target="_blank">show_belvo_middle_logo</a> section of our OFDA Widget Branding and Customization guide.
+                  example: false
+            theme:
+              type: array
+              description: "You can optionally add your brand colors to the widget using the `theme` parameter. \n\nFor more information regarding where these colors will appear in the widget, check out the dedicated <a href=\"https://developers.belvo.com/docs/branding-and-customization-ofda#add-custom-colors-to-the-widget\" target=\"_blank\">Add custom colors to the widget</a> section of our Branding guide.\n"
+              items:
+                type: object
+                required:
+                - css_key
+                - value
+                properties:
+                  css_key:
+                    type: string
+                    description: 'CSS variable name. Possible values include:
+
+                      - `--color-primary-base`
+
+                      - `--nav-bar-title-color`
+
+                      - `--nav-bar-icon-color`
+
+                      '
+                    example: --color-primary-base
+                  value:
+                    type: string
+                    description: The HEX code for the `css_key`.
+                    example: '#907AD6'
+            consent:
+              type: object
+              description: The `consent` object is unique to the OFDA widget and must be sent through.
+              required:
+              - purpose
+              - terms_and_conditions_url
+              - permissions
+              - identification_info
+              properties:
+                purpose:
+                  type: string
+                  maxLength: 140
+                  description: 'In the `purpose` parameter, you can customize the messaging that is displayed to your user regarding for what use case you are requesting their data
+
+                    For more information, check out the <a href="https://developers.belvo.com/docs/hosted-widget-ofda#purpose" target="_blank">purpose</a> section in our Hosted Widget (OFDA) guide.
+
+                    '
+                  example: Soluções financeiras personalizadas oferecidas por meio de recomendações sob medida, visando melhores ofertas de produtos financeiros e de crédito.
+                terms_and_conditions_url:
+                  type: string
+                  format: uri
+                  description: In the `terms_and_conditions_url` parameter, you **must** provide a link to your company's terms and conditions.
+                  example: https://www.your_terms_and_conditions.com
+                permissions:
+                  type: array
+                  minItems: 4
+                  maxItems: 4
+                  uniqueItems: true
+                  description: 'The `permissions` parameter contains the resources that you want to extract from Brazil''s Open Finance Network for the user.  This value **must** be set to `["REGISTER", "ACCOUNTS", "CREDIT_CARDS","CREDIT_OPERATIONS"]`.
+
+                    '
+                  items:
+                    type: string
+                    enum:
+                    - REGISTER
+                    - ACCOUNTS
+                    - CREDIT_CARDS
+                    - CREDIT_OPERATIONS
+                  example:
+                  - REGISTER
+                  - ACCOUNTS
+                  - CREDIT_CARDS
+                  - CREDIT_OPERATIONS
+                identification_info:
+                  type: array
+                  minItems: 1
+                  maxItems: 2
+                  description: "In the `identification_info` array, you need to provide the identification information of the user that you want to retrieve information for. The information that you provide here must match the information that the regulated institution has for the user (for example, for businesses, the CPF and name must be for a user with access to the business account).\n\n- For individuals, you just need to provide the CPF and name. \n- For businesses, you need to provide both the CPF and CNPJ information. \n\nFor more information, check out the <a href=\"https://developers.belvo.com/docs/hosted-widget-ofda#identification_info\" target=\"_blank\">identification_info</a> section of our Hosted Widget (OFDA) guide.\n"
+                  items:
+                    type: object
+                    required:
+                    - type
+                    - number
+                    - name
+                    properties:
+                      type:
+                        type: string
+                        description: The identifier type. Can be either `CPF` or `CNPJ`.
+                        example: CPF
+                      number:
+                        type: string
+                        description: The CPF or CNPJ number of the individual or company associated with the identification.
+                        example: 76109277673
+                      name:
+                        type: string
+                        description: Name of the individual or company associated with the identification.
+                        example: Ralph Bragg
+                default_consent_duration_days:
+                  type: number
+                  description: 'You can preselect the consent duration in the dropdown menu. The `default_consent_duration_days` parameter accepts `366`, `275`, `183`, or `92` days (corresponding to 12, 9, 6, or 3 months). If you provide any other value, the dropdown will default to "Indeterminado" (indefinite). For more information, see the <a href="https://developers.belvo.com/products/aggregation_brazil/ofda-widget-branding-and-customization#default_consent_duration_days" target="_blank">default_consent_duration_days</a> section of our OFDA Widget Branding and Customization guide.
+
+                    '
+                  example: 183
+                  enum:
+                  - 92
+                  - 183
+                  - 275
+                  - 366
+    WidgetTokenRequestEmploymentMexico:
+      type: object
+      title: Employment Records 🇲🇽 Mexico Access Token
+      required:
+      - id
+      - password
+      - scopes
+      - stale_in
+      - fetch_resources
+      - widget
+      properties:
+        id:
+          type: string
+          description: Your Belvo secretId.
+        password:
+          type: string
+          description: Your Belvo secretPassword.
+        scopes:
+          type: string
+          description: 'The scopes parameter contains a list of permissions that allow your to create a link for the user. This is a required parameter and must be sent exactly as shown.
+
+            '
+          example: read_institutions,write_links
+        fetch_resources:
+          $ref: '#/components/schemas/fetch_resources_employment_mexico'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+        credentials_storage:
+          $ref: '#/components/schemas/credentials_storage'
+        widget:
+          type: object
+          description: "The `widget` object contains additional information about how to set up the widget, including custom branding, your terms and conditions, callback URLs, and information about the user you want to extract data for. \n"
+          required:
+          - branding
+          properties:
+            callback_urls:
+              type: object
+              description: '> 📘 Only required for the Hosted Widget.
+
+
+                In the `callback_urls` object, you **must** add links to where your user should be redirected to in the following cases:
+
+
+                - success (your user successfully connected their accounts)
+
+                - exit (your user exited the widget before they completed the process)
+
+                - event (an error occurred during the connection process)
+
+
+                For more information, check out the <a href="https://developers.belvo.com/docs/widget-for-webviews#3-handling-callback-events" target="_blank">callback_urls</a> section in our Hosted Widget (Multi-Region) guide.
+
+
+                > 📘 Callback Events
+
+                >
+
+                > Belvo will also send additional event information depending on the event. For more information, please make sure to check out the <a href="https://developers.belvo.com/docs/widget-for-webviews#3-handling-callback-events" target="_blank">Handling callback events</a> section of the Hosted Widget (Multi-Region) guide.
+
+                '
+              required:
+              - success
+              - exit
+              - event
+              properties:
+                success:
+                  type: string
+                  description: The URL your user is redirected to when they successfully connects their account.
+                  example: your_deeplink_here://success
+                exit:
+                  type: string
+                  description: The URL your user is redirected to when they exit the process before connecting their account.
+                  example: your_deeplink_here://exit
+                event:
+                  type: string
+                  description: The URL your user is redirected to when they encounter an error while connecting their account.
+                  example: your_deeplink_here://error
+            branding:
+              type: object
+              description: 'In the `branding` object, you **must** add your:
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-icon" target="_blank">company_icon</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-logo" target="_blank">company_logo</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-your-company-name" target="_blank">company_name</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a>
+
+
+                You can also optionally add a custom background color for when the widget opens, as well as disable Belvo''s messaging regarding how many accounts have been connected.
+
+
+                For more information about the branding and customization options of the widget, check out our <a href="https://developers.belvo.com/docs/widget-branding-and-customization" target="_blank">dedicated guide</a>.
+
+                '
+              required:
+              - company_icon
+              - company_logo
+              - company_name
+              - company_terms_url
+              properties:
+                company_icon:
+                  type: string
+                  format: uri
+                  description: You can add your company icon to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-icon" target="_blank">company_icon</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://mysite.com/icon.svg
+                company_logo:
+                  type: string
+                  format: uri
+                  description: You can add your company logo to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-logo" target="_blank">company_icon</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://mysite.com/logo.svg
+                company_name:
+                  type: string
+                  description: You can add your company name to be displayed when the widget first starts. By default, it'll just display "Link your account". When you add your company name, the message will follow the format "[company_name] uses Belvo to connect your account". For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-your-company-name" target="_blank">company_name</a> section of our Branding and customization (Multi-Region) guide.
+                  example: ACME
+                company_terms_url:
+                  type: string
+                  format: uri
+                  description: You can add a link to your privacy policy (or terms and conditions) on the initial screen of the widget that, when clicked, will redirect your users to the linked webpage. This helps your users better understand what your use case is regarding the data you are requesting. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://belvo.com/terms-service/
+                company_terms_version:
+                  type: string
+                  description: The version of your terms and conditions. Use this parameter alongside `company_terms_url` to track which version of your T&C the user accepted during the widget flow.
+                  example: '20260323'
+                overlay_background_color:
+                  type: string
+                  description: You can add a custom overlay color for when the widget loads in your desktop application. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-custom-overlay-color" target="_blank">overlay_background_color</a> section of our Branding and customization (Multi-Region) guide.
+                  example: '#F0F2F4'
+                social_proof:
+                  type: boolean
+                  description: You can choose to hide the "Mais de 5 milhões de usuários já conectaram com segurança suas contas." message that appears when your user selects their institution in the widget. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#hide-messaging-in-the-account-connect-screen" target="_blank">social_proof</a> section of our Branding and customization (Multi-Region) guide.
+                  example: true
+            theme:
+              type: array
+              description: "You can optionally add your brand colors to the widget using the `theme` parameter. \n\nFor more information regarding where these colors will appear in the widget, check out the dedicated <a href=\"https://developers.belvo.com/docs/widget-branding-and-customization#add-custom-colors-to-the-widget\" target=\"_blank\">Add custom colors to the widget</a> section of our Branding guide.\n"
+              items:
+                type: object
+                required:
+                - css_key
+                - value
+                properties:
+                  css_key:
+                    type: string
+                    description: 'CSS variable name. Possible values include:
+
+                      - `--color-primary-base`
+
+                      - `--nav-bar-title-color`
+
+                      - `--nav-bar-icon-color`
+
+                      '
+                    example: --color-primary-base
+                  value:
+                    type: string
+                    description: The HEX code for the `css_key`.
+                    example: '#907AD6'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    WidgetTokenRequestFiscalMexico:
+      type: object
+      title: Fiscal 🇲🇽 Mexico Access Token
+      required:
+      - id
+      - password
+      - scopes
+      - stale_in
+      - fetch_resources
+      - widget
+      properties:
+        id:
+          type: string
+          description: Your Belvo secretId.
+        password:
+          type: string
+          description: Your Belvo secretPassword.
+        scopes:
+          type: string
+          description: 'The scopes parameter contains a list of permissions that allow your to create a link for the user. This is a required parameter and must be sent exactly as shown.
+
+            '
+          example: read_institutions,write_links
+        fetch_resources:
+          $ref: '#/components/schemas/fetch_resources_fiscal_mexico'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+        credentials_storage:
+          $ref: '#/components/schemas/credentials_storage'
+        widget:
+          type: object
+          description: "The `widget` object contains additional information about how to set up the widget, including custom branding, your terms and conditions, callback URLs, and information about the user you want to extract data for. \n"
+          required:
+          - branding
+          properties:
+            callback_urls:
+              type: object
+              description: '> 📘 Only required for the Hosted Widget.
+
+
+                In the `callback_urls` object, you **must** add links to where your user should be redirected to in the following cases:
+
+
+                - success (your user successfully connected their accounts)
+
+                - exit (your user exited the widget before they completed the process)
+
+                - event (an error occurred during the connection process)
+
+
+                For more information, check out the <a href="https://developers.belvo.com/docs/widget-for-webviews#3-handling-callback-events" target="_blank">callback_urls</a> section in our Hosted Widget (Multi-Region) guide.
+
+
+                > 📘 Callback Events
+
+                >
+
+                > Belvo will also send additional event information depending on the event. For more information, please make sure to check out the <a href="https://developers.belvo.com/docs/widget-for-webviews#3-handling-callback-events" target="_blank">Handling callback events</a> section of the Hosted Widget (Multi-Region) guide.
+
+                '
+              required:
+              - success
+              - exit
+              - event
+              properties:
+                success:
+                  type: string
+                  description: The URL your user is redirected to when they successfully connects their account.
+                  example: your_deeplink_here://success
+                exit:
+                  type: string
+                  description: The URL your user is redirected to when they exit the process before connecting their account.
+                  example: your_deeplink_here://exit
+                event:
+                  type: string
+                  description: The URL your user is redirected to when they encounter an error while connecting their account.
+                  example: your_deeplink_here://error
+            branding:
+              type: object
+              description: 'In the `branding` object, you **must** add your:
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-icon" target="_blank">company_icon</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-logo" target="_blank">company_logo</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-your-company-name" target="_blank">company_name</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a>
+
+
+                You can also optionally add a custom background color for when the widget opens, as well as disable Belvo''s messaging regarding how many accounts have been connected.
+
+
+                For more information about the branding and customization options of the widget, check out our <a href="https://developers.belvo.com/docs/widget-branding-and-customization" target="_blank">dedicated guide</a>.
+
+                '
+              required:
+              - company_icon
+              - company_logo
+              - company_name
+              - company_terms_url
+              properties:
+                company_icon:
+                  type: string
+                  format: uri
+                  description: You can add your company icon to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-icon" target="_blank">company_icon</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://mysite.com/icon.svg
+                company_logo:
+                  type: string
+                  format: uri
+                  description: You can add your company logo to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-logo" target="_blank">company_icon</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://mysite.com/logo.svg
+                company_name:
+                  type: string
+                  description: You can add your company name to be displayed when the widget first starts. By default, it'll just display "Link your account". When you add your company name, the message will follow the format "[company_name] uses Belvo to connect your account". For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-your-company-name" target="_blank">company_name</a> section of our Branding and customization (Multi-Region) guide.
+                  example: ACME
+                company_terms_url:
+                  type: string
+                  format: uri
+                  description: You can add a link to your privacy policy (or terms and conditions) on the initial screen of the widget that, when clicked, will redirect your users to the linked webpage. This helps your users better understand what your use case is regarding the data you are requesting. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://belvo.com/terms-service/
+                company_terms_version:
+                  type: string
+                  description: The version of your terms and conditions. Use this parameter alongside `company_terms_url` to track which version of your T&C the user accepted during the widget flow.
+                  example: '20260323'
+                overlay_background_color:
+                  type: string
+                  description: You can add a custom overlay color for when the widget loads in your desktop application. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-custom-overlay-color" target="_blank">overlay_background_color</a> section of our Branding and customization (Multi-Region) guide.
+                  example: '#F0F2F4'
+                social_proof:
+                  type: boolean
+                  description: You can choose to hide the "Mais de 5 milhões de usuários já conectaram com segurança suas contas." message that appears when your user selects their institution in the widget. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#hide-messaging-in-the-account-connect-screen" target="_blank">social_proof</a> section of our Branding and customization (Multi-Region) guide.
+                  example: true
+            theme:
+              type: array
+              description: "You can optionally add your brand colors to the widget using the `theme` parameter. \n\nFor more information regarding where these colors will appear in the widget, check out the dedicated <a href=\"https://developers.belvo.com/docs/widget-branding-and-customization#add-custom-colors-to-the-widget\" target=\"_blank\">Add custom colors to the widget</a> section of our Branding guide.\n"
+              items:
+                type: object
+                required:
+                - css_key
+                - value
+                properties:
+                  css_key:
+                    type: string
+                    description: 'CSS variable name. Possible values include:
+
+                      - `--color-primary-base`
+
+                      - `--nav-bar-title-color`
+
+                      - `--nav-bar-icon-color`
+
+                      '
+                    example: --color-primary-base
+                  value:
+                    type: string
+                    description: The HEX code for the `css_key`.
+                    example: '#907AD6'
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    stale_in:
+      type: string
+      pattern: ^\d{1,3}d$
+      description: 'Indicates how long any user-derived data should be stored in Belvo''s database for the link (both single and recurrent). For example, if you send through `90d`, Belvo will remove any data from its database relating to the user after 90 days. For more information, check out the <a href="https://developers.belvo.com/docs/data-retention-controls#stale_in" target="_blank">stale_in</a> section of our Data retention controls article.
+
+
+        > 📘 Info
+
+        >
+
+        > Belvo will only remove data for links that have not been updated in the period you provide in `stale_in`. Belvo will only remove data for links that have not been updated in the period you provide in `stale_in`.
+
+
+        By default Belvo stores user data for 365 days, unless the link is deleted.
+
+        '
+      example: 42d
+    credentials_storage:
+      type: string
+      pattern: ^(store|nostore|\d{1,3}d)$
+      description: "Indicates whether or not to store credentials (and the duration for which to store the credentials).\n\n- For recurrent links, this is set to `store` by default (and cannot be changed). \n- For single links, this is set to `365d` by default.\n\nCan be either:\n  - `store` to store credentials (until the link is deleted)\n  - `nostore` to not store credentials\n  -  Any value between `1d` and `365d` to indicate the number of days you want the credentials to be stored.\n\n For more information, check out the <a href=\"https://developers.belvo.com/docs/data-retention-controls#credentials_storage\" target=\"_blank\">credentials_storage</a> section of our Data retention controls article.\n"
+      example: 27d
+    WidgetTokenRequestEmploymentBrazil:
+      type: object
+      title: Employments 🇧🇷 Brazil Access Token
+      required:
+      - id
+      - password
+      - scopes
+      - stale_in
+      - fetch_resources
+      - widget
+      properties:
+        id:
+          type: string
+          description: Your Belvo secretId.
+        password:
+          type: string
+          description: Your Belvo secretPassword.
+        scopes:
+          type: string
+          description: 'The scopes parameter contains a list of permissions that allow your to create a link for the user. This is a required parameter and must be sent exactly as shown.
+
+            '
+          example: read_institutions,write_links
+        fetch_resources:
+          $ref: '#/components/schemas/fetch_resources_employment_brazil'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+        credentials_storage:
+          $ref: '#/components/schemas/credentials_storage'
+        widget:
+          type: object
+          description: "The `widget` object contains additional information about how to set up the widget, including custom branding, your terms and conditions, callback URLs, and information about the user you want to extract data for. \n"
+          required:
+          - branding
+          properties:
+            callback_urls:
+              type: object
+              description: '> 📘 Only required for the Hosted Widget.
+
+
+                In the `callback_urls` object, you **must** add links to where your user should be redirected to in the following cases:
+
+
+                - success (your user successfully connected their accounts)
+
+                - exit (your user exited the widget before they completed the process)
+
+                - event (an error occurred during the connection process)
+
+
+                For more information, check out the <a href="https://developers.belvo.com/docs/widget-for-webviews#3-handling-callback-events" target="_blank">callback_urls</a> section in our Hosted Widget (Multi-Region) guide.
+
+
+                > 📘 Callback Events
+
+                >
+
+                > Belvo will also send additional event information depending on the event. For more information, please make sure to check out the <a href="https://developers.belvo.com/docs/widget-for-webviews#3-handling-callback-events" target="_blank">Handling callback events</a> section of the Hosted Widget (Multi-Region) guide.
+
+                '
+              required:
+              - success
+              - exit
+              - event
+              properties:
+                success:
+                  type: string
+                  description: The URL your user is redirected to when they successfully connects their account.
+                  example: your_deeplink_here://success
+                exit:
+                  type: string
+                  description: The URL your user is redirected to when they exit the process before connecting their account.
+                  example: your_deeplink_here://exit
+                event:
+                  type: string
+                  description: The URL your user is redirected to when they encounter an error while connecting their account.
+                  example: your_deeplink_here://error
+            branding:
+              type: object
+              description: 'In the `branding` object, you **must** add your:
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-icon" target="_blank">company_icon</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-logo" target="_blank">company_logo</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-your-company-name" target="_blank">company_name</a>
+
+                - <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a>
+
+
+                You can also optionally add a custom background color for when the widget opens, as well as disable Belvo''s messaging regarding how many accounts have been connected.
+
+
+                For more information about the branding and customization options of the widget, check out our <a href="https://developers.belvo.com/docs/widget-branding-and-customization" target="_blank">dedicated guide</a>.
+
+                '
+              required:
+              - company_icon
+              - company_logo
+              - company_name
+              - company_terms_url
+              properties:
+                company_icon:
+                  type: string
+                  format: uri
+                  description: You can add your company icon to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-icon" target="_blank">company_icon</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://mysite.com/icon.svg
+                company_logo:
+                  type: string
+                  format: uri
+                  description: You can add your company logo to the widget to make it more aligned with your brand. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-company-logo" target="_blank">company_icon</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://mysite.com/logo.svg
+                company_name:
+                  type: string
+                  description: You can add your company name to be displayed when the widget first starts. By default, it'll just display "Link your account". When you add your company name, the message will follow the format "[company_name] uses Belvo to connect your account". For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-your-company-name" target="_blank">company_name</a> section of our Branding and customization (Multi-Region) guide.
+                  example: ACME
+                company_terms_url:
+                  type: string
+                  format: uri
+                  description: You can add a link to your privacy policy (or terms and conditions) on the initial screen of the widget that, when clicked, will redirect your users to the linked webpage. This helps your users better understand what your use case is regarding the data you are requesting. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-link-to-your-privacy-policy" target="_blank">company_terms_url</a> section of our Branding and customization (Multi-Region) guide.
+                  example: https://belvo.com/terms-service/
+                company_terms_version:
+                  type: string
+                  description: The version of your terms and conditions. Use this parameter alongside `company_terms_url` to track which version of your T&C the user accepted during the widget flow.
+                  example: '20260323'
+                overlay_background_color:
+                  type: string
+                  description: You can add a custom overlay color for when the widget loads in your desktop application. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#add-a-custom-overlay-color" target="_blank">overlay_background_color</a> section of our Branding and customization (Multi-Region) guide.
+                  example: '#F0F2F4'
+                social_proof:
+                  type: boolean
+                  description: You can choose to hide the "Mais de 5 milhões de usuários já conectaram com segurança suas contas." message that appears when your user selects their institution in the widget. For more information, see the <a href="https://developers.belvo.com/docs/widget-branding-and-customization#hide-messaging-in-the-account-connect-screen" target="_blank">social_proof</a> section of our Branding and customization (Multi-Region) guide.
+                  example: true
+            theme:
+              type: array
+              description: "You can optionally add your brand colors to the widget using the `theme` parameter. \n\nFor more information regarding where these colors will appear in the widget, check out the dedicated <a href=\"https://developers.belvo.com/docs/widget-branding-and-customization#add-custom-colors-to-the-widget\" target=\"_blank\">Add custom colors to the widget</a> section of our Branding guide.\n"
+              items:
+                type: object
+                required:
+                - css_key
+                - value
+                properties:
+                  css_key:
+                    type: string
+                    description: 'CSS variable name. Possible values include:
+
+                      - `--color-primary-base`
+
+                      - `--nav-bar-title-color`
+
+                      - `--nav-bar-icon-color`
+
+                      '
+                    example: --color-primary-base
+                  value:
+                    type: string
+                    description: The HEX code for the `css_key`.
+                    example: '#907AD6'
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    fetch_resources_fiscal_mexico:
+      type: array
+      description: "An array of resources that you would like to receive a historical update for.\n\nFor **Fiscal Mexico** (SAT), you can select the following resources:\n  - `FINANCIAL_STATEMENTS`\n  - `INVOICES`\n  - `TAX_COMPLIANCE_STATUS`\n  - `TAX_RETENTIONS`\n  - `TAX_RETURNS`\n  - `TAX_STATUS`\n"
+      items:
+        type: string
+        enum:
+        - FINANCIAL_STATEMENTS
+        - INVOICES
+        - TAX_COMPLIANCE_STATUS
+        - TAX_RETENTIONS
+        - TAX_RETURNS
+        - TAX_STATUS
+      example:
+      - FINANCIAL_STATEMENTS
+      - INVOICES
+      - TAX_COMPLIANCE_STATUS
+      - TAX_RETENTIONS
+      - TAX_RETURNS
+      - TAX_STATUS
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    fetch_resources_employment_brazil:
+      type: array
+      description: "An array of resources that you would like to receive a historical update for.\n\nFor **Employments Brazil** (INSS), you can select the following resources:\n  - `EMPLOYMENTS`\n  - `OWNERS`\n"
+      items:
+        type: string
+        enum:
+        - EMPLOYMENTS
+        - OWNERS
+      example:
+      - EMPLOYMENTS
+      - OWNERS
+  responses:
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

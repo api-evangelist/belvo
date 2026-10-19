@@ -1,194 +1,844 @@
 openapi: 3.2.0
 info:
-  title: Belvo Links API
-  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
-  termsOfService: https://belvo.com/terms-and-conditions/
+  title: Belvo API Docs Links API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
   contact:
-    name: Belvo Support
-    email: support@belvo.com
+    name: Need help?
     url: https://developers.belvo.com
-  version: '1.0'
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
 servers:
-- url: https://api.belvo.com
-  description: Production
 - url: https://sandbox.belvo.com
   description: Sandbox
 security:
 - basicAuth: []
 tags:
 - name: Links
-  description: Manage the credential connections to institutions.
+  description: 'A **Link** is a set of credentials associated to an end-user''s access to an **institution**. You will need to register a **Link** before accessing information from that specific end-user, such as account or transaction details.
+
+
+    We recommend using the Belvo Hosted Widget to manage the connection process.'
 paths:
   /api/links/:
     get:
-      operationId: listLinks
       tags:
       - Links
-      summary: List all Links
+      operationId: ListLinks
+      summary: List links
+      description: '## ▶️ Usage
+
+
+        With the List Links method, you can:
+
+
+        1. List all links elated to your Belvo account (without using any query parameters).
+
+        2. Get the details of a specific `link.id` (using the `id` query parameter).
+
+
+        ## 📖 Pagination
+
+
+        This method returns a paginated response (default: 100 items per page). You can use the `page_size` query parameter to increase the number of items returned to a maximum of 1000 items. You can use the `page` query parameter to navigate through the results. For more details on how to navigate Belvo''s paginated responses, see our Pagination Tips article.
+
+
+        ## 🔦 Filtering Responses
+
+
+        Please see the query list below for a list of fields that you can filter your responses by. For more information on how to use filters, see our Filtering responses article.'
       parameters:
-      - $ref: '#/components/parameters/PageSize'
-      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/institution'
+      - $ref: '#/components/parameters/institution__in'
+      - $ref: '#/components/parameters/access_mode'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/created_by__not_in'
+      - $ref: '#/components/parameters/external_id'
+      - $ref: '#/components/parameters/external_id__in'
+      - $ref: '#/components/parameters/institution_user_id'
+      - $ref: '#/components/parameters/institution_user_id__in'
+      - $ref: '#/components/parameters/refresh_rate'
+      - $ref: '#/components/parameters/status_links'
+      - $ref: '#/components/parameters/status__in_links'
       responses:
         '200':
-          description: A paginated list of Links.
+          description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedLinks'
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of link objects.
+                      items:
+                        $ref: '#/components/schemas/Link'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
     post:
-      operationId: registerLink
       tags:
       - Links
-      summary: Register a new Link
-      description: Register a Link by providing the institution and the end-user credentials. Use access_mode single for a one-time pull or recurrent to keep data refreshed.
+      operationId: RegisterLink
+      summary: Register a new link
+      description: '## ▶️ Usage
+
+
+        Register a new link (a connection between your user and their institution) using the Belvo API.
+
+
+        > 👍 We really recommend using our Connect Widget to handle link creation and link status updates.
+
+
+        To make things easier, we''ve included custom examples for the links you can create for each of our products. Just click on the type of link you want to create in the **Body Params** section below.'
+      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LinkRequest'
+              oneOf:
+              - $ref: '#/components/schemas/LinksRequestEmploymentBrazil'
+              - $ref: '#/components/schemas/LinksRequestEmploymentMexico'
+              - $ref: '#/components/schemas/LinksRequestFiscalMexico'
       responses:
         '201':
-          description: The Link was created.
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Link'
         '400':
-          $ref: '#/components/responses/Error'
-  /api/links/{id}/:
-    parameters:
-    - $ref: '#/components/parameters/ResourceId'
-    get:
-      operationId: detailLink
-      tags:
-      - Links
-      summary: Get a Link's details
-      responses:
-        '200':
-          description: The requested Link.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Link'
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
     patch:
-      operationId: patchLink
       tags:
       - Links
-      summary: Complete or update a Link request
-      description: Send a token or OTP to complete a multi-factor Link request.
+      operationId: PatchLinks
+      summary: Complete a links request
+      description: 'Used to resume a Link register session that was paused because an MFA token
+
+        was required by the institution.'
+      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LinkPatchRequest'
+              $ref: '#/components/schemas/PatchBody'
       responses:
         '200':
-          description: The updated Link.
+          description: Ok
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Link'
-    delete:
-      operationId: deleteLink
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/links/{id}/:
+    get:
       tags:
       - Links
-      summary: Delete a Link
+      operationId: DetailLink
+      summary: Get a link's details
+      description: Get the details of a specific link.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The `link.id` you want to get detailed information about.
       responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    patch:
+      tags:
+      - Links
+      operationId: ModifyLinkDataRetrieval
+      summary: Modify a link's data retrieval
+      description: 'Modify the data retrieval settings for a specific link. At present you can:
+
+
+        - Change a link''s access mode from `single` to `recurrent` or from `recurrent` to `single`.
+
+        - Modify they `stale_in` period for the link.
+
+        - Modify the historical resources you want to retrieve for the link (`fetch_resources`).
+
+
+        ## Changing a link''s `access_mode`
+
+
+        When you change a link from `single` to `recurrent`, the next day a historical update of the core resources for the link is triggered (resulting in you receiving `historical_update` webhooks for the link). You are billed for these historical updates.
+
+
+        ## Modifying `stale_in`
+
+
+        If you only modify the `stale_in` period for a link, this will not trigger a historical update. In order to trigger a historical update for the link, you must change the `access_mode`.
+
+
+        ## Modifying `fetch_resources`
+
+
+        If you only modify the `fetch_resources` for a link, this will not trigger a historical update. In order to trigger a historical update for the link, you must change the `access_mode`.'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: e4bb1afb-4a4f-4dd6-8be0-e615d233185b
+        description: The `link.id` you want to change the `access_mode`, `stale_in`, or `fetch_resources` for.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeAccessMode'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    put:
+      tags:
+      - Links
+      operationId: UpdateLink
+      summary: Update a link's credentials
+      description: 'Update the credentials of a specific link. If the successfully updated link is a recurrent one, we automatically trigger an update of the link. If we find fresh data, you''ll receive historical update webhooks.
+
+
+        > 👍 Use our Connect Widget
+
+        >
+
+        > We recommend using our Connect Widget to handle updating invalid or token_required links.'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The `link.id` you want to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinksPutRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    delete:
+      tags:
+      - Links
+      operationId: DestroyLink
+      summary: Delete a link
+      description: 'Delete a specific link and all the associated data (for example: transactions, accounts, invoices, tax returns, employments, and so on) for that link from your Belvo account. This action is irreversible, and you will not be able to recover the deleted data.
+
+
+        {% admonition type="success" name="Use the X-Belvo-Request-Mode: async header" %}
+
+        We highly recommend setting the `X-Belvo-Request-Mode` header to `async` to enable asynchronous deletion. This way, you will avoid the rate limit of 5 deletions per minute. When set, the endpoint will respond with a `202 Accepted` status and provide a request ID for tracking the deletion process. Once the process is complete, you will receive a `link_deleted` webhook notification.
+
+
+        If you do not set this header, the endpoint will respond with a `204 No Content` status, but you will be subject to the rate limit of 5 deletions per minute. If you exceed this limit, you will receive a `429 Too Many Requests` error.
+
+        {% /admonition %}'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The `link.id` that you want to delete.
+      - name: X-Belvo-Request-Mode
+        in: header
+        required: false
+        schema:
+          type: string
+          enum:
+          - async
+        description: 'Set to `async` to enable asynchronous deletion, which bypasses rate limiting. When set, the endpoint returns a `202 Accepted` response with a request ID. You will later receive a webhook notification when the deletion is complete.
+
+          '
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request_id:
+                    type: string
+                    format: uuid
+                    description: The unique identifier for tracking the async deletion request.
+                required:
+                - request_id
         '204':
-          description: The Link was deleted.
+          description: No content
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/links/{id}/refresh/:
+    post:
+      tags:
+      - Links
+      operationId: RefreshHistoricalDataForLink
+      summary: Trigger a historical update for a link
+      description: '{% admonition type="warning" name="Concurrent Request Limit" %}
+
+        To prevent duplicate requests, this endpoint has a 10-minute cooldown period per link. If you attempt to refresh the same link within 10 minutes of a previous request, you will receive a `409 Conflict` error with the message `"The link has already been refreshed. Please wait X minutes before trying again."`.
+
+        {% /admonition %}
+
+
+        Use this method to trigger a historical update for a specific link (single or recurrent). Use the `fetch_resources` parameter to specify which resources you want to update. If you do not specify this parameter, the historical update will be performed for all resources supported by the institution that the link is associated with.
+
+
+        On a successful request, our API will respond with a `202` status code and a `request_id` that you can later use to associate a given `historical_update` webhook to this request.
+
+
+        {% admonition type="info" name="Does not update link definition" %}
+
+        This endpoint does not update the link definition itself, only the historical data for the specified resources. If you want to change the link''s `fetch_resources` permanently, you should use the **Modify a link''s data retrieval** method instead.
+
+        {% /admonition %}'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: e4bb1afb-4a4f-4dd6-8be0-e615d233185b
+        description: The `link.id` you want to refresh.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fetch_resources:
+                  type: array
+                  description: "An array of resources that you would like to receive a historical update for. If you do not specify this field, the historical update will be performed for all resources supported by the institution.\n\n{% admonition type=\"warning\" name=\"Unsupported Resources for a Link\" %}\n  If you specify a resource that is not supported by the institution, we return a `400 Bad Request` error, specifying which resources are supported for the given link.\n{% /admonition %}\n"
+                  items:
+                    type: string
+                    description: A Belvo resource that the institution supports.
+                    example: ACCOUNTS
+                  example:
+                  - ACCOUNTS
+                  - TRANSACTIONS
+                  - OWNERS
+      responses:
+        '202':
+          description: Historical Refresh Request Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request_id:
+                    type: string
+                    description: The unique ID for this request. We recommend you store this value to later identify which webhook event relates to an asynchronous request.
+                    example: b5d0106ac9cc43d5b36199fe831f6bbe
+                required:
+                - request_id
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '409':
+          $ref: '#/components/responses/409_link_already_refreshed'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
 components:
   parameters:
-    Page:
-      name: page
+    omit:
+      name: omit
       in: query
-      description: The page number of results to return.
+      description: Omit certain fields from being returned in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
       schema:
-        type: integer
-        default: 1
-    PageSize:
+        type: string
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    external_id__in:
+      name: external_id__in
+      in: query
+      description: Return links with these external IDs.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          minLength: 3
+          maxLength: 256
+          example: InternalUser4001
+    status_links:
+      name: status
+      in: query
+      description: Return links with this status. Choose between `valid`, `invalid`, `unconfirmed`, or `token_required`.
+      schema:
+        type: string
+        example: invalid
+    page_size:
       name: page_size
       in: query
-      description: Number of items per page (max 1000).
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
       schema:
         type: integer
+        format: int32
         default: 100
+        minimum: 1
         maximum: 1000
-    ResourceId:
+        example: 100
+    institution__in:
+      name: institution__in
+      in: query
+      description: Return results only for these institutions (use the Belvo-designated names, such as `ofmockbank_br_retail` and `planet_mx_employment`).
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          pattern: ^[a-z_]{1,40}$
+          minLength: 1
+          maxLength: 40
+          example: planet_mx_retail
+    id:
       name: id
-      in: path
-      required: true
-      description: The unique identifier of the resource.
+      in: query
+      description: Return information only for this resource `id`.
       schema:
         type: string
         format: uuid
+        example: 24ccab1d-3a86-4136-a6eb-e04bf52b356f
+    institution_user_id:
+      name: institution_user_id
+      in: query
+      description: Return links with this specific institution user ID.
+      schema:
+        type: string
+        example: test_institution_user_id_1234567890abcdef123
+    institution_user_id__in:
+      name: institution_user_id__in
+      in: query
+      description: Return links with these institution user IDs.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: test_institution_user_id_1234567890abcdef123
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    refresh_rate:
+      name: refresh_rate
+      in: query
+      description: Return links with this refresh rate. Choose between `6h`, `12h`, `24h`, `7d`, `30d`, or `null` (for single links).
+      schema:
+        type: string
+        pattern: ^((\d{1,3}h)?(\d{1,3}m)?(\d{1,3}d)?|null)$
+        example: 24h
+    status__in_links:
+      name: status__in
+      in: query
+      description: Return links with these statuses. Choose between `valid`, `invalid`, `unconfirmed`, or `token_required`.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: invalid
+    institution:
+      name: institution
+      in: query
+      description: Return results only for this institution (use the Belvo-designated name, such as `planet_mx_employment`).
+      schema:
+        type: string
+        pattern: ^[a-z_]{1,40}$
+        minLength: 1
+        maxLength: 40
+        example: planet_mx_retail
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    fields:
+      name: fields
+      in: query
+      description: Return only the specified fields in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    external_id:
+      name: external_id
+      in: query
+      description: Return links with this external ID.
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 256
+        example: InternalUser4000
+    access_mode:
+      name: access_mode
+      in: query
+      description: Return links only with this access mode. Can be either `single` or `recurrent`.
+      example: single
+      schema:
+        type: string
+        enum:
+        - single
+        - recurrent
+        example: single
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    created_by__not_in:
+      name: created_by__not_in
+      in: query
+      description: Return links that were not created by these Belvo users.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: d9475f4d-c511-4732-9ef0-93b5672f43d3
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
   schemas:
-    LinkPatchRequest:
+    last_accessed_at:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: 'The ISO-8601 timestamp of Belvo''s most recent successful access to the institution for the given link.
+
+        '
+      example: '2021-03-09T10:28:40.000Z'
+    fetch_resources_employment_mexico:
+      type: array
+      description: "An array of resources that you would like to receive a historical update for.\n\nFor **Employment Records Mexico** (IMSS and ISSSTE), you can select the following resources:\n  - `EMPLOYMENT_RECORDS`\n\nAdditionally, you can opt-in to the following Employment Record specific resources (contact your representative as additional costs apply):\n  - `CURRENT_EMPLOYMENTS` (IMSS only)\n  - `EMPLOYMENT_METRICS` (IMSS only)\n"
+      items:
+        type: string
+        enum:
+        - EMPLOYMENT_RECORDS
+        - CURRENT_EMPLOYMENTS
+        - EMPLOYMENT_METRICS
+      example:
+      - EMPLOYMENT_RECORDS
+    LinksRequestFiscalMexico:
       type: object
-      required:
-      - id
-      - token
-      properties:
-        id:
-          type: string
-          format: uuid
-        token:
-          type: string
-        link:
-          type: string
-          format: uuid
-    Link:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        institution:
-          type: string
-        access_mode:
-          type: string
-          enum:
-          - single
-          - recurrent
-        status:
-          type: string
-          enum:
-          - valid
-          - invalid
-          - unconfirmed
-          - token_required
-        created_at:
-          type: string
-          format: date-time
-        external_id:
-          type:
-          - string
-          - 'null'
-        institution_user_id:
-          type:
-          - string
-          - 'null'
-        last_accessed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-    Pagination:
-      type: object
-      properties:
-        count:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-        previous:
-          type:
-          - string
-          - 'null'
-    LinkRequest:
-      type: object
+      title: Fiscal Links (Mexico)
+      description: The request body to create a link for fiscal institutions in Mexico.
       required:
       - institution
       - username
@@ -196,50 +846,1158 @@ components:
       properties:
         institution:
           type: string
-          example: erebor_mx_retail
+          pattern: '[a-z]+_[a-z]{2}_[a-z]+'
+          description: 'The Belvo name for the institution. For fiscal institutions in Mexico, you can select the following institutions:
+
+
+            - `sat_mx_fiscal`
+
+            - `tatooine_mx_fiscal` (Sandbox institution)
+
+            '
+          example: sat_mx_fiscal
         username:
           type: string
+          pattern: ^.{12,13}$
+          description: The user's RFC (tax ID) used to log in to the institution.
+          example: '123456789101'
         password:
           type: string
-        access_mode:
-          type: string
-          enum:
-          - single
-          - recurrent
-          default: single
+          format: password
+          pattern: ^[a-zA-Z0-9]{8}
+          description: 'The user''s password used to log in to the institution.
+
+            '
+          example: passw0rd
         external_id:
+          $ref: '#/components/schemas/external_id'
+        access_mode:
+          $ref: '#/components/schemas/EnumLinkAccessModeRequest'
+        fetch_resources:
+          $ref: '#/components/schemas/fetch_resources_fiscal_mexico'
+        credentials_storage:
+          $ref: '#/components/schemas/credentials_storage'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+    LinksRequestEmploymentMexico:
+      type: object
+      title: Employment Links (Mexico)
+      description: The request body to create a link for employment institutions in Mexico.
+      required:
+      - institution
+      - username
+      properties:
+        institution:
           type: string
-        username_type:
+          pattern: '[a-z]+_[a-z]{2}_[a-z]+'
+          description: 'The Belvo name for the institution. For employment institutions in Mexico, you can select the following institutions:
+
+
+            - `imss_mx_employment`
+
+            - `issste_mx_employment`
+
+            - `planet_mx_employment` (Sandbox institution)
+
+            '
+          example: imss_mx_employment
+        username:
           type: string
-    Error:
+          pattern: ^([A-Z]{4})([0-9]{6})([A-Z]{6})([A-Z0-9]{2})$
+          description: The user's CURP (ID) used to log in to the institution.
+          example: BLPM951331IONVGR54
+        username2:
+          type: string
+          description: The user's email address used to log in to the institution. Required for `issste_mx_employment`. Optional for `imss_mx_employment`.
+          example: carlos@bex.com
+        external_id:
+          $ref: '#/components/schemas/external_id'
+        access_mode:
+          $ref: '#/components/schemas/EnumLinkAccessModeRequest'
+        fetch_resources:
+          $ref: '#/components/schemas/fetch_resources_employment_mexico'
+        credentials_storage:
+          $ref: '#/components/schemas/credentials_storage'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    credentials_storage:
+      type: string
+      pattern: ^(store|nostore|\d{1,3}d)$
+      description: "Indicates whether or not to store credentials (and the duration for which to store the credentials).\n\n- For recurrent links, this is set to `store` by default (and cannot be changed). \n- For single links, this is set to `365d` by default.\n\nCan be either:\n  - `store` to store credentials (until the link is deleted)\n  - `nostore` to not store credentials\n  -  Any value between `1d` and `365d` to indicate the number of days you want the credentials to be stored.\n\n For more information, check out the <a href=\"https://developers.belvo.com/docs/data-retention-controls#credentials_storage\" target=\"_blank\">credentials_storage</a> section of our Data retention controls article.\n"
+      example: 27d
+    LinkAlreadyRefreshedError:
+      type: object
+      title: Link Already Refreshed Error
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`link_refreshed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#409-link_refreshed" target="_blank">409 link_refreshed errors</a>.
+
+            '
+          example: link_refreshed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `link_refreshed` errors, the description is:\n  \n  - `The link has already been refreshed. Please wait X minutes before trying again.`\n"
+          example: The link has already been refreshed. Please wait 7 minutes before trying again.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    fetch_resources_employment_brazil:
       type: array
+      description: "An array of resources that you would like to receive a historical update for.\n\nFor **Employments Brazil** (INSS), you can select the following resources:\n  - `EMPLOYMENTS`\n  - `OWNERS`\n"
       items:
-        type: object
-        properties:
-          request_id:
+        type: string
+        enum:
+        - EMPLOYMENTS
+        - OWNERS
+      example:
+      - EMPLOYMENTS
+      - OWNERS
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumLinkAccessModeResponse:
+      type:
+      - string
+      - 'null'
+      enum:
+      - single
+      - recurrent
+      - null
+      description: "The link type.\nFor more information, see our <a href=\"https://developers.belvo.com/docs/links-and-institutions#links\" target=\"_blank\">Links</a> article.\nWe return one of the following enum values:\n  - `single`\n  - `recurrent`\n  - `null`\n"
+      example: recurrent
+    LinksRequestEmploymentBrazil:
+      type: object
+      title: Employment Links (Brazil)
+      deprecated: true
+      description: '**Note**: Creating links for employment institutions in Brazil directly through the API is not supported. Use the Belvo Hosted Widget instead.
+
+
+        *The request body to create a link for employment institutions in Brazil.*
+
+        '
+      required:
+      - institution
+      - username
+      - password
+      properties:
+        institution:
+          type: string
+          pattern: '[a-z]+_[a-z]{2}_[a-z]+'
+          description: 'The Belvo name for the institution. For employment institutions in Brazil, you can select the following institutions:
+
+
+            - `inss_br_employment`
+
+            '
+          example: inss_br_employment
+        username:
+          type: string
+          pattern: ^^(\d{11}$)|(\d{3}\.){2}\d{3}(-\d{2})$
+          description: The user's CPF (ID) used to log in to the institution. You can provide this either as 11 characters or with the format `XXX.XXX.XXX-XX`.
+          example: 231.002.999-00
+        password:
+          type: string
+          format: password
+          pattern: ^.{8,70}$
+          description: 'The user''s password used to log in to the institution.
+
+            '
+          example: 1234B789C234AGH
+        external_id:
+          $ref: '#/components/schemas/external_id'
+        access_mode:
+          $ref: '#/components/schemas/EnumLinkAccessModeRequest'
+        fetch_resources:
+          $ref: '#/components/schemas/fetch_resources_employment_brazil'
+        credentials_storage:
+          $ref: '#/components/schemas/credentials_storage'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+    PatchBody:
+      type: object
+      description: A JSON object containing a session UUID and a MFA token
+      required:
+      - session
+      - link
+      properties:
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'The session you want to resume. You need to use the `session` value
+
+            that is provided in the 428 Token Required response that you receive
+
+            after you make your POST request.
+
+            '
+          example: 6e7b283c6efa449c9c028a16b5c249fa
+        token:
+          $ref: '#/components/schemas/token'
+        link:
+          type: string
+          format: uuid
+          description: 'The `link.id` you want to resume. Must be the same `link.id` as the
+
+            one you receive in the 428 Token Required response that contains the
+
+            `session` ID.
+
+            '
+          example: 683005d6-f45c-4adb-b289-f1a12f50f80c
+        save_data:
+          $ref: '#/components/schemas/save_data'
+    EnumLinkAccessModeRequest:
+      type: string
+      enum:
+      - single
+      - recurrent
+      description: 'The type of link to create.
+
+
+        - Use `single` to do ad hoc one-time POST requests for accounts, owners, and transactions.
+
+        - Use `recurrent` to have Belvo access information on a recurrent basis so you always have fresh account, owner, balance, and transaction data.
+
+
+        For more information, see our <a href="https://developers.belvo.com/docs/links-and-institutions#links" target="_blank">Links</a> article.
+
+        '
+      default: recurrent
+    token:
+      type: string
+      description: The MFA token generated by the institution which is required to continue a session.
+      example: 1234ab
+    LinksPutRequest:
+      type: object
+      required:
+      - institution
+      - username
+      - password
+      properties:
+        password:
+          type: string
+          description: The end-user's password used to log in to the institution.
+          example: password
+        password2:
+          type: string
+          description: 'The end-user''s second password used to log in to the
+
+            institution.
+
+
+
+            > 📘 Info
+
+            >
+
+            > This is only required by some institutions. To know which
+
+            institutions require a second password, see our List institution request and check the `form_fields` array in the
+
+            response.
+
+            '
+          example: pin
+        token:
+          $ref: '#/components/schemas/token'
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TokenRequiredResponse:
+      type: object
+      description: MFA Token Required
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`token_required`) that allows you to classify and handle the error programmatically.
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#428-token_required" target="_blank">428 token_required errors</a>.
+
+            '
+          example: token_required
+        message:
+          type: string
+          description: "A short description of the error. \nFor `token_required` errors, the description is:\n  \n  - `A MFA token is required by the institution to login`.\n"
+          example: A MFA token is required by the institution to login
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'A 32-character unique ID of the login session (matching a regex pattern of: `[a-f0-9]{32}`).
+
+            '
+          example: 2675b703b9d4451f8d4861a3eee54449
+        expiry:
+          type: integer
+          format: int32
+          description: Session duration time in seconds.
+          example: 9600
+        link:
+          type: string
+          format: uuid
+          description: 'Unique identifier created by Belvo, used to reference the current
+
+            Link.
+
+            '
+          example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        token_generation_data:
+          type: object
+          description: Details on how to generate the token.
+          properties:
+            instructions:
+              type: string
+              description: Instructions for token generation.
+              example: Use this code to generate the token
+            type:
+              type: string
+              description: 'Type of the data to generate the token (QR code, numeric
+
+                challenge).
+
+                '
+              example: numeric
+            value:
+              type: string
+              description: Value to use to generate the token.
+              example: '12345'
+            expects_user_input:
+              type: boolean
+              description: 'Indicates whether the user needs to provide input in order to complete the authentication.
+
+                When set to `false`, your user may need to:
+
+                - confirm the login on another device
+
+                - scan a QR code
+
+                You will still need to make a PATCH call to complete the request.
+
+                '
+              example: true
+              default: true
+    ChangeAccessMode:
+      type: object
+      description: Request body to change the access mode, stale_in, or fetch_resources of a link.
+      properties:
+        access_mode:
+          $ref: '#/components/schemas/EnumLinkAccessModeRequest'
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+        fetch_resources:
+          type: array
+          description: "An array of resources that you would like to receive a historical update for.\n\nFor banking institutions, you can select the following resources:\n  - `ACCOUNTS`\n  - `OWNERS`\n  - `TRANSACTIONS`\n  - `BILLS`\n  - `INVESTMENTS`\n  - `INVESTMENT_TRANSACTIONS`\n  - `INCOMES`\n  - `RECURRING_EXPENSES`\n  - `RISK_INSIGHTS`\n\n\nFor fiscal institutions, you can select the following resources:\n  - `FINANCIAL_STATEMENTS`\n  - `INVOICES`\n  - `TAX_COMPLIANCE_STATUS`\n  - `TAX_RETENTIONS`\n  - `TAX_RETURNS`\n  - `TAX_STATUS`\n\nFor employment institutions, you can select the following resources:\n  - `EMPLOYMENT_RECORDS`(For Mexico's IMSS and ISSTE only)\n  - `EMPLOYMENT_METRICS` (For Mexico's IMSS only)\n  - `EMPLOYMENTS` (For Brazil's INSS only)\n  \n"
+          items:
             type: string
-          message:
+            description: A Belvo resource that the institution supports.
+            example: ACCOUNTS
+          example:
+          - ACCOUNTS
+          - TRANSACTIONS
+    stale_in:
+      type: string
+      pattern: ^\d{1,3}d$
+      description: 'Indicates how long any user-derived data should be stored in Belvo''s database for the link (both single and recurrent). For example, if you send through `90d`, Belvo will remove any data from its database relating to the user after 90 days. For more information, check out the <a href="https://developers.belvo.com/docs/data-retention-controls#stale_in" target="_blank">stale_in</a> section of our Data retention controls article.
+
+
+        > 📘 Info
+
+        >
+
+        > Belvo will only remove data for links that have not been updated in the period you provide in `stale_in`. Belvo will only remove data for links that have not been updated in the period you provide in `stale_in`.
+
+
+        By default Belvo stores user data for 365 days, unless the link is deleted.
+
+        '
+      example: 42d
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumLinkStatus:
+      type: string
+      enum:
+      - valid
+      - invalid
+      - unconfirmed
+      - token_required
+      description: "The current status of the link. For more information, see our <a href=\"https://developers.belvo.com/docs/links-and-institutions#links\" target=\"_blank\">Link</a> article in the devportal.\nWe return one of the following values:\n  - `valid`\n  - `invalid`\n  - `unconfirmed`\n  - `token_required`\n"
+      example: valid
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumLinkRefreshRate:
+      type:
+      - string
+      - 'null'
+      default: 7d
+      enum:
+      - 6h
+      - 12h
+      - 24h
+      - 7d
+      - 30d
+      - null
+      description: "The update refresh rate for the recurrent link. For more information, check out our <a href=\"https://developers.belvo.com/docs/links-and-institutions#recurrent-links\" target=\"_blank\">recurrent link documentation</a> in our DevPortal.\nWe return one of the following enum values:\n  - `6h`\n  - `12h`\n  - `24h`\n  - `7d` (default)\n  - `30d` (once a month)\n  - `null` (for single links)\n"
+      example: 7d
+    save_data:
+      type: boolean
+      default: true
+      description: 'Indicates whether or not to persist the data in Belvo. By default, this is set to `true` and we return a 201 Created response.
+
+
+        When set to `false`, the data won''t be persisted and we return a 200 OK response.
+
+        '
+      example: true
+    created_by:
+      type: string
+      format: uuid
+      description: The unique ID for the user that created this item.
+      example: bcef7f35-67f2-4b19-b009-cb38795faf09
+    external_id:
+      type: string
+      minLength: 3
+      maxLength: 256
+      description: 'An additional identifier for the link, provided by you, to store in the Belvo database. **Cannot** include any Personal Identifiable Information (PII). **Must** be at least three characters long.
+
+
+
+        If we identify that the identifier contains PII, we will force a `null` value. For more information, see our <a href="https://developers.belvo.com/docs/link-creation-best-practices#adding-your-own-identifier" target="_blank">Link creation article</a>.
+
+        '
+      example: 56ab5706-6e00-48a4-91c9-ca55968678d9
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    fetch_resources_fiscal_mexico:
+      type: array
+      description: "An array of resources that you would like to receive a historical update for.\n\nFor **Fiscal Mexico** (SAT), you can select the following resources:\n  - `FINANCIAL_STATEMENTS`\n  - `INVOICES`\n  - `TAX_COMPLIANCE_STATUS`\n  - `TAX_RETENTIONS`\n  - `TAX_RETURNS`\n  - `TAX_STATUS`\n"
+      items:
+        type: string
+        enum:
+        - FINANCIAL_STATEMENTS
+        - INVOICES
+        - TAX_COMPLIANCE_STATUS
+        - TAX_RETENTIONS
+        - TAX_RETURNS
+        - TAX_STATUS
+      example:
+      - FINANCIAL_STATEMENTS
+      - INVOICES
+      - TAX_COMPLIANCE_STATUS
+      - TAX_RETENTIONS
+      - TAX_RETURNS
+      - TAX_STATUS
+    Link:
+      type: object
+      x-tags:
+      - Links
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        institution:
+          type: string
+          description: 'Belvo''s name for the institution.
+
+            '
+          example: erebor_mx_retail
+        access_mode:
+          $ref: '#/components/schemas/EnumLinkAccessModeResponse'
+        last_accessed_at:
+          $ref: '#/components/schemas/last_accessed_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        external_id:
+          $ref: '#/components/schemas/external_id'
+        institution_user_id:
+          type: string
+          pattern: '[A-Za-z0-9\-=_]{44}'
+          description: '> 📘 Info
+
+            >
+
+            > Only applicable for links created **after 08-02-2022**.
+
+
+
+            A unique 44-character string that can be used to identify a user at a given institution.
+
+
+
+            📚 Check out our <a href="https://developers.belvo.com/docs/link-creation-best-practices#avoiding-duplicated-links" target="_blank">Avoiding duplicated links</a> DevPortal article for more information and tips on how to use it.
+
+            '
+          example: test_institution_user_id_1234567890abcdef123
+        status:
+          $ref: '#/components/schemas/EnumLinkStatus'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        refresh_rate:
+          $ref: '#/components/schemas/EnumLinkRefreshRate'
+        credentials_storage:
+          $ref: '#/components/schemas/credentials_storage'
+        fetch_resources:
+          type: array
+          description: 'An array of resources that you will receive a historical update for.
+
+            '
+          items:
             type: string
-          code:
-            type: string
-    PaginatedLinks:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Link'
+            description: A Belvo resource that the institution supports.
+            example: ACCOUNTS
+          example:
+          - ACCOUNTS
+          - TRANSACTIONS
+        stale_in:
+          $ref: '#/components/schemas/stale_in'
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
   responses:
-    Error:
-      description: An error occurred.
+    428_token_required_error:
+      description: MFA Token Required
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            type: array
+            items:
+              $ref: '#/components/schemas/TokenRequiredResponse'
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    409_link_already_refreshed:
+      description: Conflict - Link Already Refreshed
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/LinkAlreadyRefreshedError'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
   securitySchemes:
     basicAuth:
       type: http
       scheme: basic
-      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

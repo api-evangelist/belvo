@@ -1,0 +1,3709 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Invoices API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Invoices
+paths:
+  /api/invoices/:
+    get:
+      tags:
+      - Invoices
+      operationId: ListInvoices
+      description: '## ▶️ Usage
+
+
+        With the List Invoices method, you can:
+
+
+        1. List invoices related to a specific `link.id` (using the `link` query parameter).
+
+        2. Get the details of a specific `invoice.id` (using the `id` query parameter).
+
+        3. **[Not Recommended]** List all invoices related to your Belvo account (without using any query parameters).
+
+
+        ## 📖 Pagination
+
+
+        This method returns a paginated response (default: 100 items per page). You can use the `page_size` query parameter to increase the number of items returned to a maximum of 1000 items. You can use the `page` query parameter to navigate through the results. For more details on how to navigate Belvo''s paginated responses, see our Pagination Tips article.
+
+
+        ## 🔦 Filtering Responses
+
+
+        Please see the query list below for a list of fields that you can filter your responses by. For more information on how to use filters, see our Filtering responses article.
+
+
+        ## 🚨 Deprecated Fields
+
+
+        This resource may return deprecated fields. In the response documentation you may see that a field has been marked as **deprecated**. This means that this field is no longer maintained by the Belvo team. You may still receive data for this field depending on the institution, however, you should not rely on this field.'
+      summary: List invoices
+      parameters:
+      - $ref: '#/components/parameters/link'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/link__in'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/invoice_date'
+      - $ref: '#/components/parameters/invoice_date__lt'
+      - $ref: '#/components/parameters/invoice_date__lte'
+      - $ref: '#/components/parameters/invoice_date__gt'
+      - $ref: '#/components/parameters/invoice_date__gte'
+      - $ref: '#/components/parameters/invoice_date__range'
+      - $ref: '#/components/parameters/invoice_identification'
+      - $ref: '#/components/parameters/invoice_identification__in'
+      - $ref: '#/components/parameters/status_invoice'
+      - $ref: '#/components/parameters/status__in_invoice'
+      - $ref: '#/components/parameters/type_invoice'
+      - $ref: '#/components/parameters/type__in_invoice'
+      - $ref: '#/components/parameters/total_amount'
+      - $ref: '#/components/parameters/total_amount__lt'
+      - $ref: '#/components/parameters/total_amount__lte'
+      - $ref: '#/components/parameters/total_amount__gt'
+      - $ref: '#/components/parameters/total_amount__gte'
+      - $ref: '#/components/parameters/total_amount__range'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of invoice objects.
+                      items:
+                        $ref: '#/components/schemas/InvoiceWithIdSat'
+              examples:
+                InvoiceIngresso:
+                  $ref: '#/components/examples/InvoiceIngresoPaginated'
+                InvoicePago:
+                  $ref: '#/components/examples/InvoicePagoPaginated'
+                InvoiceNomina:
+                  $ref: '#/components/examples/InvoiceNominaPaginated'
+                InvoiceEgreso:
+                  $ref: '#/components/examples/InvoiceEgresoPaginated'
+                InvoiceTraslado:
+                  $ref: '#/components/examples/InvoiceTrasladoPaginated'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    post:
+      tags:
+      - Invoices
+      operationId: RetrieveInvoices
+      summary: Retrieve invoices for a link
+      description: 'Retrieve invoice information from a specific fiscal link.
+
+
+        > 📘 Info
+
+        >
+
+        > You can ask for up to **one** year (365 days) of invoices per request. If you need invoices for more than one year, just make another request.
+
+
+        > 🚧 Warning
+
+        >
+
+        > This resource may return deprecated fields. Please check the response documentation for more information.'
+      parameters:
+      - $ref: '#/components/parameters/async'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - date_from
+              - date_to
+              - link
+              - type
+              properties:
+                link:
+                  $ref: '#/components/schemas/link_request'
+                date_from:
+                  $ref: '#/components/schemas/date_from'
+                date_to:
+                  $ref: '#/components/schemas/date_to'
+                type:
+                  $ref: '#/components/schemas/EnumInvoiceType'
+                attach_xml:
+                  $ref: '#/components/schemas/attach_xml'
+                save_data:
+                  $ref: '#/components/schemas/save_data'
+      responses:
+        '200':
+          description: Ok (when `save_data=false`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceWithIdSat'
+              examples:
+                InvoiceIngresso:
+                  $ref: '#/components/examples/InvoiceIngreso'
+                InvoicePago:
+                  $ref: '#/components/examples/InvoicePago'
+                InvoiceNomina:
+                  $ref: '#/components/examples/InvoiceNomina'
+                InvoiceEgreso:
+                  $ref: '#/components/examples/InvoiceEgreso'
+                InvoiceTraslado:
+                  $ref: '#/components/examples/InvoiceTraslado'
+        '201':
+          description: Created (when `save_data=true`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceWithIdSat'
+              examples:
+                InvoiceIngresso:
+                  $ref: '#/components/examples/InvoiceIngreso'
+                InvoicePago:
+                  $ref: '#/components/examples/InvoicePago'
+                InvoiceNomina:
+                  $ref: '#/components/examples/InvoiceNomina'
+                InvoiceEgreso:
+                  $ref: '#/components/examples/InvoiceEgreso'
+                InvoiceTraslado:
+                  $ref: '#/components/examples/InvoiceTraslado'
+        '202':
+          $ref: '#/components/responses/202_accepted_response'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    patch:
+      tags:
+      - Invoices
+      operationId: PatchInvoices
+      summary: Complete an invoices request
+      description: 'Used to resume an Invoice retrieve session that was paused because an MFA
+
+        token was required by the institution.
+
+
+        {% admonition type="info" %}
+
+        This resource may return deprecated fields. Please check the response documentation for more information.
+
+        {% /admonition %}'
+      parameters:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBody'
+      responses:
+        '200':
+          description: Ok (when `save_data=false`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceWithIdSat'
+        '201':
+          description: Created (when `save_data=true`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceWithIdSat'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/invoices/{id}/:
+    get:
+      tags:
+      - Invoices
+      operationId: DetailInvoice
+      summary: Get an invoice's details
+      description: 'Get the details of a specific invoice.
+
+
+        {% admonition type="info" %}
+
+        This resource may return deprecated fields. Please check the response documentation for more information.
+
+        {% /admonition %}'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `invoice.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceWithIdSat'
+              examples:
+                InvoiceIngresso:
+                  $ref: '#/components/examples/InvoiceIngresoDetail'
+                InvoicePago:
+                  $ref: '#/components/examples/InvoicePagoDetail'
+                InvoiceNomina:
+                  $ref: '#/components/examples/InvoiceNominaDetail'
+                InvoiceEgreso:
+                  $ref: '#/components/examples/InvoiceEgresoDetail'
+                InvoiceTraslado:
+                  $ref: '#/components/examples/InvoiceTrasladoDetail'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    delete:
+      tags:
+      - Invoices
+      operationId: DestroyInvoice
+      summary: Delete an invoice
+      description: Delete a specific invoice from your Belvo account.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `invoice.id` that you want to delete.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  parameters:
+    omit:
+      name: omit
+      in: query
+      description: Omit certain fields from being returned in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    async:
+      name: X-Belvo-Request-Mode
+      in: header
+      description: 'Recommended header parameter to make your POST request asynchronous (thus preventing timeouts and improving your data flow).
+
+
+        When you make an asynchronous request, Belvo responds with a `202 - Accepted` payload, including the `request_id`. Once we have retrieved the requested information, you will receive a webhook with the link and request IDs.
+
+        '
+      schema:
+        type: string
+        enum:
+        - async
+        example: async
+    invoice_date__lt:
+      name: invoice_date__lt
+      in: query
+      description: Return balances issued before this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-02'
+    link:
+      name: link
+      in: query
+      description: 'The `link.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding the `link.id` filter in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    id:
+      name: id
+      in: query
+      description: Return information only for this resource `id`.
+      schema:
+        type: string
+        format: uuid
+        example: 24ccab1d-3a86-4136-a6eb-e04bf52b356f
+    invoice_date__gte:
+      name: invoice_date__gte
+      in: query
+      description: Return invoices issued on this date or later (`YYYY-MM-DD`)
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    type_invoice:
+      name: type
+      in: query
+      description: Return invoices of this type. Can be either `OUTFLOW` or `INFLOW`.
+      schema:
+        type: string
+        enum:
+        - OUTFLOW
+        - INFLOW
+        example: OUTFLOW
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    invoice_date__gt:
+      name: invoice_date__gt
+      in: query
+      description: Return invoices issued after this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-06'
+    link__in:
+      name: link__in
+      in: query
+      description: Return results only for these `link.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 5722d0ba-69d7-42dc-8ff5-33767b83c5d6
+    invoice_date:
+      name: invoice_date
+      in: query
+      description: Return invoices issued exactly on this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    type__in_invoice:
+      name: type__in
+      in: query
+      description: Return invoices of these types. Can be either `OUTFLOW` or `INFLOW`.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - OUTFLOW
+          - INFLOW
+          example: OUTFLOW
+    fields:
+      name: fields
+      in: query
+      description: Return only the specified fields in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    invoice_date__range:
+      name: invoice_date__range
+      in: query
+      description: Return invoices issued within this date range (`YYYY-MM-DD`). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-05-06'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    total_amount__lte:
+      name: total_amount__lte
+      in: query
+      description: Return invoices less than or equal to this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 541.02
+    status__in_invoice:
+      name: status__in
+      in: query
+      description: Return invoices with these statuses. Can be either `Vigente` (valid) or `Cancelado` (cancelled).
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: Cancelado
+    total_amount__gt:
+      name: total_amount__gt
+      in: query
+      description: Return invoices greater than this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 520.02
+    total_amount__lt:
+      name: total_amount__lt
+      in: query
+      description: Return invoices less than this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 540.02
+    total_amount__range:
+      name: total_amount__range
+      in: query
+      description: Return invoices between these two values. The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          example: 541.02
+        example:
+        - 100
+        - 5000
+    invoice_identification:
+      name: invoice_identification
+      in: query
+      description: Return an invoice with this ID (as provided by the insitution).
+      schema:
+        type: string
+        example: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    total_amount:
+      name: total_amount
+      in: query
+      description: Return invoices matching exactly this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    total_amount__gte:
+      name: total_amount__gte
+      in: query
+      description: Return invoices greater than or equal to this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 519.02
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    invoice_identification__in:
+      name: invoice_identification__in
+      in: query
+      description: Return invoices with these IDs (as provided by the institution).
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: 992B9918-3G6H-4E0B-DAI9-2BE2D833B833
+    invoice_date__lte:
+      name: invoice_date__lte
+      in: query
+      description: Return balances issued on this date or earlier (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-01'
+    status_invoice:
+      name: status
+      in: query
+      description: Return invoices with this status. Can be either `Vigente` (valid) or `Cancelado` (cancelled).
+      schema:
+        type: string
+        example: Vigente
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+  schemas:
+    InvoicesPaymentsSat:
+      type: object
+      required:
+      - date
+      - payment_type
+      - currency
+      - exchange_rate
+      - amount
+      - operation_number
+      - beneficiary_account_number
+      - payer_rfc
+      - payer_account_number
+      - payer_bank_name
+      - related_documents
+      properties:
+        date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'ISO-8601 timestamp when the payment was made.
+
+            '
+          example: '2020-03-17T12:00:00.000Z'
+        payment_type:
+          type:
+          - string
+          - 'null'
+          description: 'Payment type code used for this invoice, as defined by the country''s legal entity.
+
+
+            - 🇲🇽 Mexico <a href="https://developers.belvo.com/docs/sat-catalogs#payment-type" target="_blank">SAT catalog reference article</a>
+
+            '
+          example: '03'
+        currency:
+          type:
+          - string
+          - 'null'
+          description: 'The currency of the payment. For example:
+
+
+            - 🇧🇷 BRL (Brazilian Real)
+
+            - 🇨🇴 COP (Colombian Peso)
+
+            - 🇲🇽 MXN (Mexican Peso)
+
+
+            Please note that other currencies other than in the list above may be returned.
+
+            '
+          example: BRL
+        exchange_rate:
+          type:
+          - string
+          - 'null'
+          description: 'The `currency` to MXN currency exchange rate when the payment was made.
+
+            '
+          example: '3.75'
+        amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The invoice amount, in the currency of the original invoice.
+
+            '
+          example: 8000.5
+        operation_number:
+          type:
+          - string
+          - 'null'
+          description: 'The fiscal institution''s internal identifier for the operation.
+
+            '
+          example: '831840'
+        beneficiary_rfc:
+          type:
+          - string
+          - 'null'
+          description: 'The fiscal ID of the payment beneficiary.
+
+            '
+          example: BNM840515VB1
+        beneficiary_account_number:
+          type:
+          - string
+          - 'null'
+          description: 'The bank account number of the payment beneficiary.
+
+            '
+          example: '12343453245633'
+        payer_rfc:
+          type:
+          - string
+          - 'null'
+          description: 'The fiscal ID of the payment issuer.
+
+            '
+          example: BKJM840515VB1
+        payer_account_number:
+          type:
+          - string
+          - 'null'
+          description: 'The bank account number of the payment issuer.
+
+            '
+          example: '13343663245699'
+        payer_bank_name:
+          type:
+          - string
+          - 'null'
+          description: 'The banking institution that was used by the payment issuer.
+
+            '
+          example: CITI BANAMEX
+        related_documents:
+          type: array
+          description: 'A list of all the related deferred invoices affected by the payment.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoicesPaymentsRelatedDocumentsSat'
+    EnumInvoiceSatPaymentMethod:
+      type:
+      - string
+      - 'null'
+      enum:
+      - PUE
+      - PPD
+      - null
+      description: 'The payment method code used for this invoice, as defined by the legal entity of the country.
+
+
+        - 🇲🇽 Mexico <a href="https://developers.belvo.com/docs/sat-catalogs#payment-method" target="_blank">SAT catalog reference article</a>. For Mexico, we return `PUE`, `PPD`, or `null`.
+
+        '
+      example: PUE
+    TaxDetailsInvoicesSat:
+      type: object
+      description: General information about the taxes of the invoice.
+      properties:
+        total_tax_retained:
+          type: number
+          format: float
+          description: Total amount of retained taxes.
+          example: 194.27
+        total_tax_transferred:
+          type: number
+          format: float
+          description: Total amount of transferred taxes.
+          example: 150.4
+        retained_taxes:
+          type: array
+          description: List of retained taxes.
+          items:
+            type: object
+            properties:
+              tax_type:
+                type:
+                - string
+                - 'null'
+                description: 'The tax type code for this retained tax, as defined by the legal entity in the country.
+
+                  '
+                example: Tasa
+              tax:
+                type: string
+                description: The type of retained tax (for example, ISR, IVA or IEPS).
+                example: ISR
+              tax_percentage:
+                type:
+                - number
+                - 'null'
+                format: float
+                description: The percentage of tax retained.
+                example: null
+              pre_tax_amount:
+                type:
+                - number
+                - 'null'
+                format: float
+                description: The amount before tax.
+                example: null
+              tax_amount:
+                type: number
+                format: float
+                description: The amount of retained tax.
+                example: 94
+        transferred_taxes:
+          type: array
+          description: List of transferred taxes.
+          items:
+            type: object
+            properties:
+              tax_type:
+                type:
+                - string
+                - 'null'
+                description: 'The tax type code (TipoFactor) for this transferred tax, as defined by the legal entity in the country.
+
+                  '
+                example: Tasa
+              tax:
+                type: string
+                description: The type of transferred tax (for example, ISR, IVA or IEPS).
+                example: IVA
+              tax_percentage:
+                type: number
+                format: float
+                description: The percentage of tax transferred.
+                example: 16
+              pre_tax_amount:
+                type: number
+                format: float
+                description: The amount before tax.
+                example: 940
+              tax_amount:
+                type: number
+                format: float
+                description: The amount of transferred tax.
+                example: 150.4
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvoicePayrollOtherPayments:
+      type:
+      - object
+      - 'null'
+      description: A breakdown of other payments for the payroll.
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: 'The type of other payment. For a full list of possible values, please see the <a href="https://developers.belvo.com/docs/sat-catalogs#payroll-other-payments-type" target="_blank">payroll other payments type table</a>.
+
+            '
+          example: EMPLOYMENT_SUBSIDY
+        amount:
+          type: number
+          format: float
+          description: 'The amount of the other payment.
+
+            '
+          example: 1505
+    InvoiceWithIdSat:
+      type: object
+      title: Invoices Object (Mexico)
+      x-tags:
+      - Invoices
+      required:
+      - type
+      - invoice_identification
+      - invoice_date
+      - invoice_type
+      - subtotal_amount
+      - tax_amount
+      - discount_amount
+      - total_amount
+      - currency
+      - exchange_rate
+      - status
+      - sender_name
+      - sender_id
+      - receiver_name
+      - receiver_id
+      - certification_authority
+      - certification_date
+      - cancelation_status
+      - cancelation_update_date
+      - payment_type
+      - payment_type_description
+      - invoice_details
+      - payroll
+      - payments
+      - collected_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        link:
+          $ref: '#/components/schemas/link'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        invoice_identification:
+          type:
+          - string
+          - 'null'
+          description: The fiscal institution's unique ID for the invoice.
+          example: A1A1A1A1-2B2B-3C33-D44D-555555E55EE
+        invoice_date:
+          type:
+          - string
+          - 'null'
+          description: The date of the invoice, in `YYYY-MM-DD` format.
+          example: '2019-12-01'
+        status:
+          type:
+          - string
+          - 'null'
+          description: 'The status of the invoice. Can be either *Vigente* (valid) or *Cancelado*
+
+            (cancelled).
+
+            '
+          example: Vigente
+        invoice_type:
+          $ref: '#/components/schemas/EnumInvoiceSatInvoiceType'
+        type:
+          $ref: '#/components/schemas/EnumInvoiceType'
+        tax_details:
+          $ref: '#/components/schemas/TaxDetailsInvoicesSat'
+        sender_id:
+          type:
+          - string
+          - 'null'
+          description: The fiscal ID of the invoice sender
+          example: AAA111111AA11
+        sender_fiscal_regime:
+          type:
+          - string
+          - 'null'
+          description: The tax regime of the sender, as defined by the legal entity in the country.
+          example: '601'
+        sender_name:
+          type:
+          - string
+          - 'null'
+          description: The name of the invoice sender.
+          example: ACME CORP
+        sender_tax_fraud_status:
+          type:
+          - string
+          - 'null'
+          description: 'Indicates whether or not the sender is on SAT''s tax fraud list for having submitted incorrect data, having outstanding payments, or having conducted business that is in violation of the fiscal institution''s regulations.<br><br>
+
+
+            SAT updates the tax fraud list every three months. <br><br>
+
+
+            For more information regarding the reason''s a taxpayer can be put on the tax fraud list, please see <a href="http://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69.html" target="_blank">Article 69</a> and <a href="http://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69B.html" target="_blank">Article 69-B</a> of Mexico''s Código Fiscal de la Federación.
+
+            <br><br>
+
+
+            Possible statuses are:
+
+
+            - `INVESTIGATING` <br>
+
+            The fiscal institution has identified irregularities and open an investigation regarding the taxpayer.
+
+            <br>
+
+            - `DISMISSED` <br>
+
+            The fiscal institution has investigated the taxpayer and declared them innocent.
+
+            <br>
+
+            - `CONFIRMED` <br>
+
+            The fiscal institution has confirmed that the taxpayer is guilty.
+
+            <br>
+
+            - `OVERTURNED` <br>
+
+            The fiscal institution has reassessed a previously confirmed taxpayer and, based on new evidence, has taken the taxpayer off the tax fraud list.
+
+            <br>
+
+            - `NO_TAX_FRAUD_STATUS` <br>
+
+            The receiver or sender is not found in the list (in other words, they are complying with the fiscal institution''s regulations).
+
+            '
+          example: NO_TAX_FRAUD_STATUS
+        receiver_id:
+          type:
+          - string
+          - 'null'
+          description: The fiscal ID of the invoice receiver.
+          example: BBB222222BB22
+        receiver_postal_code:
+          type: string
+          description: The postal code of the receiver.
+          example: '11560'
+        receiver_fiscal_regime:
+          type:
+          - string
+          - 'null'
+          description: The tax regime of the receiver, as defined by the legal entity in the country.
+          example: '601'
+        receiver_name:
+          type:
+          - string
+          - 'null'
+          description: The name of the invoice receiver.
+          example: BELVO CORP
+        receiver_tax_fraud_status:
+          type:
+          - string
+          - 'null'
+          description: 'Indicates whether or not the receiver is on SAT''s tax fraud list for having submitted incorrect data, having outstanding payments, or having conducted business that is in violation of the fiscal institution''s regulations.<br><br>
+
+
+            SAT updates the tax fraud list every three months. <br><br>
+
+
+            For more information regarding the reason''s a taxpayer can be put on the tax fraud list, please see <a href="http://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69.html" target="_blank">Article 69</a> and <a href="http://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69B.html" target="_blank">Article 69-B</a> of Mexico''s Código Fiscal de la Federación.
+
+            <br><br>
+
+
+            Possible statuses are:
+
+
+            - `INVESTIGATING` <br>
+
+            The fiscal institution has identified irregularities and open an investigation regarding the taxpayer.
+
+            <br>
+
+            - `DISMISSED` <br>
+
+            The fiscal institution has investigated the taxpayer and declared them innocent.
+
+            <br>
+
+            - `CONFIRMED` <br>
+
+            The fiscal institution has confirmed that the taxpayer is guilty.
+
+            <br>
+
+            - `OVERTURNED` <br>
+
+            The fiscal institution has reassessed a previously confirmed taxpayer and, based on new evidence, has taken the taxpayer off the tax fraud list.
+
+            <br>
+
+            - `NO_TAX_FRAUD_STATUS` <br>
+
+            The receiver or sender is not found in the list (in other words, they are complying with the fiscal institution''s regulations).
+
+            '
+          example: NO_TAX_FRAUD_STATUS
+        cancelation_status:
+          type:
+          - string
+          - 'null'
+          description: 'If the invoice is cancelled, this field indicates the status of the cancellation.
+
+            '
+        cancelation_update_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'The date of the invoice cancelation, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-12-02'
+        certification_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'The date of the fiscal certification, in `YYYY-MM-DD` format.
+
+            '
+          example: '2019-12-01'
+        certification_authority:
+          type:
+          - string
+          - 'null'
+          description: 'The fiscal ID of the certification provider.
+
+            '
+          example: CCC333333CC33
+        payment_type:
+          type:
+          - string
+          - 'null'
+          description: 'The payment type code used for this invoice, as defined by the country legal entity.
+
+
+            - 🇲🇽 Mexico <a href="https://developers.belvo.com/docs/sat-catalogs#payment-type" target="_blank">SAT catalog reference article</a>
+
+            '
+          example: '99'
+        payment_type_description:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+            '
+          example: null
+        payment_method:
+          $ref: '#/components/schemas/EnumInvoiceSatPaymentMethod'
+        payment_method_description:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+
+            *The description of the payment method used for this invoice.*
+
+            '
+          example: null
+        usage:
+          type:
+          - string
+          - 'null'
+          description: "The invoice's usage code, as defined by the legal entity of the country. \n\n- \U0001F1F2\U0001F1FD Mexico <a href=\"https://developers.belvo.com/docs/sat-catalogs#usage\" target=\"_blank\">SAT catalog reference article</a>\n"
+          example: P01
+        version:
+          type:
+          - string
+          - 'null'
+          description: 'The CFDI version of the invoice.
+
+            '
+          example: '3.3'
+        place_of_issue:
+          type:
+          - string
+          - 'null'
+          description: 'The postcode of where the invoice was issued.
+
+            '
+          example: '01165'
+        invoice_details:
+          type: array
+          description: 'A list of descriptions for each item (purchased product or service provided) in the invoice.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoiceDetailSat'
+        currency:
+          type:
+          - string
+          - 'null'
+          description: "The currency of the invoice. For example:\n \n - \U0001F1E7\U0001F1F7 BRL (Brazilian Real)\n - \U0001F1E8\U0001F1F4 COP (Colombian Peso)\n - \U0001F1F2\U0001F1FD MXN (Mexican Peso)\n - \U0001F1FA\U0001F1F8 USD (United States Dollar)\n"
+          example: MXN
+        subtotal_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The pretax amount of this invoice (sum of each item''s `pre_tax_amount`).
+
+            '
+          example: 400
+        exchange_rate:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The exchange rate used in this invoice for the currency.
+
+            '
+          example: 0.052
+        tax_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The amount of tax for this invoice (sum of each item''s `tax_amount`).
+
+            '
+          example: 64
+        discount_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total amount discounted in this invoice.
+
+            '
+          example: 10
+        total_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total amount of the invoice (`subtotal_amount` + `tax_amount` - `discount_amount`)
+
+            '
+          example: 454
+        related_invoices:
+          type: array
+          description: A list of related invoices.
+          items:
+            $ref: '#/components/schemas/RelatedInvoiceSat'
+        payments:
+          type: array
+          description: 'A list detailing all the invoice payments.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoicesPaymentsSat'
+        payroll:
+          $ref: '#/components/schemas/InvoicesPayrollSat'
+        folio:
+          type:
+          - string
+          - 'null'
+          description: 'The internal control number that the taxpayer assigns to the invoice.
+
+            '
+          example: '26'
+        series:
+          type:
+          - string
+          - 'null'
+          description: 'The series of the invoice, as defined by the taxpayer. This is an optional field used to group invoices.
+
+            '
+          example: A
+        export_type:
+          type:
+          - string
+          - 'null'
+          description: The export type of the invoice, as defined by the legal entity in the country. For more information, see our <a href="https://developers.belvo.com/docs/sat-catalogs#export-type" target="_blank">SAT catalog reference article</a>.
+          example: '01'
+        xml:
+          type:
+          - string
+          - 'null'
+          description: 'XML of the invoice document.
+
+            '
+        warnings:
+          $ref: '#/components/schemas/InvoiceWarningsSat'
+        sender_blacklist_status:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+            Please use `sender_tax_fraud_status` instead.
+
+            '
+          example: null
+        receiver_blacklist_status:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '*This field has been deprecated. For more information regarding Belvo and deprecation, see our Deprecated fields explanation.*
+
+            Please use `receiver_tax_fraud_status` instead.
+
+            '
+          example: null
+    EnumInvoiceSatInvoiceType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - Egreso
+      - Ingreso
+      - Nómina
+      - Pago
+      - Traslado
+      description: "The fiscal institution's classification of the invoice.\n\nFor Mexico's SAT, we return one of the following values:\n\n  - `Egreso`\n  - `Ingreso`\n  - `Nómina`\n  - `Pago`\n  - `Traslado`\n"
+      example: Ingreso
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvoicePayrollTaxDeductions:
+      type:
+      - object
+      - 'null'
+      description: A breakdown of the tax deductions on the payroll payment.
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: 'The type of tax deduction. For a full list of possible values, please see the <a href="https://developers.belvo.com/docs/sat-catalogs#payroll-tax-deductions-type" target="_blank">payroll tax deductions type table</a>.
+
+            '
+          example: UNION_FEES
+        amount:
+          type: number
+          format: float
+          description: 'The amount of the tax deduction.
+
+            '
+          example: 1505
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    PatchBody:
+      type: object
+      description: A JSON object containing a session UUID and a MFA token
+      required:
+      - session
+      - link
+      properties:
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'The session you want to resume. You need to use the `session` value
+
+            that is provided in the 428 Token Required response that you receive
+
+            after you make your POST request.
+
+            '
+          example: 6e7b283c6efa449c9c028a16b5c249fa
+        token:
+          $ref: '#/components/schemas/token'
+        link:
+          type: string
+          format: uuid
+          description: 'The `link.id` you want to resume. Must be the same `link.id` as the
+
+            one you receive in the 428 Token Required response that contains the
+
+            `session` ID.
+
+            '
+          example: 683005d6-f45c-4adb-b289-f1a12f50f80c
+        save_data:
+          $ref: '#/components/schemas/save_data'
+    InvoicePayrollEarningsBreakdown:
+      type:
+      - object
+      - 'null'
+      description: A breakdown of the earnings for the payroll payment.
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: 'The type of income. For a full list of possible values, please see the <a href="https://developers.belvo.com/docs/sat-catalogs#payroll-earnings-breakdown-type" target="_blank">payroll earnings breakdown type table</a>.
+
+            '
+          example: CHRISTMAS_BONUS
+        taxable_amount:
+          type: number
+          format: float
+          description: 'The amount of the income that is taxable.
+
+            '
+          example: 1505
+        vat_free_amount:
+          type: number
+          format: float
+          description: 'The amount of the income that is not subject to VAT.
+
+            '
+          example: 0
+    token:
+      type: string
+      description: The MFA token generated by the institution which is required to continue a session.
+      example: 1234ab
+    collected_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp when the data point was collected.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    InvoiceDetailTransferredTaxSat:
+      type: object
+      required:
+      - tax
+      - tax_percentage
+      - transferred_tax_amount
+      properties:
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        tax_type:
+          type:
+          - string
+          - 'null'
+          description: 'The tax type code for this transferred tax, as defined by the legal entity in the country.
+
+            '
+          example: Tasa
+        tax:
+          type:
+          - string
+          - 'null'
+          description: The type of transferred tax (for example, ISR, IVA or IEPS).
+          example: IVA
+        tax_percentage:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The percentage of tax transferred.
+          example: 10
+        transferred_tax_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The amount of transferred tax.
+          example: 209.79
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RelatedInvoiceSat:
+      type: object
+      description: Related invoice item.
+      properties:
+        relationship_type:
+          type:
+          - string
+          - 'null'
+          description: The type of relationship between this invoice and the related invoice, as defined by the legal entity in the country. For more information, see our <a href="https://developers.belvo.com/docs/sat-catalogs#related-invoices" target="_blank">SAT catalog reference article</a>.
+          example: '01'
+        related_invoice_identification:
+          type:
+          - string
+          - 'null'
+          description: The SAT ID of the related invoice.
+          example: INV-123456
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvoicesPaymentsRelatedDocumentsSat:
+      type: object
+      required:
+      - invoice_identification
+      - currency
+      - payment_method
+      - previous_balance
+      - amount_paid
+      - outstanding_balance
+      description: List of all the related deferred invoices affected by the payment.
+      properties:
+        invoice_identification:
+          type:
+          - string
+          - 'null'
+          description: 'The fiscal institution''s unique ID for the related deferred invoice.
+
+            '
+          example: 7EE015F3-6311-11EA-B02A-00155D014007
+        currency:
+          type:
+          - string
+          - 'null'
+          description: "The currency of the related invoice. For example:\n    \n- \U0001F1E7\U0001F1F7 BRL (Brazilian Real)\n- \U0001F1E8\U0001F1F4 COP (Colombian Peso)\n- \U0001F1F2\U0001F1FD MXN (Mexican Peso)\n  \n  Please note that other currencies other than in the list above may be returned.\n"
+          example: MXN
+        payment_method:
+          type:
+          - string
+          - 'null'
+          description: 'The payment method of the related invoice.
+
+            '
+          example: PPD
+        partiality_number:
+          type: integer
+          format: int32
+          description: 'The payment installment number.
+
+            '
+          example: 1
+        previous_balance:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The invoice amount before the payment.
+
+            '
+          example: 18877.84
+        amount_paid:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The amount paid in this installment.
+
+            '
+          example: 8000
+        outstanding_balance:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The amount remaining to be paid.
+
+            '
+          example: 10877.84
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvoiceDetailSat:
+      type: object
+      required:
+      - description
+      - product_identification
+      - quantity
+      - unit_amount
+      - unit_description
+      - unit_code
+      - pre_tax_amount
+      - tax_percentage
+      - tax_amount
+      - total_amount
+      properties:
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        description:
+          type:
+          - string
+          - 'null'
+          description: 'The description of the invoice item (an invoice can have one or more items).
+
+            '
+          example: December 2019 accounting fees
+        product_identification:
+          type:
+          - string
+          - 'null'
+          description: The identification code of the product or the service, as defined by the legal entity in the country.\n- \U0001F1F2\U0001F1FD <a href="http://200.57.3.89/Pys/catPyS.aspx" target="_blank">Mexico</a>.
+          example: '84101600'
+        quantity:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The quantity of this invoice item.
+          example: 10
+        unit_code:
+          type:
+          - string
+          - 'null'
+          description: The unit of measure, as defined by the legal entity in the country. \n- \U0001F1F2\U0001F1FD Mexico <a href="https://developers.belvo.com/docs/sat-catalogs#unit-code" target="_blank">SAT catalog reference</a>.
+          example: E48
+        unit_description:
+          type:
+          - string
+          - 'null'
+          description: The description of the item, as defined by the legal entity in the country.\n- \U0001F1F2\U0001F1FD Mexico <a href="https://developers.belvo.com/docs/sat-catalogs#unit-code" target="_blank">SAT catalog reference</a>.
+          example: Unidad de servicio
+        unit_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The price of one a singular item.
+          example: 200
+        discount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The discount amount applied to this invoice item.
+
+            '
+          example: 10
+        tax_subject_code:
+          type:
+          - string
+          - 'null'
+          description: 'Indicates what tax this item is subject to, as defined by the legal entity in the country.
+
+            '
+          example: '02'
+        identifier_number:
+          type:
+          - string
+          - 'null'
+          description: 'The identification number of the item, as defined by the seller. This can be used to identify the product or service in the seller''s system.
+
+            '
+          example: PROD-12345
+        pre_tax_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total price for this item before tax is applied (`quantity` x `unit_amount`).
+
+            '
+          example: 400
+        tax_percentage:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The tax percentage to apply.
+          example: 16
+        tax_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The amount of tax for this invoice item (`pre_tax_amount` x `tax_percentage`).
+
+            '
+          example: 64
+        total_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The total price for this invoice item (`pre_tax_amount` + `tax_amount`).
+          example: 464
+        retained_taxes:
+          type: array
+          description: The retained tax on the invoice item.
+          items:
+            $ref: '#/components/schemas/InvoiceDetailRetainedTaxSat'
+        transferred_taxes:
+          type: array
+          description: The transferred taxes related to the invoice.
+          items:
+            $ref: '#/components/schemas/InvoiceDetailTransferredTaxSat'
+    link_request:
+      type: string
+      format: uuid
+      description: The `link.id` you want to retrieve information for.
+      example: c81a1dea-6dd6-4999-8b9f-541ee8197058
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    date_to:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date you want to stop getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_to` cannot be greater than today''s date (in other words, no future dates).
+
+        '
+      example: '2020-10-05'
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+    EnumInvoicePayrollPeriodicity:
+      type:
+      - string
+      - 'null'
+      enum:
+      - DAILY
+      - WEEKLY
+      - TENTH_DAY
+      - FOURTEENTH_DAY
+      - FIFTEENTH_DAY
+      - MONTHLY
+      - BIMONTHLY
+      - PER_TASK
+      - COMMISSION
+      - ONE_OFF
+      - OTHER_PERIODICITY
+      - 'null'
+      description: "How often the payroll payment is made.\n\nFor Mexico's SAT, we return one of the following values:\n\n  - `DAILY`\n  - `WEEKLY`\n  - `TENTH_DAY`\n  - `FOURTEENTH_DAY`\n  - `FIFTEENTH_DAY`\n  - `MONTHLY`\n  - `BIMONTHLY`\n  - `PER_TASK`\n  - `COMMISSION`\n  - `ONE_OFF`\n  - `OTHER_PERIODICITY`\n"
+      example: MONTHLY
+    InvoicesPayrollSat:
+      type:
+      - object
+      - 'null'
+      required:
+      - version
+      - type
+      - payment_date
+      - date_from
+      - date_to
+      - days
+      - amount
+      description: 'Details regarding the payroll payment. Only applicable for payroll invoices.
+
+        '
+      properties:
+        days:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days covered by the payment.
+
+            '
+          example: 30
+        type:
+          type:
+          - string
+          - 'null'
+          description: 'The payroll type, as defined by the legal entity of the country.
+
+
+            - 🇲🇽 Mexico <a href="https://developers.belvo.com/docs/sat-catalogs#payroll-type" target="_blank">SAT catalog reference article</a>
+
+            '
+          example: O
+        amount:
+          type: number
+          format: float
+          description: 'The total amount of the payroll payment.
+
+            '
+          example: 20400.1
+        version:
+          type: string
+          description: 'The version of the payroll object.
+
+            '
+          example: '1.2'
+        date_from:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'The start date of the payment period, in `YYYY-MM-DD` format.
+
+            '
+          example: '2018-07-01'
+        date_to:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'The end date of the payment period, in `YYYY-MM-DD` format.
+
+            '
+          example: '2018-07-31'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        payment_date:
+          type: string
+          format: date
+          description: 'The payment date, in `YYYY-MM-DD` format.
+
+            '
+          example: '2018-07-16'
+        periodicity:
+          $ref: '#/components/schemas/EnumInvoicePayrollPeriodicity'
+        earnings_breakdown:
+          type:
+          - array
+          - 'null'
+          description: 'A breakdown of the earnings for the payroll payment.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoicePayrollEarningsBreakdown'
+        tax_deductions:
+          type:
+          - array
+          - 'null'
+          description: 'A breakdown of the tax deductions on the payroll payment.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoicePayrollTaxDeductions'
+        other_payments:
+          type:
+          - array
+          - 'null'
+          description: 'A breakdown of other payments for the payroll.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoicePayrollOtherPayments'
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    save_data:
+      type: boolean
+      default: true
+      description: 'Indicates whether or not to persist the data in Belvo. By default, this is set to `true` and we return a 201 Created response.
+
+
+        When set to `false`, the data won''t be persisted and we return a 200 OK response.
+
+        '
+      example: true
+    InvoiceWarningsSat:
+      type:
+      - object
+      - 'null'
+      required:
+      - code
+      - message
+      description: 'Object containing information about any warnings related to this invoice.
+
+        '
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The warning code. Can be one of:\n\n  - `sat_xml_limit_reached`\n  - `sat_service_unavailable`\n  - `null`\n"
+          example: sat_xml_limit_reached
+        message:
+          type:
+          - string
+          - 'null'
+          description: 'The description of the warning.
+
+
+            The message will depend on the warning code:
+
+
+            `sat_xml_limit_reached`<br>
+
+            The daily limit for XML downloads set by SAT was reached so this invoice might be missing data. Please check https://tinyurl.com/yydzhy5d for more information on this error.
+
+
+            `sat_service_unavailable` <br>
+
+            Downloading invoices details is not available. The SAT portal raised a 503 error.
+
+            '
+          example: 'The daily limit for XML downloads set by SAT was reached so this invoice
+
+            might be missing data. Please check https://tinyurl.com/yydzhy5d for more
+
+            information on this error.
+
+            '
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    attach_xml:
+      type: boolean
+      default: false
+      description: When set to `true`, you will receive the XML invoice in the response.
+      example: false
+    date_from:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date from which you want to start getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_from` cannot be greater than `date_to`.
+
+        '
+      example: '2020-08-05'
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvoiceDetailRetainedTaxSat:
+      type: object
+      required:
+      - tax
+      - tax_percentage
+      - retained_tax_amount
+      properties:
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        tax_type:
+          type:
+          - string
+          - 'null'
+          description: 'The tax type code for this retained tax, as defined by the legal entity in the country.
+
+            '
+          example: Tasa
+        tax:
+          type:
+          - string
+          - 'null'
+          description: The type of retained tax (for example, ISR, IVA or IEPS).
+          example: ISR
+        tax_percentage:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The percentage of tax retained.
+          example: 10
+        retained_tax_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The amount of retained tax.
+          example: 209.79
+    link:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: The `link.id` the data belongs to.
+      example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+    EnumInvoiceType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - OUTFLOW
+      - INFLOW
+      - null
+      description: 'The direction of the invoice (from the perspective of the Link owner).
+
+        - `OUTFLOW` indicates a sent invoice.
+
+        - `INFLOW` indicates a received invoice.
+
+        '
+      example: INFLOW
+  examples:
+    InvoiceEgresoDetail:
+      summary: Invoice Egreso
+      description: Example of an *Egreso* type invoice.
+      value:
+        id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Egreso
+        type: INFLOW
+        sender_id: GHTF980303F7
+        sender_name: Roberto Martinez Diaz
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: ACNE SA DE CV
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: '04'
+        payment_type_description: null
+        payment_method: PUE
+        usage: G03
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - product_identification: '78111500'
+          description: Reembolso del servicio
+          unit_code: E48
+          unit_description: Unidad de servicio
+          quantity: 1
+          unit_amount: 25
+          pre_tax_amount: 25
+          tax_percentage: 16
+          tax_amount: 4
+          total_amount: 29
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 25
+        exchange_rate: 1
+        tax_amount: 4
+        discount_amount: 0
+        total_amount: 29
+        payments: []
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoiceIngresoPaginated:
+      summary: Invoice Ingreso
+      description: Example of an *Igreso* type invoice.
+      value:
+        count: 110
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+          link: 1bd948f7-245d-4313-b604-34d1044cb908
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+          invoice_date: '2020-12-24'
+          status: Vigente
+          invoice_type: Ingreso
+          type: OUTFLOW
+          sender_id: GHTF980303F7
+          sender_name: Roberto Martinez Diaz
+          sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          receiver_id: MNMK3203409H1
+          receiver_name: ACNE SA DE CV
+          receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          cancelation_status: null
+          cancelation_update_date: null
+          certification_date: '2020-12-24'
+          certification_authority: FGV330542BG6
+          payment_type: '04'
+          payment_type_description: null
+          payment_method: PUE
+          usage: G03
+          place_of_issue: '11000'
+          version: '3.3'
+          invoice_details:
+          - description: Servicios de mensajería.
+            product_identification: '78102206'
+            quantity: 1
+            unit_code: E48
+            unit_description: Unidad de servicio
+            unit_amount: 25
+            pre_tax_amount: 25
+            tax_percentage: 16
+            tax_amount: 4
+            total_amount: 29
+            retained_taxes: []
+            collected_at: '2022-02-09T08:45:50.406032Z'
+          currency: MXN
+          subtotal_amount: 25
+          exchange_rate: 1
+          tax_amount: 4
+          discount_amount: 0
+          total_amount: 29
+          payments: []
+          payroll: null
+          folio: '28'
+          xml: =XML-STRING=
+          warnings:
+            code: warning_code
+            message: warning message
+    InvoiceEgresoPaginated:
+      summary: Invoice Egreso
+      description: Example of an *Egreso* type invoice.
+      value:
+        count: 110
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+          link: 1bd948f7-245d-4313-b604-34d1044cb908
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+          invoice_date: '2020-12-24'
+          status: Vigente
+          invoice_type: Egreso
+          type: INFLOW
+          sender_id: GHTF980303F7
+          sender_name: Roberto Martinez Diaz
+          sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          receiver_id: MNMK3203409H1
+          receiver_name: ACNE SA DE CV
+          receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          cancelation_status: null
+          cancelation_update_date: null
+          certification_date: '2020-12-24'
+          certification_authority: FGV330542BG6
+          payment_type: '04'
+          payment_type_description: null
+          payment_method: PUE
+          usage: G03
+          place_of_issue: '11000'
+          version: '3.3'
+          invoice_details:
+          - product_identification: '78111500'
+            description: Reembolso del servicio
+            unit_code: E48
+            unit_description: Unidad de servicio
+            quantity: 1
+            unit_amount: 25
+            pre_tax_amount: 25
+            tax_percentage: 16
+            tax_amount: 4
+            total_amount: 29
+            retained_taxes: []
+            collected_at: '2022-02-09T08:45:50.406032Z'
+          currency: MXN
+          subtotal_amount: 25
+          exchange_rate: 1
+          tax_amount: 4
+          discount_amount: 0
+          total_amount: 29
+          payments: []
+          payroll: null
+          folio: '28'
+          xml: =XML-STRING=
+          warnings:
+            code: warning_code
+            message: warning message
+    InvoicePagoDetail:
+      summary: Invoice Pago
+      description: Example of a *Pago* type invoice.
+      value:
+        id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Pago
+        type: OUTFLOW
+        sender_id: GHTF980303F7
+        sender_name: Roberto Martinez Diaz
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: ACNE SA DE CV
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: null
+        payment_type_description: null
+        payment_method: null
+        usage: P01
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: Pago
+          product_identification: '84111506'
+          quantity: 1
+          unit_amount: 0
+          unit_code: ACT
+          unit_description: null
+          pre_tax_amount: 0
+          tax_percentage: 0
+          tax_amount: 0
+          total_amount: 0
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 0
+        exchange_rate: null
+        tax_amount: 0
+        discount_amount: 0
+        total_amount: 0
+        payments:
+        - date: '2020-03-17T12:00:00.000Z'
+          payment_type: '03'
+          currency: BRL
+          exchange_rate: '3.75'
+          amount: 8000.5
+          operation_number: '831840'
+          beneficiary_rfc: BNM840515VB1
+          beneficiary_account_number: '12343453245633'
+          payer_rfc: BKJM840515VB1
+          payer_account_number: '13343663245699'
+          payer_bank_name: CITI BANAMEX
+          related_documents:
+          - invoice_identification: 7EE015F3-6311-11EA-B02A-00155D014007
+            currency: MXN
+            payment_method: PPD
+            previous_balance: 18877.84
+            amount_paid: 8000
+            outstanding_balance: 10877.84
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoicePagoPaginated:
+      summary: Invoice Pago
+      description: Example of a *Pago* type invoice.
+      value:
+        count: 110
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+          link: 1bd948f7-245d-4313-b604-34d1044cb908
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+          invoice_date: '2020-12-24'
+          status: Vigente
+          invoice_type: Pago
+          type: OUTFLOW
+          sender_id: GHTF980303F7
+          sender_name: Roberto Martinez Diaz
+          sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          receiver_id: MNMK3203409H1
+          receiver_name: ACNE SA DE CV
+          receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          cancelation_status: null
+          cancelation_update_date: null
+          certification_date: '2020-12-24'
+          certification_authority: FGV330542BG6
+          payment_type: null
+          payment_type_description: null
+          payment_method: null
+          usage: P01
+          place_of_issue: '11000'
+          version: '3.3'
+          invoice_details:
+          - description: Pago
+            product_identification: '84111506'
+            quantity: 1
+            unit_amount: 0
+            unit_code: ACT
+            unit_description: null
+            pre_tax_amount: 0
+            tax_percentage: 0
+            tax_amount: 0
+            total_amount: 0
+            retained_taxes: []
+            collected_at: '2022-02-09T08:45:50.406032Z'
+          currency: MXN
+          subtotal_amount: 0
+          exchange_rate: null
+          tax_amount: 0
+          discount_amount: 0
+          total_amount: 0
+          payments:
+          - date: '2020-03-17T12:00:00.000Z'
+            payment_type: '03'
+            currency: BRL
+            exchange_rate: '3.75'
+            amount: 8000.5
+            operation_number: '831840'
+            beneficiary_rfc: BNM840515VB1
+            beneficiary_account_number: '12343453245633'
+            payer_rfc: BKJM840515VB1
+            payer_account_number: '13343663245699'
+            payer_bank_name: CITI BANAMEX
+            related_documents:
+            - invoice_identification: 7EE015F3-6311-11EA-B02A-00155D014007
+              currency: MXN
+              payment_method: PPD
+              previous_balance: 18877.84
+              amount_paid: 8000
+              outstanding_balance: 10877.84
+          payroll: null
+          folio: '28'
+          xml: =XML-STRING=
+          warnings:
+            code: warning_code
+            message: warning message
+    InvoiceTrasladoPaginated:
+      summary: Invoice Traslado
+      description: Example of a *Traslado* type invoice.
+      value:
+        count: 110
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+          link: 1bd948f7-245d-4313-b604-34d1044cb908
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+          invoice_date: '2020-12-24'
+          status: Vigente
+          invoice_type: Traslado
+          type: INFLOW
+          sender_id: GHTF980303F7
+          sender_name: ACNE SA DE CV
+          sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          receiver_id: MNMK3203409H1
+          receiver_name: CARGOS S.A. DE C.V.
+          receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          cancelation_status: null
+          cancelation_update_date: null
+          certification_date: '2020-12-24'
+          certification_authority: FGV330542BG6
+          payment_type: null
+          payment_type_description: null
+          payment_method: null
+          usage: G03
+          place_of_issue: '11000'
+          version: '3.3'
+          invoice_details:
+          - description: FLETE
+            product_identification: '78101802'
+            quantity: 1
+            unit_code: E48
+            unit_description: Unidad de servicio
+            unit_amount: 21000
+            pre_tax_amount: 21000
+            tax_percentage: 16
+            tax_amount: 0
+            total_amount: 21000
+            retained_taxes: []
+            collected_at: '2022-02-09T08:45:50.406032Z'
+          currency: MXN
+          subtotal_amount: 0
+          exchange_rate: 1
+          tax_amount: 0
+          discount_amount: 0
+          total_amount: 0
+          payments: []
+          payroll: null
+          folio: '28'
+          xml: =XML-STRING=
+          warnings:
+            code: warning_code
+            message: warning message
+    InvoiceIngreso:
+      summary: Invoice Ingreso
+      description: Example of an *Igreso* type invoice.
+      value:
+      - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Ingreso
+        type: OUTFLOW
+        sender_id: GHTF980303F7
+        sender_name: Roberto Martinez Diaz
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: ACNE SA DE CV
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: '04'
+        payment_type_description: null
+        payment_method: PUE
+        usage: G03
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: Servicios de mensajería.
+          product_identification: '78102206'
+          quantity: 1
+          unit_code: E48
+          unit_description: Unidad de servicio
+          unit_amount: 25
+          pre_tax_amount: 25
+          tax_percentage: 16
+          tax_amount: 4
+          total_amount: 29
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 25
+        exchange_rate: 1
+        tax_amount: 4
+        discount_amount: 0
+        total_amount: 29
+        payments: []
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoicePago:
+      summary: Invoice Pago
+      description: Example of a *Pago* type invoice.
+      value:
+      - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Pago
+        type: OUTFLOW
+        sender_id: GHTF980303F7
+        sender_name: Roberto Martinez Diaz
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: ACNE SA DE CV
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: null
+        payment_type_description: null
+        payment_method: null
+        usage: P01
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: Pago
+          product_identification: '84111506'
+          quantity: 1
+          unit_amount: 0
+          unit_code: ACT
+          unit_description: null
+          pre_tax_amount: 0
+          tax_percentage: 0
+          tax_amount: 0
+          total_amount: 0
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 0
+        exchange_rate: null
+        tax_amount: 0
+        discount_amount: 0
+        total_amount: 0
+        payments:
+        - date: '2020-03-17T12:00:00.000Z'
+          payment_type: '03'
+          currency: BRL
+          exchange_rate: '3.75'
+          amount: 8000.5
+          operation_number: '831840'
+          beneficiary_rfc: BNM840515VB1
+          beneficiary_account_number: '12343453245633'
+          payer_rfc: BKJM840515VB1
+          payer_account_number: '13343663245699'
+          payer_bank_name: CITI BANAMEX
+          related_documents:
+          - invoice_identification: 7EE015F3-6311-11EA-B02A-00155D014007
+            currency: MXN
+            payment_method: PPD
+            previous_balance: 18877.84
+            amount_paid: 8000
+            outstanding_balance: 10877.84
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoiceTrasladoDetail:
+      summary: Invoice Traslado
+      description: Example of a *Traslado* type invoice.
+      value:
+        id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Traslado
+        type: INFLOW
+        sender_id: GHTF980303F7
+        sender_name: ACNE SA DE CV
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: CARGOS S.A. DE C.V.
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: null
+        payment_type_description: null
+        payment_method: null
+        usage: G03
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: FLETE
+          product_identification: '78101802'
+          quantity: 1
+          unit_code: E48
+          unit_description: Unidad de servicio
+          unit_amount: 21000
+          pre_tax_amount: 21000
+          tax_percentage: 16
+          tax_amount: 0
+          total_amount: 21000
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 0
+        exchange_rate: 1
+        tax_amount: 0
+        discount_amount: 0
+        total_amount: 0
+        payments: []
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoiceIngresoDetail:
+      summary: Invoice Ingreso
+      description: Example of an *Igreso* type invoice.
+      value:
+        id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Ingreso
+        type: OUTFLOW
+        sender_id: GHTF980303F7
+        sender_name: Roberto Martinez Diaz
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: ACNE SA DE CV
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: '04'
+        payment_type_description: null
+        payment_method: PUE
+        usage: G03
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: Servicios de mensajería.
+          product_identification: '78102206'
+          quantity: 1
+          unit_code: E48
+          unit_description: Unidad de servicio
+          unit_amount: 25
+          pre_tax_amount: 25
+          tax_percentage: 16
+          tax_amount: 4
+          total_amount: 29
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 25
+        exchange_rate: 1
+        tax_amount: 4
+        discount_amount: 0
+        total_amount: 29
+        payments: []
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoiceNominaPaginated:
+      summary: Invoice Nomina
+      description: Example of a *Nomina* type invoice.
+      value:
+        count: 110
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+          link: 1bd948f7-245d-4313-b604-34d1044cb908
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+          invoice_date: '2020-12-24'
+          status: Vigente
+          invoice_type: Nómina
+          type: INFLOW
+          sender_id: GHTF980303F7
+          sender_name: ACNE SA DE CV
+          sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          receiver_id: MNMK3203409H1
+          receiver_name: Roberto Martinez Diaz
+          receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+          cancelation_status: null
+          cancelation_update_date: null
+          certification_date: '2020-12-24'
+          certification_authority: FGV330542BG6
+          payment_type: '99'
+          payment_type_description: null
+          payment_method: PUE
+          usage: P01
+          place_of_issue: '11000'
+          version: '3.3'
+          invoice_details:
+          - description: Pago de nómina
+            product_identification: '84111505'
+            quantity: 1
+            unit_code: ACT
+            unit_description: null
+            unit_amount: 20400.1
+            total_amount: 20400.1
+            pre_tax_amount: 20400.1
+            tax_percentage: 0
+            tax_amount: 0
+            retained_taxes: []
+            collected_at: '2022-02-09T08:45:50.406032Z'
+          currency: MXN
+          subtotal_amount: 20400.1
+          exchange_rate: 1
+          tax_amount: 0
+          discount_amount: 5000
+          total_amount: 15400.1
+          payments: []
+          payroll:
+            days: 30
+            type: O
+            amount: 20400.1
+            date_to: '2020-12-31'
+            version: '1.2'
+            date_from: '2020-12-01'
+            collected_at: '2022-02-09T08:45:50.406032Z'
+            payment_date: '2020-12-24'
+          folio: '28'
+          xml: =XML-STRING=
+          warnings:
+            code: warning_code
+            message: warning message
+    InvoiceEgreso:
+      summary: Invoice Egreso
+      description: Example of an *Egreso* type invoice.
+      value:
+      - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Egreso
+        type: INFLOW
+        sender_id: GHTF980303F7
+        sender_name: Roberto Martinez Diaz
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: ACNE SA DE CV
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: '04'
+        payment_type_description: null
+        payment_method: PUE
+        usage: G03
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - product_identification: '78111500'
+          description: Reembolso del servicio
+          unit_code: E48
+          unit_description: Unidad de servicio
+          quantity: 1
+          unit_amount: 25
+          pre_tax_amount: 25
+          tax_percentage: 16
+          tax_amount: 4
+          total_amount: 29
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 25
+        exchange_rate: 1
+        tax_amount: 4
+        discount_amount: 0
+        total_amount: 29
+        payments: []
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoiceNomina:
+      summary: Invoice Nomina
+      description: Example of a *Nomina* type invoice.
+      value:
+      - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Nómina
+        type: INFLOW
+        sender_id: GHTF980303F7
+        sender_name: ACNE SA DE CV
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: Roberto Martinez Diaz
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: '99'
+        payment_type_description: null
+        payment_method: PUE
+        usage: P01
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: Pago de nómina
+          product_identification: '84111505'
+          quantity: 1
+          unit_code: ACT
+          unit_description: null
+          unit_amount: 20400.1
+          total_amount: 20400.1
+          pre_tax_amount: 20400.1
+          tax_percentage: 0
+          tax_amount: 0
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 20400.1
+        exchange_rate: 1
+        tax_amount: 0
+        discount_amount: 5000
+        total_amount: 15400.1
+        payments: []
+        payroll:
+          days: 30
+          type: O
+          amount: 20400.1
+          date_to: '2020-12-31'
+          version: '1.2'
+          date_from: '2020-12-01'
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          payment_date: '2020-12-24'
+          periodicity: MONTHLY
+          earnings_breakdown:
+          - type: SALARY
+            taxable_amount: 20400.1
+            vat_free_amount: 0
+          - type: BONUS
+            taxable_amount: 1012.1
+            vat_free_amount: 0
+          tax_deductions:
+          - type: UNION_FEES
+            amount: 1505
+          other_payments:
+          - type: EMPLOYMENT_SUBSIDY
+            amount: 1505
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoiceNominaDetail:
+      summary: Invoice Nomina
+      description: Example of a *Nomina* type invoice.
+      value:
+        id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Nómina
+        type: INFLOW
+        sender_id: GHTF980303F7
+        sender_name: ACNE SA DE CV
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: Roberto Martinez Diaz
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: '99'
+        payment_type_description: null
+        payment_method: PUE
+        usage: P01
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: Pago de nómina
+          product_identification: '84111505'
+          quantity: 1
+          unit_code: ACT
+          unit_description: null
+          unit_amount: 20400.1
+          total_amount: 20400.1
+          pre_tax_amount: 20400.1
+          tax_percentage: 0
+          tax_amount: 0
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 20400.1
+        exchange_rate: 1
+        tax_amount: 0
+        discount_amount: 5000
+        total_amount: 15400.1
+        payments: []
+        payroll:
+          days: 30
+          type: O
+          amount: 20400.1
+          date_to: '2020-12-31'
+          version: '1.2'
+          date_from: '2020-12-01'
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          payment_date: '2020-12-24'
+          periodicity: MONTHLY
+          earnings_breakdown:
+          - type: SALARY
+            taxable_amount: 20400.1
+            vat_free_amount: 0
+          - type: BONUS
+            taxable_amount: 1012.1
+            vat_free_amount: 0
+          tax_deductions:
+          - type: UNION_FEES
+            amount: 1505
+          other_payments:
+          - type: EMPLOYMENT_SUBSIDY
+            amount: 1505
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+    InvoiceTraslado:
+      summary: Invoice Traslado
+      description: Example of a *Traslado* type invoice.
+      value:
+      - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+        link: 1bd948f7-245d-4313-b604-34d1044cb908
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        invoice_identification: 862B9918-3K6H-4E0B-NAI9-2BE2D833B840
+        invoice_date: '2020-12-24'
+        status: Vigente
+        invoice_type: Traslado
+        type: INFLOW
+        sender_id: GHTF980303F7
+        sender_name: ACNE SA DE CV
+        sender_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        receiver_id: MNMK3203409H1
+        receiver_name: CARGOS S.A. DE C.V.
+        receiver_tax_fraud_status: NO_TAX_FRAUD_STATUS
+        cancelation_status: null
+        cancelation_update_date: null
+        certification_date: '2020-12-24'
+        certification_authority: FGV330542BG6
+        payment_type: null
+        payment_type_description: null
+        payment_method: null
+        usage: G03
+        place_of_issue: '11000'
+        version: '3.3'
+        invoice_details:
+        - description: FLETE
+          product_identification: '78101802'
+          quantity: 1
+          unit_code: E48
+          unit_description: Unidad de servicio
+          unit_amount: 21000
+          pre_tax_amount: 21000
+          tax_percentage: 16
+          tax_amount: 0
+          total_amount: 21000
+          retained_taxes: []
+          collected_at: '2022-02-09T08:45:50.406032Z'
+        currency: MXN
+        subtotal_amount: 0
+        exchange_rate: 1
+        tax_amount: 0
+        discount_amount: 0
+        total_amount: 0
+        payments: []
+        payroll: null
+        folio: '28'
+        xml: =XML-STRING=
+        warnings:
+          code: warning_code
+          message: warning message
+  responses:
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+    202_accepted_response:
+      description: Request Accepted (when `X-Belvo-Request-Mode` is `async`)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              request_id:
+                type: string
+                description: The unique ID for this request. We recommend you store this value to later identify which webhook event relates to an asynchronous request.
+                example: b5d0106ac9cc43d5b36199fe831f6bbe
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

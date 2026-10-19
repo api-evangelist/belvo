@@ -1,0 +1,1428 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Bank Accounts (Brazil) API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Bank Accounts (Brazil)
+  description: 'To receive inflow payments to your organization''s bank account, you must register the bank accounts (individual and business) using Belvo''s Payments API.
+
+
+    - **Individual** bank accounts must be created for each payer (your customer).
+
+    - **Business** bank accounts need to be created for the beneficiary of the payment (your organization).
+
+
+    {% admonition type="info" name="Resource Versioning" %}
+
+    This endpoint supports resource-level versioning. By including the header `X-Belvo-API-Resource-Version: Payments-BR.V2`, you can access the latest (V2) request and response formats. If the header is not provided, the default (V1) format will be used. See the API documentation for details on the differences between versions.
+
+    {% /admonition %}'
+paths:
+  /payments/br/bank-accounts/:
+    post:
+      tags:
+      - Bank Accounts (Brazil)
+      operationId: RegisterBankAccountBrazil
+      summary: Register a new bank account
+      description: Register a new bank account from which to send or request funds.
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/CreateBankAccountV2'
+              - $ref: '#/components/schemas/CreateBankAccountOfpiBusiness'
+              - $ref: '#/components/schemas/CreateBankAccountOfpiIndividual'
+      responses:
+        '201':
+          description: OK (Created)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/BankAccountV2'
+                - $ref: '#/components/schemas/BankAccountOfpiResponse'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    get:
+      tags:
+      - Bank Accounts (Brazil)
+      operationId: ListBankAccountBrazil
+      summary: List all bank accounts
+      description: List all bank accounts associated with your Belvo account.
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/number'
+      - $ref: '#/components/parameters/number__in'
+      - $ref: '#/components/parameters/customer'
+      - $ref: '#/components/parameters/external_id__payments'
+      - $ref: '#/components/parameters/external_id__in__payments'
+      - $ref: '#/components/parameters/institution'
+      - $ref: '#/components/parameters/holder__type'
+      - $ref: '#/components/parameters/holder__type__in'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of bank account objects.
+                      items:
+                        oneOf:
+                        - $ref: '#/components/schemas/BankAccountV2'
+                        - $ref: '#/components/schemas/BankAccountOfpiResponse'
+              examples:
+                OfpiBusinessPixInfo:
+                  $ref: '#/components/examples/ResponseBankAccountBusinessPixInfoPaginated'
+                OfpiIndividualPixInfo:
+                  $ref: '#/components/examples/ResponseBankAccountIndividualPixInfoPaginated'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/bank-accounts/{id}/:
+    patch:
+      tags:
+      - Bank Accounts (Brazil)
+      operationId: PatchBankAccountBrazil
+      summary: Activate or deactivate a bank account
+      description: 'Updates whether a bank account is active by setting `active` to `true` or `false`.
+
+
+        Setting `active` to `false` deactivates the bank account identified in the path. Deactivated accounts are ignored for duplicate checks on the same institution, agency, and account number, which lets you register a new bank account with the same banking details when you need to fix incorrect holder information (such as name or CPF/CNPJ) or similar mistakes from an initial registration.'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: id
+        required: true
+        in: path
+        description: The `bank-account.id` you want to activate or deactivate.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBankAccountActive'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/BankAccountV2'
+                - $ref: '#/components/schemas/BankAccountOfpiResponse'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    get:
+      tags:
+      - Bank Accounts (Brazil)
+      operationId: DetailBankAccountBrazil
+      summary: Get details about a bank account
+      description: Get the details about a specific bank account
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: id
+        required: true
+        in: path
+        description: The `bank-account.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/BankAccountV2'
+                - $ref: '#/components/schemas/BankAccountOfpiResponse'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  schemas:
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    HolderResponseOfpiIndividual:
+      type: object
+      title: OFPI Brazil 🇧🇷 INDIVIDUAL
+      required:
+      - type
+      - information
+      description: Details regarding the individual bank account holder.
+      properties:
+        type:
+          type: string
+          enum:
+          - INDIVIDUAL
+          description: The type of bank account. For individuals, this must be set to `INDIVIDUAL`.
+          example: INDIVIDUAL
+          default: INDIVIDUAL
+        information:
+          $ref: '#/components/schemas/HolderInformationIndividualOfpiResponse'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    BankAccountV2:
+      type: object
+      title: V2 - Bank Account
+      required:
+      - id
+      - created_at
+      - updated_at
+      - active
+      - external_id
+      - metadata
+      - holder
+      - details
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        updated_at:
+          $ref: '#/components/schemas/updated_at'
+        active:
+          type: boolean
+          description: Indicates if the bank account is active (and can be used to receive funds).
+          example: true
+        holder:
+          type: object
+          description: Details of the account holder.
+          required:
+          - name
+          - identifier
+          properties:
+            name:
+              type: string
+              maxLength: 120
+              pattern: ^([A-Za-zÀ-ÖØ-öø-ÿ,.@:&*+_<>()!?/\\$%\d' -]{0,120})$
+              description: The full name or business name of the account holder.
+              example: Frangos Enlatados
+            identifier:
+              type: string
+              minLength: 11
+              maxLength: 14
+              pattern: ^(?:[0-9]{11}|[0-9]{14})$
+              description: 'The CPF (11 digits) or CNPJ (14 digits) of the account holder.
+
+                '
+              example: '12345678901122'
+        details:
+          type: object
+          description: Details of the bank account.
+          required:
+          - account_type
+          - agency
+          - institution
+          - number
+          properties:
+            institution:
+              type: string
+              format: uuid
+              description: The Belvo ID of the financial institution.
+              example: f512d996-583a-4a91-8b5b-eba2e103b068
+            account_type:
+              type: string
+              enum:
+              - CHECKINGS
+              - SAVINGS
+              - PAYMENTS
+              description: "The type of bank account. Can be either:\n  - `CHECKINGS` (also known as Conta Corrente in Brazil)\n  - `SAVINGS` (also known as Conta Poupança in Brazil)\n  - `PAYMENTS` (also known as Conta de Pagamento Instantâneo or Conta de Pagamento in Brazil)\n"
+              example: CHECKINGS
+            agency:
+              type: string
+              minLength: 1
+              maxLength: 4
+              pattern: ^[0-9]{1,4}$
+              description: The agency (branch number) of the institution where the account was created.
+              example: '0444'
+            number:
+              type: string
+              pattern: ^[0-9]{1,20}$
+              minLength: 1
+              maxLength: 20
+              description: "The bank account number.\n\n{% admonition type=\"info\" name=\"Valid Account Number characters\" %}\n  You can only send through numbers (`^[0-9]+$`) in the string. For example, `\"457220\"` is a valid bank account number, while \"`45722-0`\" is invalid as it contains a hyphen (`-`).\n{% /admonition %}\n"
+              example: '457220'
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        metadata:
+          $ref: '#/components/schemas/metadata__payments'
+    created_by:
+      type: string
+      format: uuid
+      description: The unique ID for the user that created this item.
+      example: bcef7f35-67f2-4b19-b009-cb38795faf09
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    HolderResponseOfpiBusiness:
+      type: object
+      title: OFPI Brazil 🇧🇷 BUSINESS
+      required:
+      - type
+      - information
+      description: Details regarding the business bank account holder.
+      properties:
+        type:
+          type: string
+          enum:
+          - BUSINESS
+          description: The type of bank account. For businesses, this must be set to `BUSINESS`.
+          example: BUSINESS
+          default: BUSINESS
+        information:
+          $ref: '#/components/schemas/HolderInformationBusinessOfpiResponse'
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    400_validation_error:
+      type: object
+      title: Validation Error
+      required:
+      - code
+      - message
+      - request_id
+      description: 'This error occurs when the parameters provided did not match the expected fields or the item you are trying to create is already in our database, leading to a field validation errors.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`null`, `does_not_exist`, `required`, `already_registered`, `invalid_choice`, `max_length`, `min_length`, `blank`, `null`, `cancellation_error`, `idempotency_key_invalid`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: required
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nThe description can be (among others):\n\n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n  - `This customer is already registered`\n  - `Ensure this field has at least 2 characters.`\n  - `Ensure this field has no more than 4 characters.`\n  - `Entered value is not valid.`\n  - `You must set all required fields: username, password, username_type.`\n  - `Payment Intent cannot be canceled because it is not SCHEDULED.`\n  - `Payment Intent cannot be canceled as the cutoff time (23:59:00) has passed.`\n  - `The provided idempotency key is invalid.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+
+            > **Note**: This field is only present when the error is related to a specific field.
+
+            '
+          example: institution
+    updated_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was updated in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    CreateBankAccountOfpiBusiness:
+      type: object
+      title: V1 - OFPI Business
+      required:
+      - institution
+      - holder
+      - details
+      properties:
+        institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the institution that the bank account is created in.
+          example: f512d996-583a-4a91-8b5b-eba2e103b068
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        holder:
+          type: object
+          title: OFPI
+          required:
+          - type
+          - information
+          description: Details regarding the business bank account holder.
+          properties:
+            type:
+              type: string
+              enum:
+              - BUSINESS
+              description: The type of bank account. For business bank accounts, this must be set to `BUSINESS`.
+              example: BUSINESS
+              default: BUSINESS
+            information:
+              type: object
+              description: Additional information about the bank account holder required in order to create the account for OFPI.
+              title: BUSINESS
+              required:
+              - name
+              - identifier
+              - identifier_type
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: The full name of the business
+                  example: Gustavo Veloso Entertainment Universe
+                identifier_type:
+                  type: string
+                  enum:
+                  - CNPJ
+                  description: 'The customer''s ID document type. For businesses in Brazil, this must be set to `CNPJ`.
+
+                    '
+                  example: CNPJ
+                  default: CNPJ
+                identifier:
+                  type: string
+                  minLength: 14
+                  maxLength: 14
+                  pattern: ^\d{14}$
+                  description: The CNPJ document number.
+                  example: 00000000000191
+        details:
+          $ref: '#/components/schemas/BankAccountDetailsOfpi'
+    metadata__payments:
+      type: object
+      description: "Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number for the payment intent.\n\n{% admonition type=\"info\" name=\"Metadata Limitations\" %}\n  You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.\n{% /admonition %}\n"
+      maxProperties: 50
+      additionalProperties:
+        type: string
+        maxLength: 500
+        pattern: ^[-]*$
+      example:
+        internal_reference_id: GGq73487w2
+    BankAccountOfpiResponse:
+      type: object
+      title: V1 - Bank Account (No Request Header)
+      required:
+      - id
+      - created_at
+      - institution
+      - created_by
+      - holder
+      - customer
+      - details
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        customer:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: 'Belvo''s unique ID for the customer associated with the bank account.
+
+
+            For `BUSINESS` bank accounts, this field is `null`.
+
+            '
+          example: null
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        institution:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: 'Belvo''s unique ID for the institution that the bank account is created in.
+
+
+            For `BUSINESS` bank accounts that Belvo creates for organizations, this field is set to `null`.
+
+            '
+          example: null
+        details:
+          $ref: '#/components/schemas/BankAccountDetailsOfpi'
+        holder:
+          oneOf:
+          - $ref: '#/components/schemas/HolderResponseOfpiIndividual'
+          - $ref: '#/components/schemas/HolderResponseOfpiBusiness'
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    CreateBankAccountV2:
+      type: object
+      title: V2 - Bank Account
+      required:
+      - holder
+      - details
+      properties:
+        holder:
+          type: object
+          description: Details of the account holder.
+          required:
+          - name
+          - identifier
+          properties:
+            name:
+              type: string
+              maxLength: 120
+              pattern: ^([A-Za-zÀ-ÖØ-öø-ÿ,.@:&*+_<>()!?/\\$%\d' -]{0,120})$
+              description: The full name or business name of the account holder.
+              example: Frangos Enlatados
+            identifier:
+              type: string
+              minLength: 11
+              maxLength: 14
+              pattern: ^(?:[0-9]{11}|[0-9]{14})$
+              description: 'The CPF (11 digits) or CNPJ (14 digits) of the account holder.
+
+                '
+              example: '12345678901122'
+        details:
+          type: object
+          description: Details of the bank account.
+          required:
+          - account_type
+          - agency
+          - institution
+          - number
+          properties:
+            account_type:
+              type: string
+              enum:
+              - CHECKINGS
+              - SAVINGS
+              - PAYMENTS
+              description: "The type of bank account. Can be either:\n  - `CHECKINGS` (also known as Conta Corrente in Brazil)\n  - `SAVINGS` (also known as Conta Poupança in Brazil)\n  - `PAYMENTS` (also known as Conta de Pagamento Instantâneo or Conta de Pagamento in Brazil)\n"
+              example: CHECKINGS
+            agency:
+              type: string
+              minLength: 1
+              maxLength: 4
+              pattern: ^[0-9]{1,4}$
+              description: The agency (branch number) of the institution where the account was created.
+              example: '0444'
+            institution:
+              type: string
+              format: uuid
+              description: The Belvo ID of the financial institution.
+              example: f512d996-583a-4a91-8b5b-eba2e103b068
+            number:
+              type: string
+              pattern: ^[0-9]{1,20}$
+              minLength: 1
+              maxLength: 20
+              description: "The bank account number.\n\n{% admonition type=\"info\" name=\"Valid Account Number characters\" %}\n  You can only send through numbers (`^[0-9]+$`) in the string. For example, `\"457220\"` is a valid bank account number, while \"`45722-0`\" is invalid as it contains a hyphen (`-`).\n{% /admonition %}\n"
+              example: '457220'
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        metadata:
+          $ref: '#/components/schemas/metadata__payments'
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    HolderInformationIndividualOfpiResponse:
+      type: object
+      title: INDIVIDUAL
+      description: Details regarding the individual bank account holder.
+      required:
+      - first_name
+      - last_name
+      - identifier
+      - identifier_type
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The bank account holder's first name.
+          example: Dom
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The bank account holder's last name.
+          example: Mesa
+        identifier_type:
+          type: string
+          enum:
+          - CPF
+          description: 'The customer''s ID document type. For individuals in Brazil, this must be set to `CPF`.
+
+            '
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 11
+          pattern: ^\d{11}$
+          description: The document number of the customer's ID.
+          example: 00000000191
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    external_id__payments:
+      type: string
+      format: uuid
+      description: "An additional unique identifier for the resource for internal purposes.\n\n{% admonition type=\"success\" name=\"Highly Recommended\" %}\n  We recommend using this field to store your own unique identifier for each resource (customer, bank account, payment intent, or enrollment). This can be useful for tracking the resource in your system and for debugging purposes.\n{% /admonition %}\n"
+      example: 4b8a81a0-e33c-45a6-8567-479efb105f73
+    BankAccountDetailsOfpi:
+      type: object
+      title: OFPI (PIX Account Information)
+      description: Information regarding the bank account.
+      required:
+      - account_type
+      - agency
+      - number
+      properties:
+        account_type:
+          $ref: '#/components/schemas/EnumBankAccountPixAccountTypeOfpi'
+        agency:
+          type: string
+          minLength: 1
+          maxLength: 4
+          pattern: ^[0-9]{1,4}$
+          description: The agency (branch number) of the institution where the account was created.
+          example: '0444'
+        number:
+          type: string
+          pattern: ^[0-9]{1,20}$
+          minLength: 1
+          maxLength: 20
+          description: 'The bank account number.
+
+
+            > 📘 Valid account number characters
+
+            >
+
+            > You can only send through numbers (`^[0-9]+$`) in the string. For example, `"457220"` is a valid bank account number, while "`45722-0`" is invalid as it contains a hyphen (`-`).
+
+            '
+          example: '457220'
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    PatchBankAccountActive:
+      type: object
+      title: Patch bank account active status
+      required:
+      - active
+      properties:
+        active:
+          type: boolean
+          description: 'When set to `false`, deactivates this bank account. A deactivated account no longer counts toward uniqueness for the same institution, agency, and account number, so you can register a new bank account with the same banking details (for example, after correcting the holder name, CPF/CNPJ, or other metadata).
+
+
+            When set to `true`, reactivates a previously deactivated bank account.
+
+            '
+          example: false
+    CreateBankAccountOfpiIndividual:
+      type: object
+      title: V1 - OFPI Individual
+      required:
+      - institution
+      - holder
+      - details
+      properties:
+        institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the institution that the bank account is created in.
+          example: f512d996-583a-4a91-8b5b-eba2e103b068
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        holder:
+          type: object
+          title: OFPI
+          required:
+          - type
+          - information
+          description: Details regarding the individual bank account holder.
+          properties:
+            type:
+              type: string
+              enum:
+              - INDIVIDUAL
+              description: The type of bank account. For individuals, this must be set to `INDIVIDUAL`.
+              example: INDIVIDUAL
+              default: INDIVIDUAL
+            information:
+              type: object
+              description: Additional information about the bank account holder required in order to create the account for OFPI.
+              title: INDIVIDUAL
+              required:
+              - first_name
+              - last_name
+              - identifier
+              - identifier_type
+              properties:
+                first_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: The bank account holder's first name.
+                  example: Gustavo
+                last_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: The bank account holder's last name.
+                  example: Veloso
+                identifier_type:
+                  type: string
+                  enum:
+                  - CPF
+                  description: 'The customer''s ID document type. For individuals in Brazil, this must be set to `CPF`.
+
+                    '
+                  example: CPF
+                  default: CPF
+                identifier:
+                  type: string
+                  minLength: 11
+                  maxLength: 11
+                  pattern: ^\d{11}$
+                  description: The document number of the customer's ID.
+                  example: 00000000191
+        details:
+          $ref: '#/components/schemas/BankAccountDetailsOfpi'
+    EnumBankAccountPixAccountTypeOfpi:
+      type: string
+      enum:
+      - CHECKINGS
+      - SAVINGS
+      - SALARY
+      - PAYMENTS
+      description: "The type of bank account. Can be either:\n\n  - `CHECKINGS` (also known as Conta Corrente in Brazil)\n  - `SAVINGS` (also known as Conta Poupança in Brazil)\n  - `SALARY` (also known as Conta Salário in Brazil)\n  - `PAYMENTS` (also known as Conta de Pagamento Instantâneo or Conta de Pagamento in Brazil)\n"
+      example: CHECKINGS
+    HolderInformationBusinessOfpiResponse:
+      type: object
+      title: BUSINESS
+      required:
+      - name
+      - identifier
+      - identifier_type
+      description: Details regarding the individual bank account holder.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The bank account holder's first name.
+          example: Gustavo Veloso Entertainment Universe
+        identifier_type:
+          type: string
+          enum:
+          - CNPJ
+          description: 'The customer''s ID document type. For businesses in Brazil, this must be set to `CNPJ`.
+
+            '
+          example: CNPJ
+          default: CNPJ
+        identifier:
+          type: string
+          minLength: 14
+          maxLength: 14
+          pattern: ^\d{14}$
+          description: The CNPJ document number.
+          example: 00000000000191
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+  parameters:
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    customer:
+      name: customer
+      in: query
+      description: The `customer.id` you want to get results for.
+      schema:
+        type: string
+        format: uuid
+        example: 24e5b3a5-19aa-40fe-91e5-4db7f22ecc2d
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    holder__type:
+      name: holder__type
+      in: query
+      description: Return results for the provided holder type.
+      schema:
+        type: string
+        enum:
+        - INDIVIDUAL
+        - BUSINESS
+        example: INDIVIDUAL
+    external_id__in__payments:
+      name: external_id__in
+      in: query
+      description: Return objects with these external IDs.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 446bdd9f-5b3e-4c05-9159-7a5c87cfc810
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    external_id__payments:
+      name: external_id
+      in: query
+      description: Return objects with this external ID.
+      schema:
+        type: string
+        format: uuid
+        example: 295ebb46-65b8-47de-85cd-34ffbc327c09
+    holder__type__in:
+      name: holder__type__in
+      in: query
+      description: Return results for listed holder types.
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - INDIVIDUAL
+          - BUSINESS
+          example: INDIVIDUAL
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    number__in:
+      name: number__in
+      in: query
+      description: Return results for these bank account numbers.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: '1231564526'
+    number:
+      name: number
+      in: query
+      description: Return results that exactly match this value.
+      schema:
+        type: string
+        example: '1231564526'
+    header_version:
+      name: X-Belvo-API-Resource-Version
+      in: header
+      description: "Header indicating which version of the Payment API you want to use. Currently this is only applicable for Bank Accounts, Customers, and Payment Authorizations in Brazil. In the case that you are using our Payment Authorizations product, then you **must** send through this header set to `Payments-BR.V2`.\n\n{% admonition type=\"warning\" name=\"Coming Soon\" %}\n  This version is in Coming Soon. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.\n{% /admonition %}\n"
+      schema:
+        type: string
+        enum:
+        - Payments-BR.V2
+        example: Payments-BR.V2
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    institution:
+      name: institution
+      in: query
+      description: Return results only for this institution (use the Belvo-designated name, such as `planet_mx_employment`).
+      schema:
+        type: string
+        pattern: ^[a-z_]{1,40}$
+        minLength: 1
+        maxLength: 40
+        example: planet_mx_retail
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+  responses:
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+  examples:
+    ResponseBankAccountBusinessPixInfoPaginated:
+      summary: Business bank account (OFPI)
+      value:
+        count: 110
+        next: https://api.belvo.com/payments/{endpoint}/?page=2
+        previous: null
+        results:
+        - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+          created_at: '2023-02-15T07:52:31.998761Z'
+          created_by: 417514fe-50f6-42e9-a3eb-c71da00f014c
+          institution: f512d996-583a-4a91-8b5b-eba2e103b068
+          customer: null
+          holder:
+            type: BUSINESS
+            information:
+              name: Music Production Brazil
+              identifier_type: CNPJ
+              identifier: 00000000000191
+          details:
+            country: BRA
+            account_type: CHECKINGS
+            agency: '0444'
+            number: 45722-0
+    ResponseBankAccountIndividualPixInfoPaginated:
+      summary: Individual bank account (OFPI)
+      value:
+        count: 110
+        next: https://api.belvo.com/payments/{endpoint}/?page=2
+        previous: null
+        results:
+        - id: 90d90e38-0087-4b6d-b6dc-94ea561bb9cb
+          created_at: '2023-02-15T07:52:31.998761Z'
+          created_by: 417514fe-50f6-42e9-a3eb-c71da00f014c
+          institution: f512d996-583a-4a91-8b5b-eba2e103b068
+          customer: 49f244ef-06cd-49cf-ad0c-f43796e370ad
+          holder:
+            type: INDIVIDUAL
+            information:
+              first_name: Gustavo
+              last_name: Veloso
+              identifier_type: CPF
+              identifier: 23******00
+          details:
+            country: BRA
+            account_type: CHECKINGS
+            agency: '0444'
+            number: 45722-0
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

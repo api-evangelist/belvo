@@ -1,0 +1,4359 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Payment Intents (Brazil) API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Payment Intents (Brazil)
+  description: 'A **payment intent** is a single point of access to create payments using any payment method offered by Belvo.
+
+
+    A payment intent captures all payment information (such as the amount to be charged, the description of the payment, the provider, and so on) and guides your customers through the payment flow.'
+paths:
+  /payments/br/payment-intents/:
+    post:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: CreatePaymentIntentBrazil
+      summary: Create a new Payment Intent
+      description: 'Create a Payment Intent.
+
+
+        You can create Payment Intent in the following configurations:
+
+
+        |Beneficiary|Customer (Payer)|Example|
+
+        |---|---|---|
+
+        |Pix Key|Already registered with Belvo|Pix Key (With Existing Customer)|
+
+        |Pix Key|Register with Belvo at time of Payment Intent request|Pix Key (With New Customer)|
+
+        |Bank Account (Already Registered)|Already Registered |Bank Account (With Existing Customer)|
+
+        |Bank Account (Already Registered)|Register with Belvo at time of Payment Intent request|Bank Account (With New Customer)|
+
+        |Bank Account (Register at time of Payment Intent request)|Register with Belvo at time of Payment Intent request|Bank Account (With New Customer and Beneficiary Bank Account)|
+
+
+        {% admonition type="warning" name="Pix Payments" %}
+
+        When you create Payment Intents using a Pix Key, you have to make a **PATCH Complete a Payment Intent** request to complete the Payment Intent creation.
+
+        {% /admonition %}'
+      parameters:
+      - $ref: '#/components/parameters/header_idempotency_key'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/CreatePaymentIntentPixKeys'
+              - $ref: '#/components/schemas/CreatePaymentIntentPixKeysAndCustomer'
+              - $ref: '#/components/schemas/CreatePaymentIntentOfpi'
+              - $ref: '#/components/schemas/CreatePaymentIntentAndCustomerOfpi'
+              - $ref: '#/components/schemas/CreatePaymentIntentAndBankAccountAndCustomerOfpi'
+      responses:
+        '201':
+          description: OK (Created)
+          headers:
+            Belvo-Idempotency-Key:
+              $ref: '#/components/headers/header_idempotency_key_response'
+            Belvo-Idempotency-Status:
+              $ref: '#/components/headers/header_idempotency_key_status_response'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PaymentIntentPixKeys'
+                - $ref: '#/components/schemas/PaymentIntentOfpi'
+              examples:
+                PaymentIntentResponsePixKeyInitial:
+                  $ref: '#/components/examples/PaymentIntentResponsePixKeyInitial'
+                PaymentIntentResponseOfpiBankAccount:
+                  $ref: '#/components/examples/PaymentIntentResponseOfpiBankAccount'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '409':
+          $ref: '#/components/responses/409_idempotency_conflict_error'
+        '422':
+          $ref: '#/components/responses/422_idempotency_mismatch_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    get:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: ListPaymentIntentsBrazil
+      summary: List all payment intents
+      description: List all payment intents associated with your Belvo account.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/amount'
+      - $ref: '#/components/parameters/amount__gt'
+      - $ref: '#/components/parameters/amount__gte'
+      - $ref: '#/components/parameters/amount__lt'
+      - $ref: '#/components/parameters/amount__lte'
+      - $ref: '#/components/parameters/amount__range'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/customer'
+      - $ref: '#/components/parameters/customer__in'
+      - $ref: '#/components/parameters/external_id__payments'
+      - $ref: '#/components/parameters/external_id__in__payments'
+      - $ref: '#/components/parameters/ordering__payment-intents'
+      - $ref: '#/components/parameters/provider'
+      - $ref: '#/components/parameters/payment_method_type'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/status_payment-intents'
+      - $ref: '#/components/parameters/status__in_payment-intents'
+      - $ref: '#/components/parameters/updated_at'
+      - $ref: '#/components/parameters/updated_at__gt'
+      - $ref: '#/components/parameters/updated_at__gte'
+      - $ref: '#/components/parameters/updated_at__lt'
+      - $ref: '#/components/parameters/updated_at__lte'
+      - $ref: '#/components/parameters/updated_at__range'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Belvo-Idempotency-Key:
+              $ref: '#/components/headers/header_idempotency_key_response'
+            Belvo-Idempotency-Status:
+              $ref: '#/components/headers/header_idempotency_key_status_response'
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of payment intent objects.
+                      items:
+                        $ref: '#/components/schemas/PaymentIntentOfpi'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-intents/{id}/:
+    patch:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: PatchPaymentIntentBrazil
+      summary: Complete a payment intent
+      description: Complete a new payment intent.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The `payment-intent.id` you want to complete the payment for.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PatchPaymentIntentPixKeys'
+              - $ref: '#/components/schemas/PatchPaymentIntentOfpi'
+      responses:
+        '200':
+          description: OK (Confirmed)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PaymentIntentPixKeys'
+                - $ref: '#/components/schemas/PaymentIntentOfpi'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    get:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: DetailPaymentIntentBrazil
+      summary: Get details about a payment intent
+      description: Get the details about a specific payment intent.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The `payment-intent.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIntentOfpi'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-intents/{id}/cancel/:
+    post:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: CancelPaymentIntentBrazil
+      summary: Cancel a scheduled payment intent
+      description: 'Cancel a scheduled (one-off) payment intent.
+
+
+        We respond with a `204 - No Content` and will inform you via webhook that the payment intent was canceled successfully.
+
+
+        > **Note**: The latest you can cancel a scheduled payment intent is by **23:59:00 (GMT-3)** on the day **before** the scheduled payment date.'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: The scheduled `payment-intent.id` you want to cancel.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-intents/{payment_intent_id}/charges/:
+    get:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: ListChargesBrazil
+      summary: List all charges for a payment intent
+      description: List all charges associated with a payment intent.
+      parameters:
+      - name: payment_intent_id
+        required: true
+        in: path
+        description: The `payment-intent.id` the charges belong to.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/page_size'
+      - name: status
+        in: query
+        description: Return results only for this value.
+        schema:
+          type: string
+          example: SUCCEEDED
+      - name: status__in
+        in: query
+        description: Return results for listed status.
+        schema:
+          type: string
+          example: PENDING,SUCCEEDED
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of charge objects.
+                      items:
+                        $ref: '#/components/schemas/ChargeBrazil'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-intents/{payment_intent_id}/charges/{charge_id}/:
+    get:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: DetailChargesBrazil
+      summary: Get details about a charge for a payment intent
+      description: Get the details about a specific charge associated with a payment intent.
+      parameters:
+      - name: payment_intent_id
+        required: true
+        in: path
+        description: The `payment-intent.id` the charge belongs to.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      - name: charge_id
+        required: true
+        in: path
+        description: The `charge.id` you want details about.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeBrazil'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-intents/{payment_intent_id}/charges/{charge_id}/cancel/:
+    post:
+      tags:
+      - Payment Intents (Brazil)
+      operationId: CancelChargeBrazil
+      summary: Cancel a scheduled charge
+      description: 'Cancel a scheduled charge.
+
+
+        We respond with a `204 - No Content` and will inform you via webhook that the charge was canceled successfully.
+
+
+        > **Note**: The latest you can cancel a scheduled charge is by **23:59:00 (GMT-3)** on the day **before** the scheduled payment date.'
+      parameters:
+      - name: payment_intent_id
+        required: true
+        in: path
+        description: The scheduled `payment-intent.id` the charge belongs to.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      - name: charge_id
+        required: true
+        in: path
+        description: The scheduled `charge.id` you want to cancel.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  schemas:
+    NextStepDisplayConfirmationRequiredOfpi:
+      type: object
+      title: OFPI - Display Confirmation Required
+      description: 'Object detailing the next steps you should follow for a specific `next_step` type.
+
+        '
+      properties:
+        type:
+          type: string
+          enum:
+          - open_finance_display_payment_method_information
+          - open_finance_display_confirmation_required
+          - open_finance_display_needs_redirect
+          - open_finance_display_payment_processing
+          - open_finance_display_payment_succeeded
+          - open_finance_display_payment_failed
+          description: 'The type of `next_step` you need to follow.
+
+            '
+          example: open_finance_display_confirmation_required
+        open_finance_display_confirmation_required:
+          $ref: '#/components/schemas/DisplayConfirmationRequiredOfpi'
+        ready_to_confirm:
+          type: boolean
+          default: true
+          description: "Boolean that indicates whether the payment intent is ready to be confirmed. \n\n  **Note:** When set to `true`, you need to confirm the payment by making a PATCH request sending through `confirm: true`.\n"
+          example: true
+    paymentTransaction:
+      type: object
+      required:
+      - id
+      - created_at
+      - created_by
+      - amount
+      - currency
+      - description
+      - transaction_type
+      - beneficiary
+      - payer
+      - charge
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        amount:
+          type: string
+          description: 'The transaction amount.
+
+
+
+            **Note**: The amount displayed is always positive as we indicate the direction of the transaction in `transaction_type` parameter.
+
+            '
+          example: '1020.00'
+        currency:
+          $ref: '#/components/schemas/EnumPaymentsCurrency'
+        description:
+          type: string
+          maxLength: 128
+          description: 'The description of the payment.
+
+            '
+          example: Training shoes
+        transaction_type:
+          $ref: '#/components/schemas/EnumPaymentTransactionType'
+        beneficiary:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID used to identify the beneficiary''s bank account.
+
+            '
+          example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+        payer:
+          description: '**Note**: For OFPI, this will return an empty object `{}`.
+
+            '
+        payment_intent:
+          type: string
+          format: uuid
+          description: The unique ID of the payment intent associated with the transaction.
+          example: 004a28bb-fac2-4172-884b-5b6ea15314ad
+        customer:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the customer asscociated with this transaction.
+          example: 9eebd63b-3339-44a9-8a5a-72bb6cb2f310
+    EnumPaymentTransactionType:
+      type: string
+      enum:
+      - INFLOW
+      - OUTFLOW
+      description: "The direction of the transaction.\n\n  - `INFLOW` indicates money coming into the account.\n  - `OUTFLOW` indicates money coming out of the account.\n"
+      example: INFLOW
+    400_validation_error:
+      type: object
+      title: Validation Error
+      required:
+      - code
+      - message
+      - request_id
+      description: 'This error occurs when the parameters provided did not match the expected fields or the item you are trying to create is already in our database, leading to a field validation errors.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`null`, `does_not_exist`, `required`, `already_registered`, `invalid_choice`, `max_length`, `min_length`, `blank`, `null`, `cancellation_error`, `idempotency_key_invalid`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: required
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nThe description can be (among others):\n\n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n  - `This customer is already registered`\n  - `Ensure this field has at least 2 characters.`\n  - `Ensure this field has no more than 4 characters.`\n  - `Entered value is not valid.`\n  - `You must set all required fields: username, password, username_type.`\n  - `Payment Intent cannot be canceled because it is not SCHEDULED.`\n  - `Payment Intent cannot be canceled as the cutoff time (23:59:00) has passed.`\n  - `The provided idempotency key is invalid.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+
+            > **Note**: This field is only present when the error is related to a specific field.
+
+            '
+          example: institution
+    CreatePaymentIntentAndCustomerOfpi:
+      type: object
+      title: Bank Account (With New Customer)
+      description: Create a payment intent using a bank account as the beneficiary and a register a new customer.
+      required:
+      - amount
+      - customer
+      - description
+      - allowed_payment_method_types
+      - payment_method_details
+      - confirm
+      properties:
+        amount:
+          type: string
+          title: string
+          pattern: \d+(?:\.\d{1,2})?
+          example: '1234.12'
+          description: 'Amount to be paid by your customer. For OFPI, you can send through numbers with up to two decimal points, separated by a `.` period. For example: `1234.12`
+
+            '
+        customer:
+          $ref: '#/components/schemas/CreateCustomerOfpi'
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        description:
+          type: string
+          description: 'A human-readable description of the payment.
+
+            '
+          example: Shoe payment
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        allowed_payment_method_types:
+          type: array
+          description: A list of payment method types allowed in this payment intent. For Brazil (OFPI), this value must be set to `open_finance`.
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/EnumPaymentLinkAllowedPaymentMethod'
+        payment_method_details:
+          type: object
+          description: Details about the OFPI payment method.
+          required:
+          - open_finance
+          properties:
+            open_finance:
+              oneOf:
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyIndividualRequestOfpiBankAccount'
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyBusinessRequestOfpiBankAccount'
+        confirm:
+          type: boolean
+          default: false
+          description: 'Boolean that confirms the payment intent.
+
+
+            > 📘 Provide `payer_institution`
+
+            >
+
+            > In order to confirm the payment intent (`confirm: true`), you must provide the `payer_institution` parameter.
+
+
+            **Note:** Sending this parameter set to `true` confirms the payment intent.
+
+            '
+          example: false
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number for the payment intent.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+    CreateBankAccountOfpiBusiness:
+      type: object
+      title: V1 - OFPI Business
+      required:
+      - institution
+      - holder
+      - details
+      properties:
+        institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the institution that the bank account is created in.
+          example: f512d996-583a-4a91-8b5b-eba2e103b068
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        holder:
+          type: object
+          title: OFPI
+          required:
+          - type
+          - information
+          description: Details regarding the business bank account holder.
+          properties:
+            type:
+              type: string
+              enum:
+              - BUSINESS
+              description: The type of bank account. For business bank accounts, this must be set to `BUSINESS`.
+              example: BUSINESS
+              default: BUSINESS
+            information:
+              type: object
+              description: Additional information about the bank account holder required in order to create the account for OFPI.
+              title: BUSINESS
+              required:
+              - name
+              - identifier
+              - identifier_type
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: The full name of the business
+                  example: Gustavo Veloso Entertainment Universe
+                identifier_type:
+                  type: string
+                  enum:
+                  - CNPJ
+                  description: 'The customer''s ID document type. For businesses in Brazil, this must be set to `CNPJ`.
+
+                    '
+                  example: CNPJ
+                  default: CNPJ
+                identifier:
+                  type: string
+                  minLength: 14
+                  maxLength: 14
+                  pattern: ^\d{14}$
+                  description: The CNPJ document number.
+                  example: 00000000000191
+        details:
+          $ref: '#/components/schemas/BankAccountDetailsOfpi'
+    LastErrorPaymentError:
+      type: object
+      title: payment_error
+      description: Information about the error you ran into in the previous step of the payment intent, if applicable. This error can occur when something unexpected happened during the payment intent process.
+      required:
+      - error_code
+      - error_message
+      properties:
+        error_code:
+          type: string
+          description: 'A unique error code (`payment_error`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: payment_error
+        error_message:
+          type: string
+          description: 'A short description of the error.
+
+            '
+          example: Unexpected error to confirm the payment
+    scheduled_daily-2:
+      type: object
+      title: Daily
+      description: Schedule a daily recurring payment.
+      properties:
+        daily:
+          type: object
+          description: Schedule a daily recurring payment.
+          properties:
+            start_date:
+              type: string
+              format: date
+              description: 'The date the recurring daily payment should start on, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The `start_date` must be at least 1 day in the future.
+
+                '
+              example: '2024-10-22'
+            occurrences:
+              type: integer
+              minimum: 2
+              maximum: 60
+              description: "The number of times the payment should repeat. \n\n>**Note**: You must schedule at least `2` occurrences and no more than `60`.\n"
+              example: 10
+    InstitutionFormFieldSaveCredentials:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Whether or not the user wants to save the credentials for this institution for future payments.
+          example: save_credentials
+        type:
+          type: string
+          description: The input type for the form field. For `save_credentials`, this is set to `checkbox`.
+          example: checkbox
+        label:
+          type: string
+          description: 'The label of the form field. For `save_credentials`, this is set to `Recuérdame para futuros pagos``.
+
+            '
+          example: Recuérdame para futuros pagos
+        validation:
+          type:
+          - string
+          - 'null'
+          description: The type of input validation used for the field. For `save_credentials`, this is `null`.
+          example: null
+    CreateCustomerOfpi:
+      type: object
+      title: V1 - Create Customer
+      description: Create a customer for Payment Initiation
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 14
+          description: 'The customer''s CPF or CNPJ number.
+
+            '
+          example: '10187609363'
+        name:
+          type: string
+          minLength: 5
+          maxLength: 200
+          description: 'The full name of the customer you want to create.
+
+            '
+          example: Gustavo Veloso
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        email:
+          type: string
+          pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+          description: 'The customer''s email address.
+
+            '
+          example: gustavo.veloso@musicabrazil.br
+        phone:
+          type:
+          - string
+          - 'null'
+          pattern: \+55\d{11}$
+          description: 'The customer''s phone number.
+
+            '
+          example: '+5511987654321'
+        address:
+          type:
+          - string
+          - 'null'
+          description: 'The customer''s physical address.
+
+            '
+          example: Rua de Gustavo Veloso 432, 70200 Brasilia
+    scheduled_monthly-2:
+      type: object
+      title: Monthly
+      description: Schedule a monthly recurring payment.
+      properties:
+        monthly:
+          type: object
+          description: Schedule a monthly recurring payment.
+          properties:
+            start_date:
+              type: string
+              format: date
+              description: 'The date the recurring monthly payment should start on, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The `start_date` must correspond to the first `day_of_month` specified and be at least 1 day in the future.
+
+                '
+              example: '2024-10-26'
+            day_of_month:
+              type: integer
+              minimum: 1
+              maximum: 31
+              description: 'The day of the month the payment should be made. Can be any integer between `1` and `31`.
+
+                '
+              example: 26
+            occurrences:
+              type: integer
+              minimum: 2
+              maximum: 24
+              description: "The number of times the payment should repeat. \n\n>**Note**: You must schedule at least `2` occurrences and no more than `24`.\n"
+              example: 12
+    ChargePaymentMethodDetailsPix:
+      type: object
+      title: Pix
+      description: 'Details about the payment method.
+
+        '
+      properties:
+        open_finance:
+          $ref: '#/components/schemas/ChargePaymentMethodDetailsPixContent'
+    PaymentIntentPaymentMethodDetailsIndividualPixKeys:
+      type: object
+      title: INDIVIDUAL
+      description: Details about the Pix Key payment method.
+      required:
+      - open_finance
+      properties:
+        open_finance:
+          $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyIndividualPixKeys'
+    scheduled_single-2:
+      type: object
+      title: Single
+      description: Schedule a single (one-off) payment in the future.
+      properties:
+        single:
+          type: object
+          description: Schedule a single (one-off) payment in the future.
+          properties:
+            date:
+              type: string
+              format: date
+              description: 'The date the one-off scheduled payment should be made, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The date must be at least 1 day in the future and no more than 720 days in the future.
+
+                '
+              example: '2024-10-22'
+    ChargeBrazil:
+      type: object
+      title: Charge (V1 - Bank Account Beneficiary)
+      required:
+      - id
+      - created_at
+      - failure_code
+      - failure_message
+      - status
+      - updated_at
+      - amount
+      - beneficiary
+      - provider
+      - metadata
+      - payment_method_details
+      - payment_method_information
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The ISO-8601 timestamp of when the status of the charge was last updated.
+
+            '
+          example: '2022-02-09T08:45:50.406032Z'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        customer:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the customer that the charge was created for.
+          example: 531aa631-70a0-4eeb-ab97-51dea3e90c89
+        payment_intent:
+          type: string
+          format: uuid
+          description: The `payment_intent.id` associated with this charge.
+          example: 50c04229-7b1d-4a53-951c-8ad53e10c6ca
+        status:
+          type: string
+          enum:
+          - CANCELED
+          - PENDING
+          - SCHEDULED
+          - SUCCEEDED
+          - FAILED
+          - PARTIAL
+          description: "The current status of the charge. Can be one of the following values:\n\n  - `CANCELED`\n  - `PENDING`\n  - `SCHEDULED`\n  - `SUCCEEDED`\n  - `FAILED`\n  - `PARTIAL`\n"
+          example: PENDING
+        amount:
+          type:
+          - string
+          - 'null'
+          description: 'The amount of the charge.
+
+            '
+          example: '100.12'
+        currency:
+          type: string
+          enum:
+          - BRL
+          description: 'The currency of the amount paid. For 🇧🇷 Brazil, the value must be `BRL` (Brazilian Real).
+
+            '
+          example: BRL
+        description:
+          type: string
+          description: 'The description of the payment.
+
+            '
+          example: Training shoes
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'The description that will appear on the customer''s bank statement (if provided).
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        beneficiary:
+          type: string
+          format: uuid
+          description: Belvo's unique ID used to identify the beneficiary’s bank account.
+          example: 58524ccc-89ac-4ab6-b62b-c3da3f19a722
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+        payment_method_type:
+          type: string
+          enum:
+          - open_finance
+          description: 'Selected payment method type. For 🇧🇷 Brazil''s OFPI, the value must be `open_finance`.
+
+            '
+          example: open_finance
+        payment_method_details:
+          $ref: '#/components/schemas/ChargePaymentMethodDetailsOfpi'
+        payment_method_information:
+          $ref: '#/components/schemas/PaymentMethodInformationOfpi'
+        payer_information:
+          description: 'Information about the payer''s bank account.
+
+
+            > **Note**: This object is only returned when the charge `status` is `SUCCEEDED`.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ChargePayerInformation'
+        transactions:
+          type: array
+          description: An array of Transaction objects relating to the charge.
+          items:
+            $ref: '#/components/schemas/paymentTransaction'
+        failure_code:
+          type:
+          - string
+          - 'null'
+          description: 'Error code that explains the reason behind a payment being unsuccessful (if applicable).
+
+            '
+          example: null
+        failure_message:
+          type:
+          - string
+          - 'null'
+          description: 'Further information regarding the `failure_code`.
+
+            '
+          example: null
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+    DisplayPaymentMethodInformationContentOfpi:
+      type: object
+      title: Display Open Finance Brazil payment method information
+      description: Object detailing what payment method information you need to display.
+      properties:
+        institutions:
+          type: array
+          description: 'An array of institution objects.
+
+            '
+          items:
+            $ref: '#/components/schemas/paymentInstitution'
+    EnumBankAccountHolderTypeOfpi:
+      type: string
+      enum:
+      - INDIVIDUAL
+      - BUSINESS
+      description: The type of bank account. Can be either `INDIVIDUAL` or `BUSINESS`.
+      example: BUSINESS
+    EnumPaymentLinkProvider:
+      type: string
+      deprecated: true
+      enum:
+      - belvo
+      description: '**Note**: This field has been deprecated and will be removed from the API in the future.
+
+
+        *The provider used for the payment link.*
+
+        '
+      example: belvo
+    PaymentIntentOfpi:
+      type: object
+      title: Bank Account
+      required:
+      - id
+      - created_at
+      - created_by
+      - customer
+      - allowed_payment_method_types
+      - amount
+      - currency
+      - description
+      - failure_code
+      - failure_message
+      - next_step
+      - last_error
+      - payment_method_details
+      - payment_method_information
+      - provider
+      - status
+      - updated_at
+      - selected_payment_method_type
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        customer:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the customer related to this payment intent.
+          example: 1c83ead8-6665-429c-a17a-ddc76cb3a95e
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The ISO-8601 timestamp of when the payment intent was last updated.
+
+            '
+          example: '2022-02-09T08:45:50.406032Z'
+        status:
+          $ref: '#/components/schemas/EnumPaymentIntentStatus'
+        amount:
+          type: string
+          description: 'Amount to be paid by your customer.
+
+            '
+          example: '1234.12'
+        currency:
+          $ref: '#/components/schemas/EnumPaymentsCurrency'
+        description:
+          type: string
+          description: 'The description of the payment.
+
+            '
+          example: Training shoes
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        selected_payment_method_type:
+          $ref: '#/components/schemas/EnumPaymentLinkAllowedPaymentMethod'
+        allowed_payment_method_types:
+          type: array
+          description: A list of payment method types allowed in this payment intent. For OFPI, the value will be `open_finance`.
+          items:
+            type: string
+            example: open_finance
+        payment_method_details:
+          description: Details about the OFPI payment method.
+          anyOf:
+          - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsIndividualOfpi'
+          - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBusinessOfpi'
+        payment_method_information:
+          $ref: '#/components/schemas/PaymentMethodInformationOfpi'
+        failure_code:
+          type:
+          - string
+          - 'null'
+          description: 'Error code that explains the reason behind a payment being unsuccessful (if applicable).
+
+            '
+          example: null
+        failure_message:
+          type:
+          - string
+          - 'null'
+          description: 'Further information regarding the `failure_code`.
+
+            '
+          example: null
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+        charges:
+          type: array
+          description: 'An array of charge objects related to this payment intent. If no charges are associated, we return an empty array.
+
+            '
+          items:
+            $ref: '#/components/schemas/ChargeBrazil'
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+        last_error:
+          deprecated: true
+          description: '**Note**: This field has been deprecated and will be removed from the API in the future.
+
+
+            *Information about the error you ran into in the previous step of the payment intent, if applicable. This error can occur when something unexpected happened during the payment intent process.*
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/LastErrorPaymentError'
+        next_step:
+          deprecated: true
+          description: '**Note**: This field has been deprecated and will be removed from the API in the future.
+
+
+            *Object detailing the next steps you should follow for a specific `next_step` type.*
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/NextStepDisplayPaymentMethodInformation'
+          - $ref: '#/components/schemas/NextStepNeedsRedirect'
+          - $ref: '#/components/schemas/NextStepDisplayConfirmationRequiredOfpi'
+          - $ref: '#/components/schemas/NextStepDisplayPaymentProcessing'
+          - $ref: '#/components/schemas/NextStepDisplayPaymentSucceeded'
+          - $ref: '#/components/schemas/NextStepDisplayPaymentFailed'
+    PaymentIntentPaymentMethodDetailsBusinessPixKeys:
+      type: object
+      title: BUSINESS
+      description: Details about the Pix Key payment method.
+      required:
+      - open_finance
+      properties:
+        open_finance:
+          $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyBusinessPixKeys'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    BeneficiaryBankAccountOfpi:
+      type: object
+      title: Beneficiary Bank Account
+      required:
+      - id
+      - created_at
+      - created_by
+      - customer
+      - institution
+      - number
+      - holder
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        institution:
+          $ref: '#/components/schemas/paymentInstitution'
+        details:
+          oneOf:
+          - $ref: '#/components/schemas/BankAccountDetailsOpenFinance'
+          - $ref: '#/components/schemas/BankAccountDetailsOpenFinancePix'
+        holder:
+          $ref: '#/components/schemas/HolderResponseOfpi'
+    scheduled_single:
+      type:
+      - object
+      - 'null'
+      title: Single
+      description: Details regarding the scheduled (one-off) payment.
+      properties:
+        single:
+          type:
+          - object
+          - 'null'
+          description: Details regarding the scheduled (one-off) payment.
+          properties:
+            date:
+              type: string
+              format: date
+              description: 'The date the one-off scheduled payment should be made, in `YYYY-MM-DD` format.
+
+                '
+              example: '2024-10-22'
+    InstitutionFormField:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The username, password, or username type field.
+          example: username
+        type:
+          type: string
+          description: The input type for the form field. For example, string.
+          example: text
+        label:
+          type: string
+          description: 'The label of the form field. For example:
+
+            - Document
+
+            - Clave
+
+            - Token
+
+            '
+          example: Document
+        dependency:
+          type:
+          - string
+          - 'null'
+          description: 'Indicates whether or not this parameter depends on another parameter being provided. For example, if this field `dependency` = `username_type`, this means that you must also send through the `username_type` parameter.
+
+            '
+          example: username_type
+        validation:
+          type: string
+          description: The type of input validation used for the field.
+          example: ^.{1,}$
+        placeholder:
+          type: string
+          description: The placeholder text in the form field.
+          example: Username
+        validation_message:
+          type: string
+          description: The message displayed when an invalid input is provided in the form field.
+          example: Invalid client number
+        values:
+          type: array
+          description: 'Array of additional form field values.
+
+            '
+          items:
+            $ref: '#/components/schemas/InstitutionsFormFieldValues'
+        length:
+          type: integer
+          description: 'Number of digits allowed when the type is `token`.
+
+            '
+          example: 6
+        optional:
+          type: boolean
+          description: 'It indicates whether this form field is optional.
+
+            '
+          example: false
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    BankAccountDetailsOpenFinance:
+      type: object
+      title: OFPI (PIX Account Information)
+      required:
+      - country
+      - account_type
+      - agency
+      - number
+      properties:
+        country:
+          $ref: '#/components/schemas/EnumPaymentsCountry'
+        account_type:
+          $ref: '#/components/schemas/EnumBankAccountPixAccountTypeOfpi'
+        agency:
+          type: string
+          description: The agency (branch number) of the institution where the account was created.
+          example: '0444'
+        number:
+          type: string
+          description: The bank account number.
+          example: 45722-0
+    DisplayPaymentProcessing:
+      type: object
+      description: Details regarding the payer institution.
+      properties:
+        payer_institution:
+          $ref: '#/components/schemas/paymentInstitution'
+    NeedsRedirectContent:
+      type: object
+      description: Details regarding the payer institution.
+      properties:
+        payer_institution:
+          $ref: '#/components/schemas/paymentInstitution'
+    HolderResponseOfpi:
+      type: object
+      title: OFPI
+      required:
+      - type
+      - information
+      description: Details regarding the bank account holder.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumBankAccountHolderTypeOfpi'
+        information:
+          oneOf:
+          - $ref: '#/components/schemas/HolderInformationBusinessOfpiResponse'
+          - $ref: '#/components/schemas/HolderInformationIndividualOfpiResponse'
+    PaymentMethodInformationBodyOfpi:
+      type: object
+      description: Payment method type selected.
+      properties:
+        provider_request_id:
+          type:
+          - string
+          - 'null'
+          description: 'Unique ID for the payment, as sent by the provider.
+
+            '
+          example: 978c0c97ea847e78e8849634473c1f1
+        redirect_url:
+          type:
+          - string
+          - 'null'
+          description: 'The URL that redirects the user to their institution''s website to authorize the payment.
+
+            '
+          example: https://wakandanational.com/
+        end_to_end_id:
+          type:
+          - string
+          - 'null'
+          description: A unique ID for the transaction in the Brazil's PIX payment system.
+          example: F203262942022211117487a213b1d140
+        settlement_date:
+          type: string
+          format: date
+          description: "The `settlement_date` field indicates the date on which a scheduled payment (charge) is planned to be settled. This field is relevant in various states of the charge's lifecycle:\n\n  - Scheduled Charges: When a charge has the status `SCHEDULED`, this field represents the planned settlement date.\n  - Completed Charges: When a charge has the status `SUCCEEDED`, this field reflects the date that the payment was made.\n  - Failed or Canceled Charges: When a charge has the status `CANCELED` or `FAILED`, this field will still contain the originally calculated settlement date, indicating when the charge was intended to be settled.\n\n\n> **Note**: The `settlement_date` does not change based on the success or failure of the charge. It consistently reflects the original planned settlement date.\n"
+          example: '2024-10-22'
+    PaymentIntentPixKeys:
+      type: object
+      title: Pix Key
+      required:
+      - id
+      - created_at
+      - created_by
+      - customer
+      - allowed_payment_method_types
+      - amount
+      - currency
+      - description
+      - failure_code
+      - failure_message
+      - next_step
+      - last_error
+      - payment_method_details
+      - payment_method_information
+      - provider
+      - status
+      - updated_at
+      - selected_payment_method_type
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        customer:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the customer related to this payment intent.
+          example: 1c83ead8-6665-429c-a17a-ddc76cb3a95e
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The ISO-8601 timestamp of when the payment intent was last updated.
+
+            '
+          example: '2022-02-09T08:45:50.406032Z'
+        status:
+          $ref: '#/components/schemas/EnumPaymentIntentStatus'
+        amount:
+          type: string
+          description: 'Amount to be paid by your customer.
+
+            '
+          example: '1234.12'
+        currency:
+          $ref: '#/components/schemas/EnumPaymentsCurrency'
+        description:
+          type: string
+          description: 'The description of the payment.
+
+            '
+          example: Training shoes
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        selected_payment_method_type:
+          $ref: '#/components/schemas/EnumPaymentLinkAllowedPaymentMethod'
+        allowed_payment_method_types:
+          type: array
+          description: A list of payment method types allowed in this payment intent. For OFPI, the value will be `open_finance`.
+          items:
+            type: string
+            example: open_finance
+        payment_method_details:
+          description: Details about the Pix Key payment method.
+          anyOf:
+          - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsIndividualPixKeys'
+          - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBusinessPixKeys'
+        payment_method_information:
+          description: 'Information about the Pix Key payment method.
+
+
+            At the time of payment intent creation, it will only include the `open_finance.pix_key_details` property, which you need to show your user to confirm that their details are correct (see the **Initial** schema).
+
+
+            After they confirm their details in your application and you send through the PATCH request, this object will be populated with additional properties (see the **Confirmed** schema).
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/PaymentMethodInformationPixKeysInitial'
+          - $ref: '#/components/schemas/PaymentMethodInformationPixKeysConfirmed'
+        failure_code:
+          type:
+          - string
+          - 'null'
+          description: 'Error code that explains the reason behind a payment being unsuccessful (if applicable).
+
+            '
+          example: null
+        failure_message:
+          type:
+          - string
+          - 'null'
+          description: 'Further information regarding the `failure_code`.
+
+            '
+          example: null
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+        charges:
+          type: array
+          description: 'An array of charge objects related to this payment intent. If no charges are associated, we return an empty array.
+
+            '
+          items:
+            $ref: '#/components/schemas/ChargeBrazilPix'
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+        last_error:
+          deprecated: true
+          description: '**Note**: This field has been deprecated and will be removed from the API in the future.
+
+
+            *Information about the error you ran into in the previous step of the payment intent, if applicable. This error can occur when something unexpected happened during the payment intent process.*
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/LastErrorPaymentError'
+        next_step:
+          deprecated: true
+          description: '**Note**: This field has been deprecated and will be removed from the API in the future.
+
+
+            *Object detailing the next steps you should follow for a specific `next_step` type.*
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/NextStepDisplayPaymentMethodInformation'
+          - $ref: '#/components/schemas/NextStepNeedsRedirect'
+          - $ref: '#/components/schemas/NextStepDisplayConfirmationRequiredOfpi'
+          - $ref: '#/components/schemas/NextStepDisplayPaymentProcessing'
+          - $ref: '#/components/schemas/NextStepDisplayPaymentSucceeded'
+          - $ref: '#/components/schemas/NextStepDisplayPaymentFailed'
+    scheduled_custom:
+      type: object
+      title: Custom
+      description: Details regarding the custom recurring payment.
+      properties:
+        custom:
+          type: object
+          description: Details regarding the custom recurring payment.
+          properties:
+            dates:
+              type: array
+              minItems: 2
+              maxItems: 60
+              description: 'The unique dates the recurring payment should be made, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The dates must be at least 1 day in the future and no more than 720 days in the future.
+
+                '
+              items:
+                type: string
+                format: date
+                description: 'The date of the payment, in `YYYY-MM-DD` format.
+
+                  '
+                example: '2024-10-22'
+              example:
+              - '2024-10-22'
+              - '2024-10-26'
+            description:
+              type: string
+              maxLength: 256
+              description: 'A description of the custom recurring payment that will display to your user when they are redirected to their bank to accept the payment.
+
+
+                > **Note**: We highly recommend that this message be in Brazilian Portuguese, and that it clearly explains the purpose as well as recurring nature of the payment.
+
+                '
+              example: Os pagamentos ocorrerão a cada três dias até a data final (30.09.2024)
+    EnumPaymentsCurrency:
+      type: string
+      enum:
+      - BRL
+      description: 'The currency of the amount paid, for example, `BRL` (Brazilian Real).
+
+        '
+      example: BRL
+    paymentInstitution:
+      type: object
+      required:
+      - id
+      - active
+      - name
+      - display_name
+      - legal_entity_name
+      - website
+      - logo
+      - icon_logo
+      - text_logo
+      - primary_color
+      - country
+      - form_fields
+      - sort_priority
+      - description
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        active:
+          type: boolean
+          description: Indicates whether this institution is available for use or not.
+          example: true
+        name:
+          type: string
+          description: The name of the institution, as designated by Belvo.
+          example: wakanda_national
+        display_name:
+          type: string
+          description: The customer-facing name of the institution.
+          example: Wakanda National Bank
+        legal_entity_name:
+          type:
+          - string
+          - 'null'
+          description: 'The name of the legal entity of the institution, as registered with the relevant regulatory authority. Only applicable for 🇧🇷 Brazil OFPI.
+
+            '
+          example: Wakanda Bank, National Association
+        website:
+          type: string
+          description: The URL of the institution's website.
+          example: https://www.wakandanational.com
+        logo:
+          type: string
+          description: The URL of the institution's logo.
+          example: https://belvo-api-media.s3.amazonaws.com/logos/wakandanational_logo.svg
+        icon_logo:
+          type: string
+          description: The URL of the institution's icon logo.
+          example: https://belvo-api-media.s3.amazonaws.com/logos/wakandanational_icon_logo.svg
+        text_logo:
+          type: string
+          description: The URL of the institution's text logo.
+          example: https://belvo-api-media.s3.amazonaws.com/logos/wakandanational_text_logo.svg
+        primary_color:
+          type: string
+          description: The primary color on the institution's website.
+          example: '#fdbc24'
+        country:
+          $ref: '#/components/schemas/EnumPaymentsCountry'
+        form_fields:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/InstitutionFormField'
+            - $ref: '#/components/schemas/InstitutionFormFieldUsernameType'
+            - $ref: '#/components/schemas/InstitutionFormFieldSaveCredentials'
+        sort_priority:
+          type: integer
+          format: int32
+          description: 'Number that represents the order in which the institution should be displayed in an application, with `1` being the highest.
+
+            '
+          example: 1
+        description:
+          type:
+          - string
+          - 'null'
+          description: A brief description of the insitution.
+          example: 'Simple, transparent and secure: Wakanda Bank is the leading financial technology company in Latin America.'
+    IdempotencyConflictError:
+      type: object
+      title: Idempotency Conflict Error
+      required:
+      - code
+      - message
+      - request_id
+      description: 'The API responds with this error when it receives a request containing an idempotency key that has been previously used in another request which hasn''t yet finished processing. To correctly maintain an idempotent state, the server cannot process duplicate requests simultaneously.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`idempotency_key_conflict`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: idempotency_key_conflict
+        message:
+          type: string
+          description: "A short description of the error.\n\nFor `idempotency_key_conflict` errors, the description is:\n\n  - `A request with this idempotency key is already being processed.`\n"
+          example: A request with this idempotency key is already being processed.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    IdempotencyMismatchError:
+      type: object
+      title: Idempotency Key Mismatch Error
+      required:
+      - code
+      - message
+      - request_id
+      description: 'This error occurs when a request is made with an idempotency key that was previously used with a different request payload. Each unique idempotency key must be associated with the same request body.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`idempotency_payload_mismatch`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: idempotency_payload_mismatch
+        message:
+          type: string
+          description: "A short description of the error.\n\nFor `idempotency_payload_mismatch` errors, the description is:\n\n  - `A different request with the same idempotency key already exists.`\n"
+          example: A different request with the same idempotency key already exists.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    NextStepDisplayPaymentFailed:
+      type: object
+      title: OFPI - Payment Failed
+      description: 'Object detailing the next steps you should follow for a specific `next_step` type.
+
+        '
+      properties:
+        type:
+          type: string
+          enum:
+          - open_finance_display_payment_method_information
+          - open_finance_display_confirmation_required
+          - open_finance_display_needs_redirect
+          - open_finance_display_payment_processing
+          - open_finance_display_payment_succeeded
+          - open_finance_display_payment_failed
+          description: 'The type of `next_step` you need to follow.
+
+            '
+          example: open_finance_display_payment_failed
+        open_finance_display_payment_failed:
+          $ref: '#/components/schemas/DisplayPaymentFailed'
+        ready_to_confirm:
+          type: boolean
+          default: false
+          description: "Boolean that indicates whether the payment intent is ready to be confirmed. \n\n  **Note:** When set to `true`,you need to confirm the payment by making a PATCH request sending through `confirm: true`.\n"
+          example: false
+    PaymentMethodInformationPixKeysInitial:
+      type: object
+      title: Initial
+      description: 'Information about the Pix Key payment method at the time of payment intent creation. It will only include the `pix_key_details` property, which you need to show your user to confirm that their details are correct. After they confirm and you send through the PATCH request, this object will be populated with additional properties (see the **Confirmed** schema).
+
+        '
+      properties:
+        open_finance:
+          type: object
+          title: Pix Key
+          properties:
+            pix_key_details:
+              type: object
+              description: Details about the Pix Key used for the payment. You need to display this information to your user for them to confirm that the details are correct. After they confirm, you can send a PATCH request to confirm the Payment Intent.
+              properties:
+                identifier:
+                  type: string
+                  description: 'The masked identifier of the owner.
+
+                    '
+                  example: 23******00
+                name:
+                  type: string
+                  description: The name of the Pix Key holder.
+                  example: João da Silva
+    PaymentIntentPaymentMethodDetailsIndividualOfpi:
+      type: object
+      title: INDIVIDUAL
+      description: Details about the OFPI payment method.
+      required:
+      - open_finance
+      properties:
+        open_finance:
+          $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyIndividualOfpi'
+    CreatePaymentIntentPixKeys:
+      type: object
+      title: Pix Keys (With Existing Customer)
+      description: 'Create a Payment Intent using a Pix Key as the beneficiary details and using a previously created customer.
+
+
+        Note: When using the Pix Keys method, you will need to make an additional PATCH request.
+
+        '
+      required:
+      - amount
+      - customer
+      - description
+      - allowed_payment_method_types
+      - payment_method_details
+      - confirm
+      properties:
+        amount:
+          type: string
+          pattern: \d+(?:\.\d{1,2})?
+          example: '1234.12'
+          description: "Amount to be paid by your customer. You can send through numbers with up to two decimal points, separated by a `.` period. For example: `1234.12` \n"
+        customer:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID to reference your previously created customer.
+
+            '
+          example: 06dc2f14-1217-4480-9b36-550a944a39d1
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        description:
+          type: string
+          description: 'A human-readable description of the payment.
+
+            '
+          example: Shoe payment
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        allowed_payment_method_types:
+          type: array
+          description: A list of payment method types allowed in this payment intent. For Brazil (OFPI), this value must be set to `open_finance`.
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/EnumPaymentLinkAllowedPaymentMethod'
+        payment_method_details:
+          type: object
+          description: Details about the OFPI payment method.
+          required:
+          - open_finance
+          properties:
+            open_finance:
+              oneOf:
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyIndividualRequestPixKey'
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyBusinessRequestPixKey'
+        confirm:
+          type: boolean
+          default: false
+          description: 'Boolean that confirms the payment intent.
+
+
+            **Note:** Sending this parameter set to `true` confirms the payment intent.
+
+            '
+          example: false
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number for the payment intent.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    CreateBankAccountOfpiIndividual:
+      type: object
+      title: V1 - OFPI Individual
+      required:
+      - institution
+      - holder
+      - details
+      properties:
+        institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the institution that the bank account is created in.
+          example: f512d996-583a-4a91-8b5b-eba2e103b068
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        holder:
+          type: object
+          title: OFPI
+          required:
+          - type
+          - information
+          description: Details regarding the individual bank account holder.
+          properties:
+            type:
+              type: string
+              enum:
+              - INDIVIDUAL
+              description: The type of bank account. For individuals, this must be set to `INDIVIDUAL`.
+              example: INDIVIDUAL
+              default: INDIVIDUAL
+            information:
+              type: object
+              description: Additional information about the bank account holder required in order to create the account for OFPI.
+              title: INDIVIDUAL
+              required:
+              - first_name
+              - last_name
+              - identifier
+              - identifier_type
+              properties:
+                first_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: The bank account holder's first name.
+                  example: Gustavo
+                last_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: The bank account holder's last name.
+                  example: Veloso
+                identifier_type:
+                  type: string
+                  enum:
+                  - CPF
+                  description: 'The customer''s ID document type. For individuals in Brazil, this must be set to `CPF`.
+
+                    '
+                  example: CPF
+                  default: CPF
+                identifier:
+                  type: string
+                  minLength: 11
+                  maxLength: 11
+                  pattern: ^\d{11}$
+                  description: The document number of the customer's ID.
+                  example: 00000000191
+        details:
+          $ref: '#/components/schemas/BankAccountDetailsOfpi'
+    ChargePaymentMethodDetailsOfpi:
+      type: object
+      title: OFPI
+      description: 'Details about the payment method.
+
+        '
+      properties:
+        open_finance:
+          $ref: '#/components/schemas/ChargePaymentMethodDetailsOfpiContent'
+    PaymentIntentPaymentMethodDetailsBodyBusinessRequestPixKey:
+      type: object
+      title: BUSINESS
+      description: Details about the payment method when the customer (payer) is a business customer.
+      required:
+      - pix_key
+      - payer_institution
+      - callback_url
+      - cpf
+      properties:
+        pix_key:
+          type: string
+          description: 'The Pix key associated with the beneficiary of the transaction. Can be an email, phone number (including the country code, for example `+5511999998888`), CPF/CNPJ, or a random key.
+
+            '
+          example: 53497b80-81a2-4ea8-9296-83a909c05bdf
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        callback_url:
+          type: string
+          description: The callback URL that your user will be redirected to after confirming the payment in their banking application.
+          example: https://www.acmecorp.com/checkout/3487321
+        cpf:
+          type: string
+          description: 'The customer''s CPF number. Provided when available; this value is obfuscated in responses.
+
+            '
+          example: 09744477770
+        schedule:
+          $ref: '#/components/schemas/schedule-2'
+    CreatePaymentIntentPixKeysAndCustomer:
+      type: object
+      title: Pix Keys (With New Customer)
+      description: 'Create a Payment Intent using a Pix Key as the beneficiary details and using a previously created customer.
+
+
+        Note: When using the Pix Keys method, you will need to make an additional PATCH request.
+
+        '
+      required:
+      - amount
+      - customer
+      - description
+      - allowed_payment_method_types
+      - payment_method_details
+      - confirm
+      properties:
+        amount:
+          type: string
+          pattern: \d+(?:\.\d{1,2})?
+          example: '1234.12'
+          description: "Amount to be paid by your customer. You can send through numbers with up to two decimal points, separated by a `.` period. For example: `1234.12` \n"
+        customer:
+          $ref: '#/components/schemas/CreateCustomerOfpi'
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        description:
+          type: string
+          description: 'A human-readable description of the payment.
+
+            '
+          example: Shoe payment
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        allowed_payment_method_types:
+          type: array
+          description: A list of payment method types allowed in this payment intent. For Brazil (OFPI), this value must be set to `open_finance`.
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/EnumPaymentLinkAllowedPaymentMethod'
+        payment_method_details:
+          type: object
+          description: Details about the OFPI payment method.
+          required:
+          - open_finance
+          properties:
+            open_finance:
+              oneOf:
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyIndividualRequestPixKey'
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyBusinessRequestPixKey'
+        confirm:
+          type: boolean
+          default: false
+          description: 'Boolean that confirms the payment intent.
+
+
+            **Note:** Sending this parameter set to `true` confirms the payment intent.
+
+            '
+          example: false
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number for the payment intent.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+    EnumPaymentIntentStatus:
+      type: string
+      enum:
+      - REQUIRES_PAYMENT_METHOD
+      - REQUIRES_ACTION
+      - SUCCEEDED
+      - PROCESSING
+      - FAILED
+      description: 'The current status of the payment intent.
+
+        '
+      example: REQUIRES_ACTION
+    CreatePaymentIntentAndBankAccountAndCustomerOfpi:
+      type: object
+      title: Bank Account (With New Customer and Beneficiary Bank Account)
+      description: 'Create a customer, bank account, and payment intent for Brazil (OFPI).
+
+        '
+      required:
+      - amount
+      - customer
+      - description
+      - allowed_payment_method_types
+      - payment_method_details
+      - confirm
+      properties:
+        amount:
+          type: string
+          title: string
+          pattern: \d+(?:\.\d{1,2})?
+          example: '1234.12'
+          description: 'Amount to be paid by your customer. For OFPI, you can send through numbers with up to two decimal points, separated by a `.` period. For example: `1234.12`
+
+            '
+        customer:
+          $ref: '#/components/schemas/CreateCustomerOfpi'
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        description:
+          type: string
+          description: 'A human-readable description of the payment.
+
+            '
+          example: Shoe payment
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        allowed_payment_method_types:
+          type: array
+          description: A list of payment method types allowed in this payment intent. For Brazil (OFPI), this value must be set to `open_finance`.
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/EnumPaymentLinkAllowedPaymentMethod'
+        payment_method_details:
+          type: object
+          description: Details about the OFPI payment method.
+          required:
+          - open_finance
+          properties:
+            open_finance:
+              oneOf:
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyIndividualRequestOfpiBankAccount'
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyBusinessRequestOfpiBankAccount'
+        confirm:
+          type: boolean
+          default: false
+          description: 'Boolean that confirms the payment intent.
+
+
+            > 📘 Provide `payer_institution`
+
+            >
+
+            > In order to confirm the payment intent (`confirm: true`), you must provide the `payer_institution` parameter.
+
+
+            **Note:** Sending this parameter set to `true` confirms the payment intent.
+
+            '
+          example: false
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number for the payment intent.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+    PaymentIntentPaymentMethodDetailsBodyIndividualRequestOfpi:
+      type: object
+      title: INDIVIDUAL
+      description: Payment method type selected.
+      required:
+      - beneficiary_bank_account
+      - callback_url
+      properties:
+        beneficiary_bank_account:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID used to identify the beneficiary''s bank account.
+
+            '
+          example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        schedule:
+          $ref: '#/components/schemas/schedule-2'
+        callback_url:
+          type: string
+          description: The callback URL that your user will be redirected to after confirming the payment in their banking application.
+          example: https://www.acmecorp.com/checkout/3487321
+    DisplayPaymentSucceeded:
+      type: object
+      description: Details regarding the payer institution.
+      properties:
+        payer_institution:
+          $ref: '#/components/schemas/paymentInstitution'
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    DisplayPaymentFailed:
+      type: object
+      description: Details regarding the payer institution.
+      properties:
+        payer_institution:
+          $ref: '#/components/schemas/paymentInstitution'
+    scheduled_daily:
+      type: object
+      title: Daily
+      description: Details regarding the daily recurring payment.
+      properties:
+        daily:
+          type: object
+          description: Details regarding the daily recurring payment.
+          properties:
+            start_date:
+              type: string
+              format: date
+              description: 'The date the recurring daily payment should start on, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The `start_date` must be at least 1 day in the future.
+
+                '
+              example: '2024-10-22'
+            occurrences:
+              type: integer
+              minimum: 2
+              maximum: 60
+              description: "The number of times the payment should repeat. \n\n>**Note**: You must schedule at least `2` occurrences and no more than `60`.\n"
+              example: 10
+    ChargePaymentMethodDetailsPixContent:
+      type: object
+      description: Information about the payer of a Pix payment.
+      properties:
+        payer_institution:
+          type: string
+          format: uuid
+          description: 'Unique identifier for the payer''s institution.
+
+            '
+          example: db201c6a-e0ee-4caa-92d6-72b480d6d86f
+        pix_key:
+          type: string
+          description: 'The Pix key associated with the beneficiary of the transaction. Can be an email, phone number, CPF/CNPJ, or a random key.
+
+            '
+          example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+        schedule:
+          $ref: '#/components/schemas/schedule'
+    EnumPaymentsCountry:
+      type:
+      - string
+      - 'null'
+      enum:
+      - BRA
+      - 'null'
+      maxLength: 3
+      description: 'The customer''s country of residence.
+
+        -  BRA (🇧🇷 Brazil)
+
+        '
+      example: BRA
+    scheduled_monthly:
+      type: object
+      title: Monthly
+      description: Details regarding the monthly recurring payment.
+      properties:
+        monthly:
+          type: object
+          description: Details regarding the monthly recurring payment.
+          properties:
+            start_date:
+              type: string
+              format: date
+              description: 'The date the recurring monthly payment should start on, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The `start_date` must correspond to the first `day_of_month` specified and be at least 1 day in the future.
+
+                '
+              example: '2024-10-26'
+            day_of_month:
+              type: integer
+              minimum: 1
+              maximum: 31
+              description: 'The day of the month the payment should be made. Can be any integer between `1` and `31`.
+
+                '
+              example: 26
+            occurrences:
+              type: integer
+              minimum: 2
+              maximum: 24
+              description: "The number of times the payment should repeat. \n\n>**Note**: You must schedule at least `2` occurrences and no more than `24`.\n"
+              example: 12
+    InstitutionFormFieldUsernameType:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The username, password, or username type field.
+          example: username
+        type:
+          type: string
+          description: The input type for the form field. For example, string.
+          example: text
+        placeholder:
+          type: string
+          description: The placeholder text in the form field.
+          example: Username
+        values:
+          type: array
+          description: 'Array of additional form field values.
+
+            '
+          items:
+            $ref: '#/components/schemas/InstitutionsFormFieldValues'
+        preselected:
+          type: integer
+          description: 'Indicated which option from the `username_type`s array is automatically preselected for the user.
+
+            '
+          example: 6
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    scheduled_weekly:
+      type: object
+      title: Weekly
+      description: Details regarding the weekly recurring payment.
+      properties:
+        weekly:
+          type: object
+          description: Details regarding the weekly recurring payment.
+          properties:
+            start_date:
+              type: string
+              format: date
+              description: 'The date the recurring weekly payment should start on, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The `start_date` must correspond to the first `day_of_week` specified and be at least 1 day in the future.
+
+                '
+              example: '2024-10-22'
+            day_of_week:
+              type: string
+              enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+              description: "The day of the week the payment should be made. Can be one of the following values:\n\n  - `MONDAY`\n  - `TUESDAY`\n  - `WEDNESDAY`\n  - `THURSDAY`\n  - `FRIDAY`\n  - `SATURDAY`\n  - `SUNDAY`\n"
+              example: MONDAY
+            occurrences:
+              type: integer
+              minimum: 2
+              maximum: 60
+              description: "The number of times the payment should repeat. \n\n>**Note**: You must schedule at least `2` occurrences and no more than `60`.\n"
+              example: 10
+    schedule:
+      type:
+      - object
+      - 'null'
+      title: Schedule a payment
+      description: 'Details regarding the scheduled payment (optional). For more information on how to schedule payments, please see our dedicated <a href="https://developers.belvo.com/docs/ofpi-scheduled-payments" target="_blank">OFPI Scheduled Payments</a> guide.
+
+        '
+      oneOf:
+      - $ref: '#/components/schemas/scheduled_single'
+      - $ref: '#/components/schemas/scheduled_daily'
+      - $ref: '#/components/schemas/scheduled_weekly'
+      - $ref: '#/components/schemas/scheduled_monthly'
+      - $ref: '#/components/schemas/scheduled_custom'
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    HolderInformationIndividualOfpiResponse:
+      type: object
+      title: INDIVIDUAL
+      description: Details regarding the individual bank account holder.
+      required:
+      - first_name
+      - last_name
+      - identifier
+      - identifier_type
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The bank account holder's first name.
+          example: Dom
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The bank account holder's last name.
+          example: Mesa
+        identifier_type:
+          type: string
+          enum:
+          - CPF
+          description: 'The customer''s ID document type. For individuals in Brazil, this must be set to `CPF`.
+
+            '
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 11
+          pattern: ^\d{11}$
+          description: The document number of the customer's ID.
+          example: 00000000191
+    EnumPaymentLinkAllowedPaymentMethod:
+      type: string
+      enum:
+      - open_finance
+      - open_finance_biometric_pix
+      description: "Selected payment method type. For \U0001F1E7\U0001F1F7 Brazil's OFPI, can be either:\n\n  - `open_finance`: For regular payments.\n  - `open_finance_biometric_pix`: For biometric payments using the PIX network.\n"
+      example: open_finance
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    BankAccountDetailsOfpi:
+      type: object
+      title: OFPI (PIX Account Information)
+      description: Information regarding the bank account.
+      required:
+      - account_type
+      - agency
+      - number
+      properties:
+        account_type:
+          $ref: '#/components/schemas/EnumBankAccountPixAccountTypeOfpi'
+        agency:
+          type: string
+          minLength: 1
+          maxLength: 4
+          pattern: ^[0-9]{1,4}$
+          description: The agency (branch number) of the institution where the account was created.
+          example: '0444'
+        number:
+          type: string
+          pattern: ^[0-9]{1,20}$
+          minLength: 1
+          maxLength: 20
+          description: 'The bank account number.
+
+
+            > 📘 Valid account number characters
+
+            >
+
+            > You can only send through numbers (`^[0-9]+$`) in the string. For example, `"457220"` is a valid bank account number, while "`45722-0`" is invalid as it contains a hyphen (`-`).
+
+            '
+          example: '457220'
+    scheduled_custom-2:
+      type: object
+      title: Custom
+      description: Schedule a custom recurring payment.
+      properties:
+        custom:
+          type: object
+          description: Schedule a custom recurring payment.
+          required:
+          - dates
+          - description
+          properties:
+            dates:
+              type: array
+              minItems: 2
+              maxItems: 60
+              description: 'The unique dates the recurring payment should be made, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The dates must be at least 1 day in the future and no more than 720 days in the future.
+
+                '
+              items:
+                type: string
+                format: date
+                description: 'The date of the payment, in `YYYY-MM-DD` format.
+
+                  '
+                example: '2024-10-22'
+              example:
+              - '2024-10-22'
+              - '2024-10-26'
+            description:
+              type: string
+              maxLength: 256
+              description: 'A description of the custom recurring payment that will display to your user when they are redirected to their bank to accept the payment.
+
+
+                > **Note**: We highly recommend that this message be in Brazilian Portuguese, and that it clearly explains the purpose as well as recurring nature of the payment.
+
+                '
+              example: Os pagamentos ocorrerão a cada três dias até a data final (30.09.2024)
+    ChargePaymentMethodDetailsOfpiContent:
+      type: object
+      description: Information about the payer of a OFPI payment.
+      properties:
+        schedule:
+          $ref: '#/components/schemas/schedule'
+        payer_institution:
+          type: string
+          format: uuid
+          description: 'Unique identifier for the payer''s institution.
+
+            '
+          example: db201c6a-e0ee-4caa-92d6-72b480d6d86f
+        beneficiary_bank_account:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID used to identify the beneficiary''s bank account.
+
+            '
+          example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+    NextStepNeedsRedirect:
+      type: object
+      title: OFPI - Needs Redirect
+      description: 'Object detailing the next steps you should follow for a specific `next_step` type.
+
+        '
+      properties:
+        type:
+          type: string
+          enum:
+          - open_finance_display_payment_method_information
+          - open_finance_display_confirmation_required
+          - open_finance_display_needs_redirect
+          - open_finance_display_payment_processing
+          - open_finance_display_payment_succeeded
+          - open_finance_display_payment_failed
+          description: 'The type of `next_step` you need to follow.
+
+            '
+          example: open_finance_display_needs_redirect
+        open_finance_display_needs_redirect:
+          $ref: '#/components/schemas/NeedsRedirectContent'
+        ready_to_confirm:
+          type: boolean
+          default: false
+          description: "Boolean that indicates whether the payment intent is ready to be confirmed. \n\n  **Note:** When set to `true`, you need to confirm the payment by making a PATCH request sending through `confirm: true`.\n"
+          example: false
+    HolderInformationBusinessOfpiResponse:
+      type: object
+      title: BUSINESS
+      required:
+      - name
+      - identifier
+      - identifier_type
+      description: Details regarding the individual bank account holder.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The bank account holder's first name.
+          example: Gustavo Veloso Entertainment Universe
+        identifier_type:
+          type: string
+          enum:
+          - CNPJ
+          description: 'The customer''s ID document type. For businesses in Brazil, this must be set to `CNPJ`.
+
+            '
+          example: CNPJ
+          default: CNPJ
+        identifier:
+          type: string
+          minLength: 14
+          maxLength: 14
+          pattern: ^\d{14}$
+          description: The CNPJ document number.
+          example: 00000000000191
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+    PaymentIntentPaymentMethodDetailsBodyBusinessRequestOfpiBankAccount:
+      type: object
+      title: BUSINESS
+      description: Payment method type selected.
+      required:
+      - beneficiary_bank_account
+      - payer_institution
+      - callback_url
+      - cpf
+      properties:
+        beneficiary_bank_account:
+          $ref: '#/components/schemas/CreateBankAccountOfpiBusiness'
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        schedule:
+          $ref: '#/components/schemas/schedule-2'
+        callback_url:
+          type: string
+          description: The callback URL that your user will be redirected to after confirming the payment in their banking application.
+          example: https://www.acmecorp.com/checkout/3487321
+        cpf:
+          type: string
+          description: 'The customer''s CPF number. Provided when available; this value is obfuscated in responses.
+
+            '
+          example: 09744477770
+    CreatePaymentIntentOfpi:
+      type: object
+      title: Bank Account (With Existing Customer)
+      description: Create a payment intent using a bank account as the beneficiary and a previously created customer.
+      required:
+      - amount
+      - customer
+      - description
+      - allowed_payment_method_types
+      - payment_method_details
+      - confirm
+      properties:
+        amount:
+          type: string
+          title: string
+          pattern: \d+(?:\.\d{1,2})?
+          example: '1234.12'
+          description: "Amount to be paid by your customer. For OFPI, you can send through numbers with up to two decimal points, separated by a `.` period. For example: `1234.12` \n"
+        customer:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID to reference your previously created customer.
+
+            '
+          example: 06dc2f14-1217-4480-9b36-550a944a39d1
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        description:
+          type: string
+          description: 'A human-readable description of the payment.
+
+            '
+          example: Shoe payment
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        allowed_payment_method_types:
+          type: array
+          description: A list of payment method types allowed in this payment intent. For Brazil (OFPI), this value must be set to `open_finance`.
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/EnumPaymentLinkAllowedPaymentMethod'
+        payment_method_details:
+          type: object
+          description: Details about the OFPI payment method.
+          required:
+          - open_finance
+          properties:
+            open_finance:
+              oneOf:
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyIndividualRequestOfpi'
+              - $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyBusinessRequestOfpi'
+        confirm:
+          type: boolean
+          default: false
+          description: 'Boolean that confirms the payment intent.
+
+
+            **Note:** Sending this parameter set to `true` confirms the payment intent.
+
+            '
+          example: false
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number for the payment intent.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+    PaymentMethodInformationPixKeysConfirmed:
+      type: object
+      title: Confirmed
+      description: 'Information about the Pix Key payment method after the payment intent has been confirmed via a PATCH request.
+
+        '
+      properties:
+        open_finance:
+          type: object
+          title: Pix Key
+          properties:
+            provider_request_id:
+              type:
+              - string
+              - 'null'
+              description: 'Unique ID for the payment, as sent by the provider.
+
+                '
+              example: 978c0c97ea847e78e8849634473c1f1
+            redirect_url:
+              type:
+              - string
+              - 'null'
+              description: 'The URL that redirects the payer to their institution''s website to authorize the payment.
+
+                '
+              example: https://wakandanational.com/
+            end_to_end_id:
+              type:
+              - string
+              - 'null'
+              description: A unique ID for the transaction in the Brazil's PIX payment system.
+              example: F203262942022211117487a213b1d140
+            settlement_date:
+              type: string
+              format: date
+              description: "The `settlement_date` field indicates the date on which a scheduled payment (charge) is planned to be settled. This field is relevant in various states of the charge's lifecycle:\n\n  - Scheduled Charges: When a charge has the status `SCHEDULED`, this field represents the planned settlement date.\n  - Completed Charges: When a charge has the status `SUCCEEDED`, this field reflects the date that the payment was made.\n  - Failed or Canceled Charges: When a charge has the status `CANCELED` or `FAILED`, this field will still contain the originally calculated settlement date, indicating when the charge was intended to be settled.\n\n\n> **Note**: The `settlement_date` does not change based on the success or failure of the charge. It consistently reflects the original planned settlement date.\n"
+              example: '2024-10-22'
+            pix_key_details:
+              type: object
+              description: Details about the Pix key used for the payment.
+              properties:
+                identifier:
+                  type: string
+                  description: 'The masked identifier of the owner.
+
+                    '
+                  example: 23******00
+                name:
+                  type: string
+                  description: The name of the Pix key holder.
+                  example: João da Silva
+    PaymentIntentPaymentMethodDetailsBodyBusinessRequestOfpi:
+      type: object
+      title: BUSINESS
+      description: Payment method type selected.
+      required:
+      - beneficiary_bank_account
+      - payer_institution
+      - callback_url
+      - cpf
+      properties:
+        beneficiary_bank_account:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID used to identify the beneficiary''s bank account.
+
+            '
+          example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        schedule:
+          $ref: '#/components/schemas/schedule-2'
+        callback_url:
+          type: string
+          description: The callback URL that your user will be redirected to after confirming the payment in their banking application.
+          example: https://www.acmecorp.com/checkout/3487321
+        cpf:
+          type: string
+          description: 'The customer''s CPF number. Provided when available; this value is obfuscated in responses.
+
+            '
+          example: 09744477770
+    PaymentIntentPaymentMethodDetailsBusinessOfpi:
+      type: object
+      title: BUSINESS
+      description: Details about the OFPI payment method.
+      required:
+      - open_finance
+      properties:
+        open_finance:
+          $ref: '#/components/schemas/PaymentIntentPaymentMethodDetailsBodyBusinessOfpi'
+    NextStepDisplayPaymentMethodInformation:
+      type: object
+      title: OFPI -  Display Payment Method Information
+      description: 'Object detailing the next steps you should follow for a specific `next_step` type.
+
+        '
+      properties:
+        type:
+          type: string
+          enum:
+          - open_finance_display_payment_method_information
+          - open_finance_display_confirmation_required
+          - open_finance_display_needs_redirect
+          - open_finance_display_payment_processing
+          - open_finance_display_payment_succeeded
+          - open_finance_display_payment_failed
+          description: 'The type of `next_step` you need to follow.
+
+            '
+          example: open_finance_display_payment_method_information
+        open_finance_display_payment_method_information:
+          $ref: '#/components/schemas/DisplayPaymentMethodInformationContentOfpi'
+        ready_to_confirm:
+          type: boolean
+          default: false
+          description: "Boolean that indicates whether the payment intent is ready to be confirmed. \n\n  **Note:** When set to `true`, you need to confirm the payment by making a PATCH request sending through `confirm: true`.\n"
+          example: false
+    DisplayConfirmationRequiredOfpi:
+      type: object
+      title: Display Open Finance Brazil confirmation required
+      description: 'Object detailing the next steps you should follow for a specific `next_step` type.
+
+        '
+      properties:
+        beneficiary_bank_account:
+          $ref: '#/components/schemas/BeneficiaryBankAccountOfpi'
+        payer_name:
+          type: string
+          description: The name of the payer.
+          example: Gustavo Veloso
+        payer_identifier:
+          type: string
+          description: The payer's ID.
+          example: LV890273900-23
+        payer_institution:
+          $ref: '#/components/schemas/paymentInstitution'
+    PaymentIntentPaymentMethodDetailsBodyIndividualPixKeys:
+      type: object
+      description: Payment method type selected.
+      required:
+      - pix_key
+      - payer_institution
+      - callback_url
+      properties:
+        pix_key:
+          type: string
+          description: "The Pix key associated with the beneficiary of the transaction. Can be an email, phone number (including the country code, for example `+5511999998888`), CPF/CNPJ, or a random key.\n\n{% admonition type=\"info\" name=\"Pix Key Masking\" %}\n  In the case that the provided Pix Key is a CPF, email address, or phone number, value in `payment_method_details.open_finance.pix_key` will be masked. If it is a CNPJ or random Pix Key UUID, the value will not be masked.\n{% /admonition %}\n"
+          example: 53497b80-81a2-4ea8-9296-83a909c05bdf
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        callback_url:
+          type: string
+          description: 'The callback URL that your user will be redirected to after confirming the payment in their banking application.
+
+            '
+          example: https://www.acmecorp.com/checkout/3487321
+        cpf:
+          type:
+          - string
+          - 'null'
+          description: 'The customer''s CPF number. Provided when available; this value is obfuscated in responses.
+
+            '
+          example: 23******00
+        schedule:
+          $ref: '#/components/schemas/schedule'
+    PatchPaymentIntentPixKeys:
+      type: object
+      title: Pix Key
+      required:
+      - confirm
+      properties:
+        confirm:
+          type: boolean
+          description: 'Boolean that indicates whether this request confirms the payment intent. Must be set to `true` to confirm the payment intent.
+
+            '
+          example: true
+    InstitutionsFormFieldValues:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The code of the document.
+          example: '001'
+        label:
+          type: string
+          description: 'The label for the field. For example:
+
+            - Cédula de Ciudadanía
+
+            - Cédula de Extranjería
+
+            - Pasaporte
+
+            '
+          example: Cédula de Ciudadanía
+        validation:
+          type: string
+          description: The type of input validation used for the field.
+          example: ^.{1,}$
+        validation_message:
+          type: string
+          description: The message displayed when an invalid input is provided in the form field.
+          example: Invalid document number
+        placeholder:
+          type: string
+          description: The placeholder text in the form field.
+          example: DEF4444908M22
+    PaymentIntentPaymentMethodDetailsBodyIndividualOfpi:
+      type: object
+      description: Payment method type selected.
+      required:
+      - beneficiary_bank_account
+      - payer_institution
+      - callback_url
+      properties:
+        beneficiary_bank_account:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID used to identify the beneficiary''s bank account.
+
+            '
+          example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        schedule:
+          $ref: '#/components/schemas/schedule'
+        callback_url:
+          type: string
+          description: 'The callback URL that your user will be redirected to after confirming the payment in their banking application.
+
+            '
+          example: https://www.acmecorp.com/checkout/3487321
+        cpf:
+          type:
+          - string
+          - 'null'
+          description: 'The customer''s CPF number. Provided when available; this value is obfuscated in responses.
+
+            '
+          example: 23******00
+    ChargeBrazilPix:
+      type: object
+      title: Charge (V1 - Pix Key Beneficiary)
+      required:
+      - id
+      - created_at
+      - failure_code
+      - failure_message
+      - status
+      - updated_at
+      - amount
+      - beneficiary
+      - provider
+      - metadata
+      - payment_method_details
+      - payment_method_information
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The ISO-8601 timestamp of when the status of the charge was last updated.
+
+            '
+          example: '2022-02-09T08:45:50.406032Z'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        customer:
+          type: string
+          format: uuid
+          description: Belvo's unique ID for the customer that the charge was created for.
+          example: 531aa631-70a0-4eeb-ab97-51dea3e90c89
+        payment_intent:
+          type: string
+          format: uuid
+          description: The `payment_intent.id` associated with this charge.
+          example: 50c04229-7b1d-4a53-951c-8ad53e10c6ca
+        status:
+          type: string
+          enum:
+          - CANCELED
+          - PENDING
+          - SCHEDULED
+          - SUCCEEDED
+          - FAILED
+          - PARTIAL
+          description: "The current status of the charge. Can be one of the following values:\n\n  - `CANCELED`\n  - `PENDING`\n  - `SCHEDULED`\n  - `SUCCEEDED`\n  - `FAILED`\n  - `PARTIAL`\n"
+          example: PENDING
+        amount:
+          type:
+          - string
+          - 'null'
+          description: 'The amount of the charge.
+
+            '
+          example: '100.12'
+        currency:
+          type: string
+          enum:
+          - BRL
+          description: 'The currency of the amount paid. For 🇧🇷 Brazil, the value must be `BRL` (Brazilian Real).
+
+            '
+          example: BRL
+        description:
+          type: string
+          description: 'The description of the payment.
+
+            '
+          example: Training shoes
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'The description that will appear on the customer''s bank statement (if provided).
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        beneficiary:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: Belvo's unique ID used to identify the beneficiary’s bank account. In the case that the beneficiary is a Pix Key, this field will be `null`.
+          example: null
+        provider:
+          $ref: '#/components/schemas/EnumPaymentLinkProvider'
+        payment_method_type:
+          type: string
+          enum:
+          - open_finance
+          description: 'Selected payment method type. For 🇧🇷 Brazil''s OFPI, the value must be `open_finance`.
+
+            '
+          example: open_finance
+        payment_method_details:
+          $ref: '#/components/schemas/ChargePaymentMethodDetailsPix'
+        payment_method_information:
+          $ref: '#/components/schemas/PaymentMethodInformationPixKeysConfirmed'
+        payer_information:
+          $ref: '#/components/schemas/ChargePayerInformation'
+        transactions:
+          description: For Pix Key payments, this will be an empty array.
+          example: []
+        failure_code:
+          type:
+          - string
+          - 'null'
+          description: 'Error code that explains the reason behind a payment being unsuccessful (if applicable).
+
+            '
+          example: null
+        failure_message:
+          type:
+          - string
+          - 'null'
+          description: 'Further information regarding the `failure_code`.
+
+            '
+          example: null
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+    created_by:
+      type: string
+      format: uuid
+      description: The unique ID for the user that created this item.
+      example: bcef7f35-67f2-4b19-b009-cb38795faf09
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    PaymentMethodInformationOfpi:
+      type: object
+      title: OFPI
+      description: 'Information about the payment method selected.
+
+        '
+      properties:
+        open_finance:
+          $ref: '#/components/schemas/PaymentMethodInformationBodyOfpi'
+    PatchPaymentIntentOfpi:
+      type: object
+      title: Bank Account
+      required:
+      - payment_method_details
+      properties:
+        payment_method_details:
+          type: object
+          required:
+          - open_finance
+          description: Object containing additional required fields for the payment intent flow.
+          properties:
+            open_finance:
+              type: object
+              properties:
+                payer_institution:
+                  type: string
+                  format: uuid
+                  description: 'Belvo''s unique ID for the payer’s institution.
+
+                    '
+                  example: db201c6a-e0ee-4caa-92d6-72b480d6d86f
+                beneficiary_bank_account:
+                  type: string
+                  format: uuid
+                  description: 'Belvo''s unique ID for the beneficiary bank account.
+
+                    '
+                  example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+        confirm:
+          type: boolean
+          description: "Boolean that indicates whether this request confirms the payment intent. \n"
+          example: true
+    PaymentIntentPaymentMethodDetailsBodyIndividualRequestOfpiBankAccount:
+      type: object
+      title: INDIVIDUAL
+      description: Payment method type selected.
+      required:
+      - beneficiary_bank_account
+      - payer_institution
+      - callback_url
+      properties:
+        beneficiary_bank_account:
+          $ref: '#/components/schemas/CreateBankAccountOfpiIndividual'
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        callback_url:
+          type: string
+          description: The callback URL that your user will be redirected to after confirming the payment in their banking application.
+          example: https://www.acmecorp.com/checkout/3487321
+        schedule:
+          $ref: '#/components/schemas/schedule-2'
+    scheduled_weekly-2:
+      type: object
+      title: Weekly
+      description: Schedule a weekly recurring payment.
+      properties:
+        weekly:
+          type: object
+          description: Schedule a weekly recurring payment.
+          properties:
+            start_date:
+              type: string
+              format: date
+              description: 'The date the recurring weekly payment should start on, in `YYYY-MM-DD` format.
+
+
+                >**Note**: The `start_date` must correspond to the first `day_of_week` specified and be at least 1 day in the future.
+
+                '
+              example: '2024-10-22'
+            day_of_week:
+              type: string
+              enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+              description: "The day of the week the payment should be made. Can be one of the following values:\n\n  - `MONDAY`\n  - `TUESDAY`\n  - `WEDNESDAY`\n  - `THURSDAY`\n  - `FRIDAY`\n  - `SATURDAY`\n  - `SUNDAY`\n"
+              example: MONDAY
+            occurrences:
+              type: integer
+              minimum: 2
+              maximum: 60
+              description: "The number of times the payment should repeat. \n\n>**Note**: You must schedule at least `2` occurrences and no more than `60`.\n"
+              example: 10
+    PaymentIntentPaymentMethodDetailsBodyBusinessOfpi:
+      type: object
+      description: Payment method type selected.
+      required:
+      - beneficiary_bank_account
+      - payer_institution
+      - callback_url
+      - cpf
+      properties:
+        beneficiary_bank_account:
+          type: string
+          format: uuid
+          description: 'Belvo''s unique ID used to identify the beneficiary''s bank account.
+
+            '
+          example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        schedule:
+          $ref: '#/components/schemas/schedule'
+        callback_url:
+          type: string
+          description: 'The callback URL that your user will be redirected to after confirming the payment in their banking application.
+
+            '
+          example: https://www.acmecorp.com/checkout/3487321
+        cpf:
+          type:
+          - string
+          - 'null'
+          description: 'The customer''s CPF number. Provided when available; this value is obfuscated in responses.
+
+            '
+          example: 23******00
+    schedule-2:
+      type: object
+      title: Schedule a payment
+      description: 'Details regarding the scheduled payment (optional). For more information on how to schedule payments, please see our dedicated <a href="https://developers.belvo.com/docs/ofpi-scheduled-payments" target="_blank">OFPI Scheduled Payments</a> guide.
+
+        '
+      oneOf:
+      - $ref: '#/components/schemas/scheduled_single-2'
+      - $ref: '#/components/schemas/scheduled_daily-2'
+      - $ref: '#/components/schemas/scheduled_weekly-2'
+      - $ref: '#/components/schemas/scheduled_monthly-2'
+      - $ref: '#/components/schemas/scheduled_custom-2'
+    external_id__payments:
+      type: string
+      format: uuid
+      description: "An additional unique identifier for the resource for internal purposes.\n\n{% admonition type=\"success\" name=\"Highly Recommended\" %}\n  We recommend using this field to store your own unique identifier for each resource (customer, bank account, payment intent, or enrollment). This can be useful for tracking the resource in your system and for debugging purposes.\n{% /admonition %}\n"
+      example: 4b8a81a0-e33c-45a6-8567-479efb105f73
+    PaymentIntentPaymentMethodDetailsBodyBusinessPixKeys:
+      type: object
+      description: Payment method type selected.
+      required:
+      - pix_key
+      - payer_institution
+      - callback_url
+      - cpf
+      properties:
+        pix_key:
+          type: string
+          description: "The Pix key associated with the beneficiary of the transaction. Can be an email, phone number (including the country code, for example `+5511999998888`), CPF/CNPJ, or a random key.\n\n{% admonition type=\"info\" name=\"Pix Key Masking\" %}\n  In the case that the provided Pix Key is a CPF, email address, or phone number, value in `payment_method_details.open_finance.pix_key` will be masked. If it is a CNPJ or random Pix Key UUID, the value will not be masked.\n{% /admonition %}\n"
+          example: 53497b80-81a2-4ea8-9296-83a909c05bdf
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        schedule:
+          $ref: '#/components/schemas/schedule'
+        callback_url:
+          type: string
+          description: 'The callback URL that your user will be redirected to after confirming the payment in their banking application.
+
+            '
+          example: https://www.acmecorp.com/checkout/3487321
+        cpf:
+          type:
+          - string
+          - 'null'
+          description: 'The customer''s CPF number. Provided when available; this value is obfuscated in responses.
+
+            '
+          example: 23******00
+    BankAccountDetailsOpenFinancePix:
+      type: object
+      title: OFPI (PIX Keys)
+      required:
+      - country
+      - pix_key
+      properties:
+        country:
+          $ref: '#/components/schemas/EnumPaymentsCountry'
+        pix_key:
+          type: string
+          description: The PIX key identifier of the bank account.
+          example: RANDOM://6c1c236c-a035-4b80-ab12-e38f88ce82ab
+    ChargePayerInformation:
+      type: object
+      description: Information about the ChargePayerInformation.yaml
+      properties:
+        bank_account:
+          type: object
+          description: Information about the payer's bank account.
+          properties:
+            type:
+              type: string
+              description: The type of the payer's bank account. Can be either `CHECKINGS`, `SAVINGS`, or `PAYMENTS`.
+              example: CHECKINGS
+            agency:
+              type: string
+              description: The agency number of the payer's bank account.
+              example: '1234'
+            number:
+              type: string
+              description: The account number of the payer's bank account.
+              example: '123456789'
+            institution_id:
+              type: string
+              format: uuid
+              description: The Belvo institution ID of the payer's bank account.
+              example: 528228e2-d40d-4cec-948d-ec5edd7d081c
+    NextStepDisplayPaymentSucceeded:
+      type: object
+      title: OFPI - Payment Succeeded
+      description: 'Object detailing the next steps you should follow for a specific `next_step` type.
+
+        '
+      properties:
+        type:
+          type: string
+          enum:
+          - open_finance_display_payment_method_information
+          - open_finance_display_confirmation_required
+          - open_finance_display_needs_redirect
+          - open_finance_display_payment_processing
+          - open_finance_display_payment_succeeded
+          - open_finance_display_payment_failed
+          description: 'The type of `next_step` you need to follow.
+
+            '
+          example: open_finance_display_payment_succeeded
+        open_finance_display_payment_succeeded:
+          $ref: '#/components/schemas/DisplayPaymentSucceeded'
+        ready_to_confirm:
+          type: boolean
+          default: false
+          description: "Boolean that indicates whether the payment intent is ready to be confirmed. \n\n  **Note:** When set to `true`, you need to confirm the payment by making a PATCH request sending through `confirm: true`.\n"
+          example: false
+    EnumBankAccountPixAccountTypeOfpi:
+      type: string
+      enum:
+      - CHECKINGS
+      - SAVINGS
+      - SALARY
+      - PAYMENTS
+      description: "The type of bank account. Can be either:\n\n  - `CHECKINGS` (also known as Conta Corrente in Brazil)\n  - `SAVINGS` (also known as Conta Poupança in Brazil)\n  - `SALARY` (also known as Conta Salário in Brazil)\n  - `PAYMENTS` (also known as Conta de Pagamento Instantâneo or Conta de Pagamento in Brazil)\n"
+      example: CHECKINGS
+    NextStepDisplayPaymentProcessing:
+      type: object
+      title: OFPI - Payment Processing
+      description: 'Object detailing the next steps you should follow for a specific `next_step` type.
+
+        '
+      properties:
+        type:
+          type: string
+          enum:
+          - open_finance_display_payment_method_information
+          - open_finance_display_confirmation_required
+          - open_finance_display_needs_redirect
+          - open_finance_display_payment_processing
+          - open_finance_display_payment_succeeded
+          - open_finance_display_payment_failed
+          description: 'The type of `next_step` you need to follow.
+
+            '
+          example: open_finance_display_payment_processing
+        open_finance_display_payment_processing:
+          $ref: '#/components/schemas/DisplayPaymentProcessing'
+        ready_to_confirm:
+          type: boolean
+          default: false
+          description: "Boolean that indicates whether the payment intent is ready to be confirmed. \n\n  **Note:** When set to `true`, you need to confirm the payment by making a PATCH request sending through `confirm: true`.\n"
+          example: false
+    PaymentIntentPaymentMethodDetailsBodyIndividualRequestPixKey:
+      type: object
+      title: INDIVIDUAL
+      description: Details about the payment method when the customer (payer) is an individual customer.
+      required:
+      - pix_key
+      - payer_institution
+      - callback_url
+      properties:
+        pix_key:
+          type: string
+          description: 'The Pix key associated with the beneficiary of the transaction. Can be an email, phone number (including the country code, for example `+5511999998888`), CPF/CNPJ, or a random key.
+
+            '
+          example: 53497b80-81a2-4ea8-9296-83a909c05bdf
+        payer_institution:
+          type: string
+          format: uuid
+          description: Belvo's unique ID to reference the payer's institution.
+          example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        callback_url:
+          type: string
+          description: The callback URL that your user will be redirected to after confirming the payment in their banking application.
+          example: https://www.acmecorp.com/checkout/3487321
+        schedule:
+          $ref: '#/components/schemas/schedule-2'
+  parameters:
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    customer__in:
+      name: customer__in
+      in: query
+      description: One or more `customer.id`s that you want to get results for.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: cb320adc-9a6b-4224-933a-5b08cf771ac7
+    ordering__payment-intents:
+      name: ordering
+      in: query
+      description: "Return results in a specified time order.\n\nCan be either:\n  - `updated_at`: returns payment intents from most recently updated to last (in ascending order).\n  - `-updated_at`: returns payment intents from last updated to most recently updated (in descending order).\n"
+      schema:
+        enum:
+        - updated_at
+        - -updated_at
+        example: updated_at
+        type: string
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    updated_at__lte:
+      name: updated_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    amount__gt:
+      name: amount__gt
+      in: query
+      description: Return results only for more than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    updated_at:
+      name: updated_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    updated_at__gt:
+      name: updated_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    payment_method_type:
+      name: payment_method_type
+      in: query
+      description: Return results only for this payment method type. Can be either `open_finance` or `open_finance_biometric_pix`.
+      schema:
+        type: string
+        enum:
+        - open_finance
+        - open_finance_biometric_pix
+        example: open_finance
+    header_idempotency_key:
+      name: Belvo-Idempotency-Key
+      in: header
+      description: "A UUID to ensure idempotent requests. This key helps prevent duplicate operations by allowing the server to recognize repeated requests with the same key and return the original response instead of processing the request again.\n\n{% admonition type=\"info\" name=\"Highly Recommended\" %}\n  We highly recommend including this header in any request where you want to ensure idempotency, such as creating resources or performing actions that should not be duplicated.\n{% /admonition %}\n\nYou may receive the following errors in the case that there is an issue with your request:\n\n- `409` Conflict: If a previous request is still being processed with the same idempotency key. Check the response `Belvo-Idempotency-Status` header for the current state of that idempotency key.\n- `422` Unprocessable Entity: If a new request uses an idempotency key that has been previously used in another request containing a different payload. In this case, you should change the idempotency key to a new unique value.\n\n{% admonition type=\"warning\" name=\"In Beta\" %}\n  This feature is currently in Beta and only available for selected customers. If you encounter any issues or are interested in using this feature, please contact your Belvo representative.\n{% /admonition %}\n"
+      schema:
+        type: string
+        format: uuid
+        example: 82737f32-7730-4832-a985-dd86df70301c
+    updated_at__gte:
+      name: updated_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    external_id__in__payments:
+      name: external_id__in
+      in: query
+      description: Return objects with these external IDs.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 446bdd9f-5b3e-4c05-9159-7a5c87cfc810
+    amount__lt:
+      name: amount__lt
+      in: query
+      description: Return results only for less than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    amount__range:
+      name: amount__range
+      in: query
+      description: Return results between this amount range. The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          example: 2000.02
+        example:
+        - 100
+        - 5000
+    status_payment-intents:
+      name: status
+      in: query
+      description: Return results only for this value.
+      schema:
+        type: string
+        example: SUCCEEDED
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    customer:
+      name: customer
+      in: query
+      description: The `customer.id` you want to get results for.
+      schema:
+        type: string
+        format: uuid
+        example: 24e5b3a5-19aa-40fe-91e5-4db7f22ecc2d
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    external_id__payments:
+      name: external_id
+      in: query
+      description: Return objects with this external ID.
+      schema:
+        type: string
+        format: uuid
+        example: 295ebb46-65b8-47de-85cd-34ffbc327c09
+    amount__lte:
+      name: amount__lte
+      in: query
+      description: Return results only for this amount or less.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    amount:
+      name: amount
+      in: query
+      description: Return results only for this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    amount__gte:
+      name: amount__gte
+      in: query
+      description: Return results only for and more than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    search:
+      name: search
+      in: query
+      description: "Return results that match the description you searched for. \n\n**Note:**\n\nThis filter supports both full and partial search queries, with a minimum of three characters required.\n\nFor example, searching for `trai` may match the following values:\n\n  - `Awesome training sneakers` \n  - `Training equipment`\n\nSearching for `car` may match the following values:\n\n        - `Carlos Vives`\n        - `Carmen Domínguez` \n        - `carlos.vives@musicabrazil.br`\n"
+      schema:
+        type: string
+        minLength: 3
+        example: trai
+    updated_at__lt:
+      name: updated_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    provider:
+      name: provider
+      in: query
+      description: Return results only for this provider. At present, you can only be `belvo`.
+      schema:
+        type: string
+        enum:
+        - belvo
+        example: belvo
+    status__in_payment-intents:
+      name: status__in
+      in: query
+      description: Return payment intents one of these statuses.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: PROCESSING
+    updated_at__range:
+      name: updated_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+  headers:
+    header_idempotency_key_status_response:
+      description: "The status of the idempotent request associated with the `Belvo-Idempotency-Key` header.\n\nCan be one of the following values:\n- `AVAILABLE`: The original request has been processed successfully, and the response is available.\n- `PROCESSING`: The original request is still being processed.\n- `REPLAYED`: The original request has already been processed, and the response has been returned.\n\n{% admonition type=\"warning\" name=\"In Beta\" %}\n  This feature is currently in Beta and only available for selected customers. If you encounter any issues or are interested in using this feature, please contact your Belvo representative.\n{% /admonition %}\n"
+      schema:
+        type: string
+        enum:
+        - AVAILABLE
+        - PROCESSING
+        - REPLAYED
+        example: AVAILABLE
+    header_idempotency_key_response:
+      description: "The idempotency key that was used in the request. This key helps prevent duplicate operations by allowing the server to recognize repeated requests with the same key and return the original response instead of processing the request again.\n\n{% admonition type=\"warning\" name=\"In Beta\" %}\n  This feature is currently in Beta and only available for selected customers. If you encounter any issues or are interested in using this feature, please contact your Belvo representative.\n{% /admonition %}\n"
+      schema:
+        type: string
+        format: uuid
+        example: 82737f32-7730-4832-a985-dd86df70301c
+  examples:
+    PaymentIntentResponseOfpiBankAccount:
+      summary: Bank Account
+      description: Bank Account (Confirmed)
+      value:
+        id: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+        customer: 1c83ead8-6665-429c-a17a-ddc76cb3a95e
+        external_id: 4b8a81a0-e33c-45a6-8567-479efb105f73
+        created_at: '2022-02-09T08:45:50.406032Z'
+        created_by: bcef7f35-67f2-4b19-b009-cb38795faf09
+        updated_at: '2022-02-09T08:45:50.406032Z'
+        status: REQUIRES_ACTION
+        amount: '1234.12'
+        currency: BRL
+        description: Training shoes
+        statement_description: Super Shoe Store - Brown Sneakers
+        selected_payment_method_type: open_finance
+        allowed_payment_method_types:
+        - open_finance
+        payment_method_details:
+          open_finance:
+            beneficiary_bank_account: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+            payer_institution: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+            schedule:
+              single:
+                date: '2024-10-22'
+            callback_url: https://www.acmecorp.com/checkout/3487321
+            cpf: 23******00
+        payment_method_information:
+          open_finance:
+            provider_request_id: 978c0c97ea847e78e8849634473c1f1
+            redirect_url: https://wakandanational.com/
+            end_to_end_id: F203262942022211117487a213b1d140
+            settlement_date: '2024-10-22'
+        failure_code: null
+        failure_message: null
+        metadata:
+          internal_reference_id: GGq73487w2
+        charges:
+        - id: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+          created_at: '2022-02-09T08:45:50.406032Z'
+          updated_at: '2022-02-09T08:45:50.406032Z'
+          created_by: bcef7f35-67f2-4b19-b009-cb38795faf09
+          customer: 531aa631-70a0-4eeb-ab97-51dea3e90c89
+          payment_intent: 50c04229-7b1d-4a53-951c-8ad53e10c6ca
+          status: PENDING
+          amount: '100.12'
+          currency: BRL
+          description: Training shoes
+          statement_description: Super Shoe Store - Brown Sneakers
+          beneficiary: 58524ccc-89ac-4ab6-b62b-c3da3f19a722
+          provider: belvo
+          payment_method_type: open_finance
+          payment_method_details:
+            open_finance:
+              schedule:
+                single:
+                  date: '2024-10-22'
+              payer_institution: db201c6a-e0ee-4caa-92d6-72b480d6d86f
+              beneficiary_bank_account: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+          payment_method_information:
+            open_finance:
+              provider_request_id: 978c0c97ea847e78e8849634473c1f1
+              redirect_url: https://wakandanational.com/
+              end_to_end_id: F203262942022211117487a213b1d140
+              settlement_date: '2024-10-22'
+          payer_information:
+            bank_account:
+              code: '123345'
+              type: CHECKINGS
+              agency: '1234'
+              number: '123456789'
+          transactions:
+          - id: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+            created_at: '2022-02-09T08:45:50.406032Z'
+            created_by: bcef7f35-67f2-4b19-b009-cb38795faf09
+            amount: '1020.00'
+            currency: BRL
+            description: Training shoes
+            transaction_type: INFLOW
+            beneficiary: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+            payer: null
+            payment_intent: 004a28bb-fac2-4172-884b-5b6ea15314ad
+            customer: 9eebd63b-3339-44a9-8a5a-72bb6cb2f310
+          failure_code: null
+          failure_message: null
+          metadata:
+            internal_reference_id: GGq73487w2
+        provider: belvo
+        last_error:
+          error_code: payment_error
+          error_message: Unexpected error to confirm the payment
+        next_step: null
+    PaymentIntentResponsePixKeyInitial:
+      summary: Pix Key
+      description: Pix Key Payment Intent
+      value:
+        id: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+        customer: 1c83ead8-6665-429c-a17a-ddc76cb3a95e
+        external_id: 4b8a81a0-e33c-45a6-8567-479efb105f73
+        created_at: '2022-02-09T08:45:50.406032Z'
+        created_by: bcef7f35-67f2-4b19-b009-cb38795faf09
+        updated_at: '2022-02-09T08:45:50.406032Z'
+        status: REQUIRES_ACTION
+        amount: '1234.12'
+        currency: BRL
+        description: Training shoes
+        statement_description: Super Shoe Store - Brown Sneakers
+        selected_payment_method_type: open_finance
+        allowed_payment_method_types:
+        - open_finance
+        payment_method_details:
+          open_finance:
+            pix_key: 53497b80-81a2-4ea8-9296-83a909c05bdf
+            payer_institution: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+            callback_url: https://www.acmecorp.com/checkout/3487321
+            cpf: 23******00
+            schedule:
+              single:
+                date: '2024-10-22'
+        payment_method_information:
+          open_finance:
+            pix_key_details:
+              identifier: 23******00
+              name: João da Silva
+        failure_code: null
+        failure_message: null
+        metadata:
+          internal_reference_id: GGq73487w2
+        charges: []
+        provider: belvo
+        last_error:
+          error_code: payment_error
+          error_message: Unexpected error to confirm the payment
+        next_step: null
+  responses:
+    422_idempotency_mismatch_error:
+      description: Unprocessable Entity - Idempotency Key Mismatch
+      headers:
+        Belvo-Idempotency-Key:
+          $ref: '#/components/headers/header_idempotency_key_response'
+        Belvo-Idempotency-Status:
+          $ref: '#/components/headers/header_idempotency_key_status_response'
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when the same idempotency key is reused with a different request payload. To retry this request, generate a new unique idempotency key.
+
+              '
+            items:
+              $ref: '#/components/schemas/IdempotencyMismatchError'
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+    409_idempotency_conflict_error:
+      description: Idempotency Conflict
+      headers:
+        Belvo-Idempotency-Key:
+          $ref: '#/components/headers/header_idempotency_key_response'
+        Belvo-Idempotency-Status:
+          $ref: '#/components/headers/header_idempotency_key_status_response'
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when a request with the same idempotency key is already being processed. Check the `Belvo-Idempotency-Status` response header to determine the use status of the idempotency key.
+
+              '
+            items:
+              $ref: '#/components/schemas/IdempotencyConflictError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

@@ -1,0 +1,1996 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Payment Authorizations (Brazil) API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Payment Authorizations (Brazil)
+  description: 'A Payment Authorization is the consent that your user gives you to charge (debit money from) their accounts. You need to perform one Payment Authorization per ‘contract’ (for example, if your company does both electricity and water but they are billed separately, then you will create two separate Payment Authorizations).
+
+
+    Once the user confirms the authorization, you will need to listen for a a `PAYMENT_AUTHORIZATION` webhook with the status set to `AUTHORIZED`. Once you receive this webhook, the authorization process is complete, and you will be able to charge your user.
+
+
+    {% admonition type="info" name="What is a charge?" %}
+
+    A **charge** represents the individual payment (debit) that your customer will make.
+
+    {% /admonition %}
+
+
+    {% admonition type="danger" name="Version Header" %}
+
+    The Payment Authorization resource requires that you send through the `X-Belvo-API-Resource-Version` header set to `Payments-BR.V2`.
+
+    {% /admonition %}'
+paths:
+  /payments/br/payment-authorizations/:
+    post:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: CreatePaymentAuthorizationBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: Create a new Payment Authorization
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        Create a Payment Authorization.'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/CreatePaymentAuthorizationImmediate'
+              - $ref: '#/components/schemas/CreatePaymentAuthorizationScheduled'
+      responses:
+        '201':
+          description: OK - Payment Authorization created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorization'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    get:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: ListPaymentAuthorizationsBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: List all Payment Authorizations
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        List all Payment Authorizations associated with your Belvo account.'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/amount'
+      - $ref: '#/components/parameters/amount__gt'
+      - $ref: '#/components/parameters/amount__gte'
+      - $ref: '#/components/parameters/amount__lt'
+      - $ref: '#/components/parameters/amount__lte'
+      - $ref: '#/components/parameters/amount__range'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/customer'
+      - $ref: '#/components/parameters/customer__in'
+      - $ref: '#/components/parameters/external_id__payments'
+      - $ref: '#/components/parameters/external_id__in__payments'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/updated_at'
+      - $ref: '#/components/parameters/updated_at__gt'
+      - $ref: '#/components/parameters/updated_at__gte'
+      - $ref: '#/components/parameters/updated_at__lt'
+      - $ref: '#/components/parameters/updated_at__lte'
+      - $ref: '#/components/parameters/updated_at__range'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of Payment Authorization objects.
+                      items:
+                        $ref: '#/components/schemas/PaymentAuthorization'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-authorizations/{payment_authorization_id}/:
+    get:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: DetailPaymentAuthorizationBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: Get details about a Payment Authorization
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        Get the details about a specific Payment Authorization.'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: payment_authorization_id
+        required: true
+        in: path
+        description: The `payment-authorization.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAuthorization'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-authorizations/{payment_authorization_id}/cancel/:
+    post:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: CancelPaymentAuthorizationBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: Cancel a Payment Authorization
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        Cancel a Payment Authorization
+
+
+        We respond with a `204 - No Content` and will inform you via webhook that the Payment Authorization was canceled successfully.
+
+
+        {% admonition type="warning" name="Cancellation Time Restrictions" %}
+
+        The latest you can cancel a Payment Authorization is by 22:00:00 (GMT-3) on the day before the next Charge date. If you miss the cutoff time, the Payment Authorization will be cancelled, **but the Charge will still be processed**.
+
+        {% /admonition %}'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: payment_authorization_id
+        required: true
+        in: path
+        description: The scheduled `payment-authorization.id` you want to cancel.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-authorizations/{payment_authorization_id}/charges/:
+    get:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: ListPaymentAuthorizationChargesBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: List all Charges for a Payment Authorization
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        List all Charges associated with a Payment Authorization'
+      parameters:
+      - name: payment_authorization_id
+        required: true
+        in: path
+        description: The `payment-authorization.id` the charges belong to.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/page_size'
+      - name: status
+        in: query
+        description: Return results only for this value.
+        schema:
+          type: string
+          example: SUCCEEDED
+      - name: status__in
+        in: query
+        description: Return results for listed status.
+        schema:
+          type: string
+          example: PENDING,SUCCEEDED
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of charge objects.
+                      items:
+                        $ref: '#/components/schemas/ChargeV2'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-authorizations/{payment_authorization_id}/charges/{charge_id}/:
+    get:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: DetailPaymentAuthorizationChargeBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: Get details about a Charge for a Payment Authorization
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        Get the details about a specific Charge associated with a Payment Authorization.'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: payment_authorization_id
+        required: true
+        in: path
+        description: The `payment-authorization.id` the Charge belongs to.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      - name: charge_id
+        required: true
+        in: path
+        description: The `charge.id` you want details about.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeV2'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-authorizations/{payment_authorization_id}/charges/{charge_id}/retry/:
+    post:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: RetryPaymentAuthorizationChargeBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: Retry a failed Charge for a Payment Authorization
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        Retry a failed Charge for a given Payment Authorization.
+
+
+        {% admonition type="warning" name="Additional documentation" %}
+
+        Please make sure to read the dedicated Retrying Charges and Linked Charges documentation before attempting to retry a charge.
+
+        {% /admonition %}'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: payment_authorization_id
+        required: true
+        in: path
+        description: The `payment-authorization.id` the Charge belongs to.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      - name: charge_id
+        required: true
+        in: path
+        description: The `charge.id` you want details about.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+                  description: The date you want to retry the Charge on, in `YYYY-MM-DD` format. Must be at least one day in the future.
+                  example: '2025-06-30'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeV2'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/payment-authorizations/{payment_authorization_id}/charges/{charge_id}/cancel/:
+    post:
+      tags:
+      - Payment Authorizations (Brazil)
+      operationId: CancelPaymentAuthorizationChargeBrazil
+      x-badges:
+      - name: Coming Soon
+        position: before
+      summary: Cancel a scheduled Charge
+      description: '{% admonition type="warning" name="Coming Soon" %}
+
+        This endpoint is currently undergoing development.. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.
+
+        {% /admonition %}
+
+
+        Cancel a scheduled Charge.
+
+
+        We respond with a `204 - No Content` and will inform you via webhook that the charge was canceled successfully.
+
+
+        {% admonition type="warning" name="Cancellation Time Restriction" %}
+
+        The latest you can cancel a scheduled Charge is by 22:00:00 (GMT-3) on the day before the Charge date. If you miss the cutoff time, you will receive an API error from Belvo and the payment will go through.
+
+        {% /admonition %}'
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: payment_authorization_id
+        required: true
+        in: path
+        description: The scheduled `payment-authorization.id` the Charge belongs to.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      - name: charge_id
+        required: true
+        in: path
+        description: The scheduled `charge.id` you want to cancel.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  parameters:
+    amount__gte:
+      name: amount__gte
+      in: query
+      description: Return results only for and more than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    customer:
+      name: customer
+      in: query
+      description: The `customer.id` you want to get results for.
+      schema:
+        type: string
+        format: uuid
+        example: 24e5b3a5-19aa-40fe-91e5-4db7f22ecc2d
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    updated_at__gte:
+      name: updated_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    external_id__in__payments:
+      name: external_id__in
+      in: query
+      description: Return objects with these external IDs.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 446bdd9f-5b3e-4c05-9159-7a5c87cfc810
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    amount__lt:
+      name: amount__lt
+      in: query
+      description: Return results only for less than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    external_id__payments:
+      name: external_id
+      in: query
+      description: Return objects with this external ID.
+      schema:
+        type: string
+        format: uuid
+        example: 295ebb46-65b8-47de-85cd-34ffbc327c09
+    customer__in:
+      name: customer__in
+      in: query
+      description: One or more `customer.id`s that you want to get results for.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: cb320adc-9a6b-4224-933a-5b08cf771ac7
+    amount__lte:
+      name: amount__lte
+      in: query
+      description: Return results only for this amount or less.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    search:
+      name: search
+      in: query
+      description: "Return results that match the description you searched for. \n\n**Note:**\n\nThis filter supports both full and partial search queries, with a minimum of three characters required.\n\nFor example, searching for `trai` may match the following values:\n\n  - `Awesome training sneakers` \n  - `Training equipment`\n\nSearching for `car` may match the following values:\n\n        - `Carlos Vives`\n        - `Carmen Domínguez` \n        - `carlos.vives@musicabrazil.br`\n"
+      schema:
+        type: string
+        minLength: 3
+        example: trai
+    updated_at__lt:
+      name: updated_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    amount__range:
+      name: amount__range
+      in: query
+      description: Return results between this amount range. The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          example: 2000.02
+        example:
+        - 100
+        - 5000
+    updated_at__lte:
+      name: updated_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    header_version:
+      name: X-Belvo-API-Resource-Version
+      in: header
+      description: "Header indicating which version of the Payment API you want to use. Currently this is only applicable for Bank Accounts, Customers, and Payment Authorizations in Brazil. In the case that you are using our Payment Authorizations product, then you **must** send through this header set to `Payments-BR.V2`.\n\n{% admonition type=\"warning\" name=\"Coming Soon\" %}\n  This version is in Coming Soon. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.\n{% /admonition %}\n"
+      schema:
+        type: string
+        enum:
+        - Payments-BR.V2
+        example: Payments-BR.V2
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    amount__gt:
+      name: amount__gt
+      in: query
+      description: Return results only for more than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    updated_at:
+      name: updated_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    updated_at__gt:
+      name: updated_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    updated_at__range:
+      name: updated_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    amount:
+      name: amount
+      in: query
+      description: Return results only for this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+  schemas:
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    PaymentAuthorization:
+      type: object
+      title: Payment Authorization
+      description: Payment Authorization details.
+      required:
+      - id
+      - created_at
+      - updated_at
+      - status
+      - status_reason_code
+      - status_reason_message
+      - status_updated_at
+      - authorized_at
+      - external_id
+      - description
+      - return_url
+      - payment_method
+      - payer
+      - beneficiary
+      - payment_method_configuration
+      - charges
+      properties:
+        id:
+          type: string
+          format: uuid
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+          description: The Belvo ID for the Payment Authorization.
+          example: 9fc68b84-f2d6-4142-b2ad-9d2d1ad70432
+        created_at:
+          type: string
+          format: date-time
+          description: The ISO-8601 timestamp of when the Payment Authorization was created.
+          example: '2025-05-20T09:55:02Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: The ISO-8601 timestamp of when the Payment Authorization was last updated.
+          example: '2025-05-20T09:55:02Z'
+        status:
+          type: string
+          description: 'The current status of the Payment Authorization.
+
+            '
+          enum:
+          - AWAITING_AUTHORIZATION
+          - PARTIALLY_ACCEPTED
+          - AUTHORIZED
+          - FAILED
+          - CONSUMED
+          - REVOKED
+          example: AWAITING_AUTHORIZATION
+        status_reason_code:
+          type:
+          - string
+          - 'null'
+          description: A code indicating the reason for the current status (when applicable). For a full list of possible codes and messages, please see our dedicated Error Codes and Messages article.
+          example: null
+        status_reason_message:
+          type:
+          - string
+          - 'null'
+          description: A human-readable message explaining the reason for the current status (when applicable).
+          example: null
+        status_updated_at:
+          type: string
+          format: date-time
+          description: The ISO-8601 timestamp of when the status was last updated.
+          example: '2025-05-20T09:55:02Z'
+        authorized_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The ISO-8601 timestamp of when the Payment Authorization was authorized by the user.
+          example: '2025-05-20T09:55:02Z'
+        external_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+          description: The merchant's internal ID for the authorization.
+          example: c169a8a9-e9f5-48db-9f4a-818caef9356b
+        description:
+          type: string
+          minLength: 1
+          maxLength: 140
+          pattern: ^[\w\W\s]+$
+          description: An internal description used by the merchant only.
+          example: Internal description used by the merchant only
+        return_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+          description: The URL where the user will be redirected after authorization.
+          example: https://merchant.com/return
+        payment_method:
+          type: string
+          enum:
+          - PIX_OF_IMMEDIATE
+          - PIX_OF_SCHEDULED
+          description: 'The payment method that was authorized.
+
+            '
+          example: PIX_OF_IMMEDIATE
+        payer:
+          type: object
+          description: Details regarding the payer.
+          properties:
+            customer:
+              type: string
+              format: uuid
+              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+              description: The Belvo ID for the customer.
+              example: 533e7a9b-e6c7-4bd4-be79-3a3c3bd78044
+            institution:
+              type: string
+              format: uuid
+              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+              description: The Belvo ID of the institution that the payer will use.
+              example: 770932b4-8f1f-4b0f-8470-1c605903fdb2
+            representative_identifier:
+              type: string
+              minLength: 11
+              maxLength: 14
+              pattern: ^[0-9]{11,14}$
+              description: 'In the case that the customer is a business, the CPF of the representative authorized to make payments.
+
+                '
+              example: '12345678901122'
+        beneficiary:
+          type: object
+          description: Details regarding the beneficiary of the payment.
+          properties:
+            type:
+              type: string
+              enum:
+              - BANK_ACCOUNT
+              description: The type of beneficiary account.
+              example: BANK_ACCOUNT
+            target:
+              type: string
+              format: uuid
+              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+              description: The Belvo ID of the bank account that will receive funds.
+              example: b6278377-f710-4d1a-a026-7bab757256d0
+        payment_method_configuration:
+          type: object
+          description: Configuration details for the payment method.
+          oneOf:
+          - $ref: '#/components/schemas/PaymentConfigurationImmediate'
+          - $ref: '#/components/schemas/PaymentConfigurationScheduled'
+        charges:
+          type: array
+          minItems: 0
+          description: A list of Charge IDs associated with the Payment Authorization.
+          items:
+            type: string
+            format: uuid
+            description: The Belvo ID of the Charge.
+            example: 7d159b21-9f25-4365-9fa2-734d20797819
+        metadata:
+          $ref: '#/components/schemas/metadata__payments'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    CustomerId:
+      type: string
+      title: Belvo ID
+      format: uuid
+      description: "The Belvo ID of previously created customer that will make the payments to the beneficiary.\n\n{% admonition type=\"warning\" name=\"Customer from Payments-BR.V2\" %}\n  The provided customer ID must be one that was created using the `Payments-BR.V2` version of our API. For example, using either the Bank Account Details option when created the Payment Authorization, or the Create a Customer endpoint with the `X-Belvo-API-Resource-Version: Payments-BR.V2` header.\n  If you provide an ID that is not `Payments-BR.V2` version compliant, you will receive the following error: `The customer does not exist or is invalid.`.\n{% /admonition %}\n"
+      example: c169a8a9-e9f5-48db-9f4a-818caef9356b
+    ChargeV2:
+      type: object
+      title: Charge (V2)
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        status_updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The ISO-8601 timestamp of when the status of the Charge was last updated.
+
+            '
+          example: '2025-06-09T08:45:50.406032Z'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - SCHEDULED
+          - SETTLED
+          - CANCELED
+          - FAILED
+          description: "The current status of the Charge. Can be one of the following values:\n\n  - `PENDING`\n  - `SCHEDULED`\n  - `SETTLED`\n  - `CANCELED`\n  - `FAILED`\n"
+          example: PENDING
+        status_reason_code:
+          type:
+          - string
+          - 'null'
+          description: 'The reason code for the current status of the Charge, if applicable.
+
+            '
+          example: null
+        status_reason_message:
+          type:
+          - string
+          - 'null'
+          description: 'Further information regarding the `status_reason_code`.
+
+            '
+          example: null
+        amount:
+          type:
+          - string
+          - 'null'
+          description: 'The amount of the Charge.
+
+            '
+          example: '100.12'
+        date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'The original date of the Charge.
+
+            '
+          example: '2025-06-09'
+        end_to_end_id:
+          type:
+          - string
+          - 'null'
+          description: 'The end-to-end ID of the Charge. This is a unique identifier for the transaction that can be used to track it across different systems.
+
+            '
+          example: 1234567890abcdef
+        statement_description:
+          type: string
+          minLength: 1
+          maxLength: 140
+          description: 'The description that will appear on the customer''s bank statement (if provided).
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        beneficiary:
+          type: object
+          description: Information about the beneficiary of the Charge.
+          properties:
+            bank_account:
+              type: object
+              description: Information about the beneficiary's bank account.
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: Belvo's unique ID used to identify the beneficiary's bank account.
+                  example: 088bc38f-1430-40c5-a5d2-80bd67189d11
+                holder:
+                  type: object
+                  description: Information about the holder of the beneficiary's bank account.
+                  properties:
+                    name:
+                      type: string
+                      description: The full name of the holder of the beneficiary's bank account.
+                      example: Jane Smith
+                    identifier:
+                      type: string
+                      description: The identifier of the holder of the beneficiary's bank account. Can be either a CPF (11 characters) or CNPJ (14 characters).
+                      minLength: 11
+                      maxLength: 14
+                      example: '12345678901'
+                details:
+                  type: object
+                  description: Details of the beneficiary's bank account.
+                  properties:
+                    institution:
+                      type: string
+                      format: uuid
+                      description: Belvo's unique ID used to identify the beneficiary's bank.
+                      example: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                    agency:
+                      type: string
+                      description: The agency number of the beneficiary's bank account.
+                      example: '5678'
+                    number:
+                      type: string
+                      description: The account number of the beneficiary's bank account.
+                      example: '987654321'
+                    account_type:
+                      type: string
+                      description: The type of the beneficiary's bank account. Can be either `CHECKINGS`, `SAVINGS`, or `PAYMENTS`.
+                      example: SAVINGS
+                    code:
+                      type: string
+                      description: The ISPB code of the beneficiary's bank.
+                      example: '678901'
+        payer:
+          type: object
+          description: Information about the payer of the Charge.
+          properties:
+            bank_account:
+              type: object
+              description: Information about the payer's bank account.
+              properties:
+                holder:
+                  type: object
+                  description: Information about the holder of the payer's bank account.
+                  properties:
+                    identifier:
+                      type: string
+                      description: The identifier of the holder of the payer bank account. Can be either a CPF (11 characters) or CNPJ (14 characters).
+                      minLength: 11
+                      maxLength: 14
+                      example: '12345678902'
+                details:
+                  type: object
+                  description: Details of the payer's bank account.
+                  properties:
+                    institution:
+                      type: string
+                      format: uuid
+                      description: Belvo's unique ID used to identify the payer's bank.
+                    code:
+                      type: string
+                      description: The ISPB code of the payer's bank.
+                      example: '123345'
+                    account_type:
+                      type: string
+                      description: The type of the payer's bank account. Can be either `CHECKINGS`, `SAVINGS`, or `PAYMENTS`.
+                      example: CHECKINGS
+                    agency:
+                      type: string
+                      description: The agency number of the payer's bank account.
+                      example: '1234'
+                    number:
+                      type: string
+                      description: The account number of the payer's bank account.
+                      example: '123456789'
+        metadata:
+          $ref: '#/components/schemas/metadata__payments'
+        next:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The Belvo ID of the next Charge in the sequence (only applicable if the Charge was retried). If `null`, it indicates that there are no further Charges in the sequence.
+          example: 7d159b21-9f25-4365-9fa2-734d20797819
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The Belvo ID of the previous Charge in the sequence (only applicable if the Charge was retried). If `null`, it indicates that there are no previous Charges in the sequence.
+          example: 7d159b21-9f25-4365-9fa2-734d20797818
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    BankAccountObject:
+      type: object
+      title: Bank Account Details
+      description: Details of the bank account to be registered. If the bank account exists, we return their Belvo ID. If not, we create a new bank account and return the newly assigned Belvo ID.
+      required:
+      - details
+      - holder
+      properties:
+        holder:
+          type: object
+          description: Details of the account holder.
+          required:
+          - identifier
+          - name
+          properties:
+            identifier:
+              type: string
+              minLength: 11
+              maxLength: 14
+              pattern: ^(?:[0-9]{11}|[0-9]{14})$
+              description: 'The CPF (11 digits) or CNPJ (14 digits) of the account holder.
+
+                '
+              example: '12345678901122'
+            name:
+              type: string
+              maxLength: 120
+              pattern: ^([A-Za-zÀ-ÖØ-öø-ÿ,.@:&*+_<>()!?/\\$%\d' -]{0,120})$
+              description: The full name or business name of the account holder.
+              example: Frangos Enlatados
+        details:
+          type: object
+          description: Details of the bank account.
+          required:
+          - account_type
+          - agency
+          - institution
+          - number
+          properties:
+            account_type:
+              type: string
+              enum:
+              - CHECKINGS
+              - SAVINGS
+              - PAYMENTS
+              description: "The type of bank account. Can be either:\n  - `CHECKINGS` (also known as Conta Corrente in Brazil)\n  - `SAVINGS` (also known as Conta Poupança in Brazil)\n  - `PAYMENTS` (also known as Conta de Pagamento Instantâneo or Conta de Pagamento in Brazil)\n"
+              example: CHECKINGS
+            agency:
+              type: string
+              minLength: 1
+              maxLength: 4
+              pattern: ^[0-9]{1,4}$
+              description: The agency (branch number) of the institution where the account was created.
+              example: '0444'
+            institution:
+              type: string
+              format: uuid
+              description: The Belvo ID of the financial institution.
+              example: f512d996-583a-4a91-8b5b-eba2e103b068
+            number:
+              type: string
+              pattern: ^[0-9]{1,20}$
+              minLength: 1
+              maxLength: 20
+              description: "The bank account number.\n\n{% admonition type=\"info\" name=\"Valid Account Number characters\" %}\n  You can only send through numbers (`^[0-9]+$`) in the string. For example, `\"457220\"` is a valid bank account number, while \"`45722-0`\" is invalid as it contains a hyphen (`-`).\n{% /admonition %}\n"
+              example: '457220'
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        metadata:
+          $ref: '#/components/schemas/metadata__payments'
+    CreatePaymentAuthorizationImmediate:
+      type: object
+      title: Immediate
+      description: Create an Immediate Payment Authorization.
+      required:
+      - payment_method
+      - description
+      - return_url
+      - payer
+      - beneficiary
+      - payment_method_configuration
+      properties:
+        payment_method:
+          type: string
+          enum:
+          - PIX_OF_IMMEDIATE
+          description: 'The payment method to authorize. For immediate one-time payments, this must be set to `PIX_OF_IMMEDIATE`.
+
+            '
+          example: PIX_OF_IMMEDIATE
+        description:
+          type: string
+          description: An internal description for the merchant.
+          minLength: 1
+          maxLength: 140
+          pattern: '[\w\W\s]{1,140}'
+          example: Blue Suede Shoes - Premium 3429123
+        external_id:
+          type: string
+          format: uuid
+          description: (Highly Recommended) The merchant's internal ID for the authorization.
+          example: c169a8a9-e9f5-48db-9f4a-818caef9356b
+        return_url:
+          type: string
+          format: uri
+          description: The URL that the user should be redirected to after authorizing the payment in the institution.
+          example: https://merchant.com/return
+        payer:
+          type: object
+          description: Details regarding the payer.
+          required:
+          - customer
+          properties:
+            customer:
+              description: 'Details of the customer making payments to the beneficiary. You can either provide the customer''s CPF or CNPJ, or their Belvo ID. If you provide the Belvo ID, it must be a UUID of a customer that has already been created in Belvo. If you provide the CPF or CNPJ, we will check if the customer exists in Belvo. If the customer exists, we return their Belvo ID. If not, we create a new customer and return the newly assigned Belvo ID.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/CustomerObject'
+              - $ref: '#/components/schemas/CustomerId'
+            institution:
+              type: string
+              description: The Belvo ID of the institution that they payer will use to pay for the merchant's service. To get the Belvo ID of an institution, use the [Institutions endpoint](https://developers.belvo.com/apis/belvoopenapispec/payment-institutions-(brazil)/listpaymentinstitutionsbrazil).
+              example: ef685cf7-d143-4671-a1e5-4d1d019a3f5c
+            representative_identifier:
+              type: string
+              minLength: 14
+              maxLength: 14
+              pattern: ^[0-9]{14}$
+              description: 'In the case that the customer is a business, this is the CPF of the representative authorized to make payments for the business.
+
+                '
+              example: '12345678901234'
+        beneficiary:
+          type: object
+          description: Details regarding the beneficiary of the payment.
+          required:
+          - type
+          - target
+          properties:
+            type:
+              type: string
+              enum:
+              - BANK_ACCOUNT
+              description: The type of beneficiary account. At present, this must be set to `BANK_ACCOUNT`.
+              example: BANK_ACCOUNT
+            target:
+              oneOf:
+              - $ref: '#/components/schemas/BankAccountObject'
+              - $ref: '#/components/schemas/BankAccountId'
+              description: Details regarding the bank account that will receive funds. You can either provide the complete details of the bank account or the Belvo ID. If you provide the complete bank account details, we will check if the bank account exists in Belvo. If the bank account exists, we return their Belvo ID. If not, we create a new bank account and return the newly assigned Belvo ID.
+        payment_method_configuration:
+          type: object
+          description: Details regarding the payment.
+          required:
+          - amount
+          - statement_description
+          properties:
+            amount:
+              type: number
+              format: float
+              description: 'The amount that your customer will be charged.
+
+                '
+              example: 10000.05
+            statement_description:
+              type: string
+              minLength: 1
+              maxLength: 140
+              pattern: '[\w\W\s]{1,140}'
+              description: The description that will appear on your customer's bank statement.
+              example: Blue Suede Shoes - Premium
+        metadata:
+          $ref: '#/components/schemas/metadata__payments'
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    BankAccountId:
+      type: string
+      title: Bank Account ID
+      format: uuid
+      description: "The Belvo ID of the bank account you previously registered that will receive funds.\n\n{% admonition type=\"warning\" name=\"Bank Account from Payments-BR.V2\" %}\n  The provided bank account ID must be one that was created using the `Payments-BR.V2` version of our API. For example, using either the Bank Account Details option when created the Payment Authorization, or the Register Bank Account endpoint with the `X-Belvo-API-Resource-Version: Payments-BR.V2` header.\n  If you provide an ID that is not `Payments-BR.V2` version compliant, you will receive the following error: `The bank account does not exist or is invalid.`.\n{% /admonition %}\n"
+      example: b6278377-f710-4d1a-a026-7bab757256d0
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    400_validation_error:
+      type: object
+      title: Validation Error
+      required:
+      - code
+      - message
+      - request_id
+      description: 'This error occurs when the parameters provided did not match the expected fields or the item you are trying to create is already in our database, leading to a field validation errors.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`null`, `does_not_exist`, `required`, `already_registered`, `invalid_choice`, `max_length`, `min_length`, `blank`, `null`, `cancellation_error`, `idempotency_key_invalid`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: required
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nThe description can be (among others):\n\n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n  - `This customer is already registered`\n  - `Ensure this field has at least 2 characters.`\n  - `Ensure this field has no more than 4 characters.`\n  - `Entered value is not valid.`\n  - `You must set all required fields: username, password, username_type.`\n  - `Payment Intent cannot be canceled because it is not SCHEDULED.`\n  - `Payment Intent cannot be canceled as the cutoff time (23:59:00) has passed.`\n  - `The provided idempotency key is invalid.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+
+            > **Note**: This field is only present when the error is related to a specific field.
+
+            '
+          example: institution
+    CustomerObject:
+      type: object
+      title: CPF or CNPJ
+      description: Details of the customer making payments to the beneficiary. If the customer exists, we return their Belvo ID. If not, we create a new customer and return the newly assigned Belvo ID.
+      required:
+      - identifier
+      - name
+      properties:
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 14
+          pattern: ^(?:[0-9]{11}|[0-9]{14})$
+          description: 'The CPF or CNPJ of the customer. For CPF, must be 11 characters. For CNPJ, must be 14 characters.
+
+            '
+          example: '12345678901'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: ^([A-Za-zÀ-ÖØ-öø-ÿ,.@:&*+_<>()!?/\\$%\d' -]{0,120})$
+          description: The full name of the customer.
+          example: João da Silva
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+    PaymentConfigurationScheduled:
+      type: object
+      title: PIX_OF_SCHEDULED
+      description: Configuration details for the `PIX_OF_SCHEDULED` payment method.
+      properties:
+        amount:
+          type: string
+          pattern: ^-?\d{1,15}\.\d{2,4}$
+          description: 'The amount that your customer will be charged.
+
+            '
+          example: '10000.05'
+        statement_description:
+          type: string
+          minLength: 1
+          maxLength: 140
+          pattern: '[\w\W\s]{1,140}'
+          description: The description that will appear on your customer's bank statement.
+          example: Blue Suede Shoes - Premium
+        dates:
+          type: array
+          description: The date that the payment is scheduled to be made, in `YYYY-MM-DD` format.
+          minItems: 1
+          maxItems: 1
+          items:
+            type: string
+            format: date
+            pattern: ^\d{4}-\d{2}-\d{2}$
+          example:
+          - '2025-10-30'
+        authorization_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+          description: The URL where the user should be redirected to authorize the payment.
+          example: https://auth.belvo.com/authorize?token=abc123def456
+    metadata__payments:
+      type: object
+      description: "Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number for the payment intent.\n\n{% admonition type=\"info\" name=\"Metadata Limitations\" %}\n  You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.\n{% /admonition %}\n"
+      maxProperties: 50
+      additionalProperties:
+        type: string
+        maxLength: 500
+        pattern: ^[-]*$
+      example:
+        internal_reference_id: GGq73487w2
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    CreatePaymentAuthorizationScheduled:
+      type: object
+      title: Scheduled
+      description: Create a Scheduled Payment Authorization.
+      required:
+      - payment_method
+      - description
+      - return_url
+      - payer
+      - beneficiary
+      - payment_method_configuration
+      properties:
+        payment_method:
+          type: string
+          enum:
+          - PIX_OF_SCHEDULED
+          description: 'The payment method to authorize. For scheduled one-time payments, this must be set to `PIX_OF_SCHEDULED`.
+
+            '
+          example: PIX_OF_SCHEDULED
+        description:
+          type: string
+          description: An internal description for the merchant.
+          minLength: 1
+          maxLength: 140
+          pattern: '[\w\W\s]{1,140}'
+          example: Layaway Shoe Payment 3429123
+        external_id:
+          type: string
+          format: uuid
+          description: (Highly Recommended) The merchant's internal ID for the authorization.
+          example: c169a8a9-e9f5-48db-9f4a-818caef9356b
+        return_url:
+          type: string
+          format: uri
+          description: The URL that the user should be redirected to after authorizing the payment in the institution.
+          example: https://merchant.com/return
+        payer:
+          type: object
+          description: Details regarding the payer.
+          required:
+          - customer
+          properties:
+            customer:
+              description: 'Details of the customer making payments to the beneficiary. You can either provide the customer''s CPF or CNPJ, or their Belvo ID. If you provide the Belvo ID, it must be a UUID of a customer that has already been created in Belvo. If you provide the CPF or CNPJ, we will check if the customer exists in Belvo. If the customer exists, we return their Belvo ID. If not, we create a new customer and return the newly assigned Belvo ID.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/CustomerObject'
+              - $ref: '#/components/schemas/CustomerId'
+            institution:
+              type: string
+              description: The Belvo ID of the institution that they payer will use to pay for the merchant's service. To get the Belvo ID of an institution, use the [Institutions endpoint](https://developers.belvo.com/apis/belvoopenapispec/payment-institutions-(brazil)/listpaymentinstitutionsbrazil).
+              example: ef685cf7-d143-4671-a1e5-4d1d019a3f5c
+            representative_identifier:
+              type: string
+              minLength: 14
+              maxLength: 14
+              pattern: ^[0-9]{14}$
+              description: 'In the case that the customer is a business, this is the CPF of the representative authorized to make payments for the business.
+
+                '
+              example: '12345678901234'
+        beneficiary:
+          type: object
+          description: Details regarding the beneficiary of the payment.
+          required:
+          - type
+          - target
+          properties:
+            type:
+              type: string
+              enum:
+              - BANK_ACCOUNT
+              description: The type of beneficiary account. At present, this must be set to `BANK_ACCOUNT`.
+              example: BANK_ACCOUNT
+            target:
+              oneOf:
+              - $ref: '#/components/schemas/BankAccountObject'
+              - $ref: '#/components/schemas/BankAccountId'
+              description: Details regarding the bank account that will receive funds. You can either provide the complete details of the bank account or the Belvo ID. If you provide the complete bank account details, we will check if the bank account exists in Belvo. If the bank account exists, we return their Belvo ID. If not, we create a new bank account and return the newly assigned Belvo ID.
+        payment_method_configuration:
+          type: object
+          description: Details regarding the payment.
+          required:
+          - amount
+          - statement_description
+          - dates
+          properties:
+            amount:
+              type: number
+              format: float
+              description: 'The amount that your customer will be charged.
+
+                '
+              example: 10000.05
+            statement_description:
+              type: string
+              minLength: 1
+              maxLength: 140
+              pattern: '[\w\W\s]{1,140}'
+              description: The description that will appear on your customer's bank statement.
+              example: Blue Suede Shoes - Premium
+            dates:
+              type: array
+              description: The date that the payment is scheduled to be made, in `YYYY-MM-DD` format. Must be at least one day into the future.
+              minItems: 1
+              maxItems: 1
+              items:
+                type: string
+                format: date
+                pattern: ^\d{4}-\d{2}-\d{2}$
+              example:
+              - '2025-10-30'
+        metadata:
+          $ref: '#/components/schemas/metadata__payments'
+    PaymentConfigurationImmediate:
+      type: object
+      title: PIX_OF_IMMEDIATE
+      description: Configuration details for the `PIX_OF_IMMEDIATE` payment method.
+      properties:
+        amount:
+          type: string
+          pattern: ^-?\d{1,15}\.\d{2,4}$
+          description: 'The amount that your customer will be charged.
+
+            '
+          example: '10000.05'
+        statement_description:
+          type: string
+          minLength: 1
+          maxLength: 140
+          pattern: '[\w\W\s]{1,140}'
+          description: The description that will appear on your customer's bank statement.
+          example: Blue Suede Shoes - Premium
+        authorization_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 2048
+          description: The URL where the user should be redirected to authorize the payment.
+          example: https://auth.belvo.com/authorize?token=abc123def456
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    external_id__payments:
+      type: string
+      format: uuid
+      description: "An additional unique identifier for the resource for internal purposes.\n\n{% admonition type=\"success\" name=\"Highly Recommended\" %}\n  We recommend using this field to store your own unique identifier for each resource (customer, bank account, payment intent, or enrollment). This can be useful for tracking the resource in your system and for debugging purposes.\n{% /admonition %}\n"
+      example: 4b8a81a0-e33c-45a6-8567-479efb105f73
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+  responses:
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

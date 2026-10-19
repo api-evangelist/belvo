@@ -1,264 +1,4184 @@
 openapi: 3.2.0
 info:
-  title: Belvo Transactions API
-  description: The Belvo API is a RESTful open-finance API for Latin America. It lets you connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia through Links, then retrieve accounts, balances, transactions, owners, incomes, and recurring expenses. The Payments (Brazil) surface initiates account-to-account payments over Pix and the Open Finance network. All requests use HTTP Basic authentication with your Secret Key ID as the username and Secret Key Password as the password.
-  termsOfService: https://belvo.com/terms-and-conditions/
+  title: Belvo API Docs Transactions API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
   contact:
-    name: Belvo Support
-    email: support@belvo.com
+    name: Need help?
     url: https://developers.belvo.com
-  version: '1.0'
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
 servers:
-- url: https://api.belvo.com
-  description: Production
 - url: https://sandbox.belvo.com
   description: Sandbox
 security:
 - basicAuth: []
 tags:
 - name: Transactions
-  description: Detailed transaction history for accounts in a Link.
+  description: A **transaction** contains the detailed information of each movement inside an account. For example, a purchase at a store or a restaurant.
 paths:
   /api/transactions/:
     get:
-      operationId: listTransactions
       tags:
       - Transactions
-      summary: List all transactions
+      operationId: ListTransactions
+      summary: List transactions
+      description: '## ▶️ Usage
+
+
+        With the List Transactions method, you can:
+
+
+        1. **[Required]** List transactions related to a specific `link.id` (using the `link` query parameter).
+
+        2. Filter the returned transactions using query parameters (see the Filtering responses section below).
+
+        3. Get the details of a specific `transaction.id` (using the `id` query parameter along with the `link` query parameter).
+
+
+        ## 📖 Pagination
+
+
+        This method returns a paginated response (default: 100 items per page). You can use the `page_size` query parameter to increase the number of items returned to a maximum of 1000 items. You can use the `page` query parameter to navigate through the results. For more details on how to navigate Belvo''s paginated responses, see our Pagination Tips article.
+
+
+        ## 🔦 Filtering Responses
+
+
+        Please see the query list below for a list of fields that you can filter your responses by. For more information on how to use filters, see our Filtering responses article.'
       parameters:
-      - $ref: '#/components/parameters/PageSize'
-      - $ref: '#/components/parameters/Page'
-      - name: link
-        in: query
-        schema:
-          type: string
-          format: uuid
-      - name: account
-        in: query
-        schema:
-          type: string
-      - name: value_date__gte
-        in: query
-        schema:
-          type: string
-          format: date
-      - name: value_date__lte
-        in: query
-        schema:
-          type: string
-          format: date
+      - $ref: '#/components/parameters/link__required'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/link__in'
+      - $ref: '#/components/parameters/account'
+      - $ref: '#/components/parameters/account__in'
+      - $ref: '#/components/parameters/account__balance__available'
+      - $ref: '#/components/parameters/account__balance__available__lt'
+      - $ref: '#/components/parameters/account__balance__available__lte'
+      - $ref: '#/components/parameters/account__balance__available__gt'
+      - $ref: '#/components/parameters/account__balance__available__gte'
+      - $ref: '#/components/parameters/account__balance__available__range'
+      - $ref: '#/components/parameters/account__balance__current'
+      - $ref: '#/components/parameters/account__balance__current__gt'
+      - $ref: '#/components/parameters/account__balance__current__gte'
+      - $ref: '#/components/parameters/account__balance__current__lt'
+      - $ref: '#/components/parameters/account__balance__current__lte'
+      - $ref: '#/components/parameters/account__balance__current__range'
+      - $ref: '#/components/parameters/account_type'
+      - $ref: '#/components/parameters/account_type__in'
+      - $ref: '#/components/parameters/accounting_date'
+      - $ref: '#/components/parameters/accounting_date__gt'
+      - $ref: '#/components/parameters/accounting_date__gte'
+      - $ref: '#/components/parameters/accounting_date__lt'
+      - $ref: '#/components/parameters/accounting_date__lte'
+      - $ref: '#/components/parameters/accounting_date__range'
+      - $ref: '#/components/parameters/amount'
+      - $ref: '#/components/parameters/amount__gt'
+      - $ref: '#/components/parameters/amount__gte'
+      - $ref: '#/components/parameters/amount__lt'
+      - $ref: '#/components/parameters/amount__lte'
+      - $ref: '#/components/parameters/amount__range'
+      - $ref: '#/components/parameters/collected_at'
+      - $ref: '#/components/parameters/collected_at__gt'
+      - $ref: '#/components/parameters/collected_at__gte'
+      - $ref: '#/components/parameters/collected_at__lt'
+      - $ref: '#/components/parameters/collected_at__lte'
+      - $ref: '#/components/parameters/collected_at__range'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/currency'
+      - $ref: '#/components/parameters/currency__in'
+      - $ref: '#/components/parameters/credit_card_data__bill_name__in'
+      - $ref: '#/components/parameters/reference'
+      - $ref: '#/components/parameters/reference__in'
+      - $ref: '#/components/parameters/status_transactions'
+      - $ref: '#/components/parameters/status__in_transactions'
+      - $ref: '#/components/parameters/type_transactions'
+      - $ref: '#/components/parameters/type__in_transactions'
+      - $ref: '#/components/parameters/value_date'
+      - $ref: '#/components/parameters/value_date__gt'
+      - $ref: '#/components/parameters/value_date__gte'
+      - $ref: '#/components/parameters/value_date__lt'
+      - $ref: '#/components/parameters/value_date__lte'
+      - $ref: '#/components/parameters/value_date__range'
       responses:
         '200':
-          description: A paginated list of transactions.
+          description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedTransactions'
+                type: object
+                title: Transactions (OFDA Brazil)
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of transaction objects (OFDA Brazil).
+                      items:
+                        $ref: '#/components/schemas/TransactionOpenFinanceBrazil'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
     post:
-      operationId: retrieveTransactions
       tags:
       - Transactions
-      summary: Retrieve transactions for a Link
+      operationId: RetrieveTransactions
+      summary: Retrieve transactions for a link
+      description: 'Retrieve transactions for one or more accounts from a specific link.
+
+
+        > 📘 Transaction Periods and Retrieval
+
+        >
+
+        > When retrieving transactions, it is important to understand that the available transaction data ranges depend on each institution. If you try to access older information than what we can access, we will return all the data we can read within that date range. For example, if you request transactions for the last year and we can only access the last six months, we will return the information corresponding to these six months of data.'
+      parameters:
+      - $ref: '#/components/parameters/async'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RetrieveTransactionsRequest'
+              type: object
+              description: Request body for the Retrieve Transactions method.
+              required:
+              - link
+              - date_from
+              - date_to
+              properties:
+                link:
+                  $ref: '#/components/schemas/link_request'
+                account:
+                  type: string
+                  format: uuid
+                  description: If provided, we return transactions only from this account.
+                  example: d4617561-1c01-4b2f-83b6-a594f7b3bc57
+                date_from:
+                  $ref: '#/components/schemas/date_from'
+                date_to:
+                  $ref: '#/components/schemas/date_to'
+                token:
+                  $ref: '#/components/schemas/token'
+                save_data:
+                  $ref: '#/components/schemas/save_data'
       responses:
         '200':
-          description: The transactions found for the Link.
+          description: Ok (when `save_data=false`)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Transaction'
+                  $ref: '#/components/schemas/TransactionOpenFinanceBrazil'
         '201':
-          description: The transactions were retrieved.
+          description: Created (when `save_data=true`)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Transaction'
-  /api/transactions/{id}/:
-    parameters:
-    - $ref: '#/components/parameters/ResourceId'
-    get:
-      operationId: detailTransaction
+                  $ref: '#/components/schemas/TransactionOpenFinanceBrazil'
+        '202':
+          $ref: '#/components/responses/202_accepted_response'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    patch:
       tags:
       - Transactions
-      summary: Get a transaction's details
+      operationId: PatchTransactions
+      summary: Complete a transactions request
+      description: 'Used to resume a Transaction retrieve session that was paused because an MFA
+
+        token was required by the institution.'
+      parameters:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBody'
       responses:
         '200':
-          description: The requested transaction.
+          description: Ok (when `save_data=false`)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transaction'
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionOpenFinanceBrazil'
+        '201':
+          description: Created (when `save_data=true`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionOpenFinanceBrazil'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/transactions/{id}/:
+    get:
+      tags:
+      - Transactions
+      operationId: DetailTransaction
+      summary: Get a transaction's details
+      description: Get the details of a specific transaction.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `transaction.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionOpenFinanceBrazil'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    delete:
+      tags:
+      - Transactions
+      operationId: DestroyTransaction
+      summary: Delete a transaction
+      description: 'Delete a specific transaction from your Belvo account.
+
+
+        > ❗️ Rate limited
+
+        >
+
+        > This endpoint is rate limited. You can only delete 5 items per minute. If you exceed this limit, you will receive a `429` status code.'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `transaction.id` that you want to delete.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
 components:
   parameters:
-    Page:
-      name: page
+    omit:
+      name: omit
       in: query
-      description: The page number of results to return.
+      description: Omit certain fields from being returned in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
       schema:
-        type: integer
-        default: 1
-    PageSize:
-      name: page_size
+        type: string
+    accounting_date__gte:
+      name: accounting_date__gte
       in: query
-      description: Number of items per page (max 1000).
+      description: Return transactions that were processed by the institution on this date (`YYYY-MM-DD`) or later.
       schema:
-        type: integer
-        default: 100
-        maximum: 1000
-    ResourceId:
-      name: id
-      in: path
+        type: string
+        format: date
+        example: '2022-05-04'
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    async:
+      name: X-Belvo-Request-Mode
+      in: header
+      description: 'Recommended header parameter to make your POST request asynchronous (thus preventing timeouts and improving your data flow).
+
+
+        When you make an asynchronous request, Belvo responds with a `202 - Accepted` payload, including the `request_id`. Once we have retrieved the requested information, you will receive a webhook with the link and request IDs.
+
+        '
+      schema:
+        type: string
+        enum:
+        - async
+        example: async
+    accounting_date__lte:
+      name: accounting_date__lte
+      in: query
+      description: Return transactions that were processed by the institution on this date (`YYYY-MM-DD`) or earlier.
+      schema:
+        type: string
+        format: date
+        example: '2022-03-01'
+    account_type:
+      name: account_type
+      in: query
+      description: Return information only for transactions matching this account type, as designated by the institution.
+      schema:
+        type: string
+        example: Cuentas de efectivo
+    status_transactions:
+      name: status
+      in: query
+      description: Return transactions with this status. Can be either `PENDING`, `PROCESSED`, or `UNCATEGORIZED`.
+      schema:
+        type: string
+        example: PENDING
+    link__required:
+      name: link
+      in: query
       required: true
-      description: The unique identifier of the resource.
+      description: 'The `link.id` you want to filter by.
+
+        '
       schema:
         type: string
         format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    account__balance__available__lt:
+      name: account__balance__available__lt
+      in: query
+      description: Return transactions that have a `account.balance.available` less than this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 6000.02
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    accounting_date__lt:
+      name: accounting_date__lt
+      in: query
+      description: Return transactions that were processed by the institution before this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-02'
+    credit_card_data__bill_name__in:
+      name: credit_card_data__bill_name__in
+      in: query
+      description: Return transactions for one of these bill names.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          maxLength: 50
+          example: feb-2022
+    currency__in:
+      name: currency__in
+      in: query
+      description: Return results that have funds or balances in one of these three-letter currency codes.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          pattern: ^[A-Z]{3}$
+          example: BRA
+    account__balance__current__gte:
+      name: account__balance__current__gte
+      in: query
+      description: Return transactions that have a `account.balance.current` greater than or equal to this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 4019.02
+    amount__gt:
+      name: amount__gt
+      in: query
+      description: Return results only for more than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    account__balance__current__lt:
+      name: account__balance__current__lt
+      in: query
+      description: Return transactions that have a `account.balance.current` less than this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 3000.02
+    account__balance__current:
+      name: account__balance__current
+      in: query
+      description: Return transactions that have a `account.balance.current` matching exactly this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 4000.02
+    value_date__lte:
+      name: value_date__lte
+      in: query
+      description: Return results for this date (`YYYY-MM-DD`) or earlier.
+      schema:
+        type: string
+        format: date
+        example: '2022-03-01'
+    account:
+      name: account
+      in: query
+      description: 'The `account.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding either the `link.id` or the `account.id` filters in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    collected_at:
+      name: collected_at
+      in: query
+      description: Return items that were retrieved from the institution on this date (`YYYY-MM-DD` or full `ISO-8601` timestamp).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-01'
+    type__in_transactions:
+      name: type__in
+      in: query
+      description: Return transactions with this types. Can be either `INFLOW` or `OUTFLOW`.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - OUTFLOW
+          - INFLOW
+          example: INFLOW
+    collected_at__gt:
+      name: collected_at__gt
+      in: query
+      description: Return items that were retrieved from the institution after this date (`YYYY-MM-DD` or full `ISO-8601` timestamp).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    account__balance__available:
+      name: account__balance__available
+      in: query
+      description: Return transactions that have a `account.balance.available` matching exactly this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 4000.02
+    amount__lt:
+      name: amount__lt
+      in: query
+      description: Return results only for less than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    account__balance__available__lte:
+      name: account__balance__available__lte
+      in: query
+      description: Return transactions that have a `account.balance.available` less than or equal to this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 5999.02
+    account_type__in:
+      name: account_type__in
+      in: query
+      description: Return information only for transactions matching these account types, as designated by the institution.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: Depositos Ahorro
+    amount__range:
+      name: amount__range
+      in: query
+      description: Return results between this amount range. The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          example: 2000.02
+        example:
+        - 100
+        - 5000
+    link__in:
+      name: link__in
+      in: query
+      description: Return results only for these `link.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 5722d0ba-69d7-42dc-8ff5-33767b83c5d6
+    account__balance__current__range:
+      name: account__balance__current__range
+      in: query
+      description: Return transactions that have a `account.balance.current` within a range. The first value indicates the start of the range and the second value indicates the end of the range. of two values.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: number
+          example: 4350
+        example:
+        - 100
+        - 5000
+    value_date:
+      name: value_date
+      in: query
+      description: Return results for exactly this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    account__balance__current__lte:
+      name: account__balance__current__lte
+      in: query
+      description: Return transactions that have a `account.balance.current` less than or equal to this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 2999.02
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    account__balance__available__gte:
+      name: account__balance__available__gte
+      in: query
+      description: Return transactions that have a `account.balance.available` more than or equal to this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 5999.02
+    status__in_transactions:
+      name: status__in
+      in: query
+      description: Return transactions with these statuses. Can be either `PENDING`, `PROCESSED`, or `UNCATEGORIZED`.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: PROCESSED
+    type_transactions:
+      name: type
+      in: query
+      description: Return transactions with this type. Can be either `INFLOW` or `OUTFLOW`.
+      schema:
+        type: string
+        enum:
+        - OUTFLOW
+        - INFLOW
+        example: OUTFLOW
+    fields:
+      name: fields
+      in: query
+      description: Return only the specified fields in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    accounting_date:
+      name: accounting_date
+      in: query
+      description: Return transactions that were processed by the institution on exactly this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    accounting_date__gt:
+      name: accounting_date__gt
+      in: query
+      description: Return transactions that were processed by the institution after this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-06'
+    value_date__range:
+      name: value_date__range
+      in: query
+      description: Return results for this date (`YYYY-MM-DD`) range. The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-05-06'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    account__balance__available__gt:
+      name: account__balance__available__gt
+      in: query
+      description: Return transactions that have a `account.balance.available` more than this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 6000.02
+    collected_at__lte:
+      name: collected_at__lte
+      in: query
+      description: Return items that were retrieved from the institution before or on this date (`YYYY-MM-DD` or full `ISO-8601` timestamp).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    account__balance__current__gt:
+      name: account__balance__current__gt
+      in: query
+      description: Return transactions that have a `account.balance.current` greater than this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 4020.02
+    collected_at__range:
+      name: collected_at__range
+      in: query
+      description: Return items that were retrieved from the institution between two dates (`YYYY-MM-DD` or full `ISO-8601` timestamp). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-05-04'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    amount__lte:
+      name: amount__lte
+      in: query
+      description: Return results only for this amount or less.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    value_date__gte:
+      name: value_date__gte
+      in: query
+      description: Return results for this date (`YYYY-MM-DD`) or later.
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    reference__in:
+      name: reference__in
+      in: query
+      description: Returns transactions with these institution-assigned reference numbers.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: 085904452810319225
+    account__in:
+      name: account__in
+      in: query
+      description: Return results only for these `account.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 85b77707-90ef-46fd-9059-5a757f24247a
+    accounting_date__range:
+      name: accounting_date__range
+      in: query
+      description: Return transactions that were processed by the institution in this date. The first value indicates the start of the range and the second value indicates the end of the range. range (`YYYY-MM-DD`).
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-05-06'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    collected_at__gte:
+      name: collected_at__gte
+      in: query
+      description: Return items that were retrieved from the institution after or on this date (`YYYY-MM-DD` or full `ISO-8601` timestamp).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    amount:
+      name: amount
+      in: query
+      description: Return results only for this value.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    amount__gte:
+      name: amount__gte
+      in: query
+      description: Return results only for and more than this amount.
+      schema:
+        type: number
+        format: float
+        pattern: ^\d{1,15}\.\d{2,4}$
+        example: 1000.02
+    value_date__lt:
+      name: value_date__lt
+      in: query
+      description: Return results for before this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-02'
+    reference:
+      name: reference
+      in: query
+      description: Returns transactions with this institution-assigned reference number.
+      schema:
+        type: string
+        example: 085904452810319225
+    collected_at__lt:
+      name: collected_at__lt
+      in: query
+      description: Return items that were retrieved from the institution before this date (`YYYY-MM-DD` or full `ISO-8601` timestamp).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    currency:
+      name: currency
+      in: query
+      description: Return results that hold finances or balances in only this three-letter currency code.
+      schema:
+        type: string
+        pattern: ^[A-Z]{3}$
+        example: BRA
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    value_date__gt:
+      name: value_date__gt
+      in: query
+      description: Return results that occurred after this date (`YYYY-MM-DD`).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-06'
+    account__balance__available__range:
+      name: account__balance__available__range
+      in: query
+      description: Return transactions that have a `account.balance.available` within a. The first value indicates the start of the range and the second value indicates the end of the range. range of two values.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          example: 4350.02
+        example:
+        - 100
+        - 5000
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
   schemas:
-    RetrieveRequest:
+    TransactionLoanDataCharges:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - info
+      - amount
+      description: Details regarding the charges associated with this payment. Only applicable when `is_detached` = `true`.
+      properties:
+        type:
+          type: string
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'The type of charge.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network when the `charges` field is present
+
+            '
+          example: MULTA_ATRASO_PAGAMENTO
+        info:
+          type: string
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'Additional information regarding the charge `type`.
+
+            '
+          example: Late payment charge.
+        amount:
+          type: number
+          format: float
+          pattern: ^-?\d{1,15}\.\d{2,4}$
+          description: 'The amount of the charge.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network when the `charges` field is present
+
+            '
+          example: 8903.77
+    last_accessed_at:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: 'The ISO-8601 timestamp of Belvo''s most recent successful access to the institution for the given link.
+
+        '
+      example: '2021-03-09T10:28:40.000Z'
+    EnumInstitutionType:
+      type: string
+      enum:
+      - bank
+      - fiscal
+      - employment
+      description: "The type of institution. We return one of the following values:\n\n  - `bank`\n  - `fiscal`\n  - `employment`\n"
+    EnumTransactionCategory:
+      type:
+      - string
+      - 'null'
+      enum:
+      - Bills & Utilities
+      - Credits & Loans
+      - Deposits
+      - Fees & Charges
+      - Food & Groceries
+      - Home & Life
+      - Income & Payments
+      - Insurance
+      - Investments & Savings
+      - Online Platforms & Leisure
+      - Personal Shopping
+      - Taxes
+      - Transfers
+      - Transport & Travel
+      - Unknown
+      - Withdrawal & ATM
+      - null
+      description: "The name of the transaction category.\n\n> **Get transaction categorization**\nWith transaction categorization, we clean and categorize transactions for you, turning raw data into actionable insights. To enable this feature, just <a href=\"https://belvo.com/contact/?utm_source=documentation\" target=\"_blank\">reach out</a> to us, and we'll get right to it.\n\nWe return one of the following enum values:\n\n  - `Bills & Utilities`\n  - `Credits & Loans`\n  - `Deposits`\n  - `Fees & Charges`\n  - `Food & Groceries`\n  - `Home & Life`\n  - `Income & Payments`\n  - `Insurance`\n  - `Investments & Savings`\n  - `Online Platforms & Leisure`\n  - `Personal Shopping`\n  - `Taxes`\n  - `Transfers`\n  - `Transport & Travel`\n  - `Unknown`*\n  - `Withdrawal & ATM`\n  - `null`\n\n\n  \\* For clients not using our Transaction Categorization product, we return `null` instead.\n"
+      example: Income & Payments
+    EnumAccountLoanDataFeeChargeType:
+      type: string
+      enum:
+      - SINGLE
+      - PER_INSTALLMENT
+      description: "Indicates the type of charge. We return one of the following values:\n\n  - `SINGLE`\n  - `PER_INSTALLMENT`\n\n   > **Non-nullable:** A value must be returned by Brazil's open finance network if the `fees` field is available.\n"
+      example: SINGLE
+    EnumAccountLoanDataInterestRateDataTaxType:
+      type: string
+      enum:
+      - NOMINAL
+      - EFFECTIVE
+      description: "The type of interest rate tax. We return one of the following values:\n\n  - `NOMINAL`\n  - `EFFECTIVE`\n  \n  > **Non-nullable:** A value must be returned by Brazil's open finance network.\n"
+      example: NOMINAL
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumTransactionStatus:
+      type:
+      - string
+      - 'null'
+      enum:
+      - PENDING
+      - PROCESSED
+      - UNCATEGORIZED
+      - null
+      description: "The status of the transaction. We return one of the following values:\n\n  - `PROCESSED` (The transaction has been processed by the institution.)\n  - `PENDING` (The institution clearly states that the transaction has not yet been processed.)\n  - `UNCATEGORIZED` (deprecated)\n  - `null` (deprecated)\n  \n"
+      example: PROCESSED
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    AccountCreditDataOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      required:
+      - collected_at
+      - credit_limit
+      description: Details regarding the credit cards associated with this account.
+      properties:
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        credit_limit:
+          type:
+          - number
+          - 'null'
+          format: float
+          maxLength: 20
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The upper credit limit of the card.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 192000.9
+        limits:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountCreditDataLimitsOpenFinanceBrazil'
+        cutting_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: The date when the credit card's bill is due.
+          example: '2019-12-11'
+        minimum_payment:
+          type:
+          - number
+          - 'null'
+          format: float
+          maxLength: 20
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The minimum amount that the account owner needs to pay in the current credit period.
+
+            '
+          example: 2400.3
+        network:
+          $ref: '#/components/schemas/EnumAccountCreditCardNetwork'
+        network_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: '[\w\W\s]*'
+          description: 'Additional information about the credit card network.
+
+            '
+          example: It's an orange card.
+        cards:
+          type: array
+          minItems: 1
+          description: Details regarding the cards associated with the account.
+          items:
+            $ref: '#/components/schemas/AccountCreditDataCardsOpenFinanceBrazil'
+        next_payment_date:
+          type:
+          - string
+          - 'null'
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        no_interest_payment:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        interest_rate:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        monthly_payment:
+          type:
+          - number
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+    AccountBalanceOpenFinanceBrazil:
       type: object
       required:
+      - current
+      description: 'Details regarding the current and available balances for the account.
+
+        '
+      properties:
+        current:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The current balance is calculated differently according to the type of account.
+
+
+
+            - **💰 Checking and saving accounts**:
+
+
+
+            The user''s account balance at the `collected_at` timestamp.
+
+
+            - **💳 Credit cards**:
+
+
+
+            The amount the user has spent in the current card billing period (see `credit_data.cutting_date` for information on when the current billing period finishes).
+
+
+            - **🏡 Loan accounts**:
+
+
+
+            The amount remaining to pay on the users''s loan.
+
+            '
+          example: 5874.13
+        available:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The balance that the account owner can use.
+
+
+            - **💰 Checking and saving accounts**:
+
+
+
+            The available balance may be different to the `current` balance due to pending transactions.
+
+
+            - **💳 Credit cards**:
+
+
+
+            The credit amount the user still has available for the current period. The amount is calculated as `credit_data.credit_limit` minus `balance.current`.
+
+
+            - **🏡 Loan accounts**:
+
+
+
+            The present value required to pay off the loan, as provided by the institution.
+
+
+
+            **Note:** If the institution does not provide this value, we return `null`.
+
+            '
+          example: 5621.12
+        blocked:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The amount that is currently blocked due to pending transactions.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `balances` field is available.
+
+            '
+          example: 60.32
+        automatically_invested:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The amount that is automatically invested (as agreed upon with the institution).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `balances` field is available.
+
+            '
+          example: 131.5
+    AccountLoanDataBalloonPaymentsOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      description: Detailed information regarding any balloon payments for the loan, if applicable.
+      required:
+      - due_date
+      - currency
+      - amount
+      properties:
+        due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date that the balloon payment is to be paid, in `YYYY-MM-DD` format.
+
+            '
+          example: '2021-09-06'
+        currency:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+            '
+          example: BRL
+        amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The total amount of the balloon payment.
+
+            '
+          example: 45391.89
+    AccountLoanDataFeesOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - value
+      - name
+      - code
+      - fee_charge_type
+      - fee_charge
+      - rate
+      description: Breakdown of the fees applied to the loan.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumAccountLoanDataFeeType'
+        value:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The total value of the fee. Same currency as the loan.
+
+            '
+          example: 5.6
+        name:
+          type: string
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: "The fee name.\n\n > **Non-nullable:** A value must be returned by Brazil's open finance network if the `fees` field is available.\n"
+          example: Renovação de cadastro
+        code:
+          type: string
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: "The fee code.\n\n > **Non-nullable:** A value must be returned by Brazil's open finance network if the `fees` field is available.\n"
+          example: CADASTRO
+        fee_charge_type:
+          $ref: '#/components/schemas/EnumAccountLoanDataFeeChargeType'
+        fee_charge:
+          $ref: '#/components/schemas/EnumAccountLoanDataFeeCharge'
+        rate:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^[01]\.\d{6}$
+          description: 'The percentage rate of the fee. Required when `fee_charge` is set to `PERCENTAGE`.
+
+            '
+          example: 0.062
+    EnumAccountLoanDataContractedChargeType:
+      type: string
+      enum:
+      - LATE_PAYMENT_INTEREST_FEE
+      - LATE_PAYMENT_PENALTY_FEE
+      - DEFAULT_INTEREST_FEE
+      - LOAN_CONTRACT_TAX
+      - LATE_PAYMENT_TAX
+      - NO_CHARGE
+      - OTHER
+      description: "The type of contracted charge. We return one of the following values:\n\n  - `LATE_PAYMENT_INTEREST_FEE`\n  - `LATE_PAYMENT_PENALTY_FEE`\n  - `DEFAULT_INTEREST_FEE`\n  - `LOAN_CONTRACT_TAX`\n  - `LATE_PAYMENT_TAX`\n  - `NO_CHARGE`\n  - `OTHER`\n\n  > **Non-nullable:** A value must be returned by Brazil's open finance network if the `contracted_charges` field is available.\n"
+      example: LATE_PAYMENT_INTEREST_FEE
+    EnumAccountLoanDataFeeCharge:
+      type: string
+      enum:
+      - MINIMUM
+      - MAXIMUM
+      - FIXED
+      - PERCENTAGE
+      description: "Billing method, as agreed upon with the institution. We return one of the following values:\n\n  - `MINIMUM`\n  - `MAXIMUM`\n  - `FIXED`\n  - `PERCENTAGE`\n\n   > **Non-nullable:** A value must be returned by Brazil's open finance network if the `fees` field is available.\n"
+      example: FIXED
+    EnumTransactionPaymentType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - FULL
+      - INSTALLMENT
+      - null
+      description: "The transaction payment type. We return one of the following values:\n\n  - `FULL`\n  - `INSTALLMENT`\n  - `null`\n"
+      example: FULL
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    EnumAccountLoanDataFeeType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - OPERATION_FEE
+      - INSURANCE_FEE
+      - OTHERS
+      - null
+      description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+        '
+      example: null
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TransactionCreditCardDataOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      required:
+      - collected_at
+      - bill_name
+      - bill_status
+      - previous_bill_total
+      - bill_amount
+      - card_number
+      - fee_type
+      - fee_type_additional_info
+      - credits_type
+      - credits_type_additional_info
+      - installment_identifier
+      - number_of_installments
+      description: Additional data provided by the institution for credit card transactions.
+      properties:
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        bill_name:
+          type:
+          - string
+          - 'null'
+          description: 'The title of the monthly credit card bill the transaction belongs to. The format of the returned value is institution specific, however, some common examples are:
+
+
+            - diciembre-2021
+
+            - dec-2021
+
+            - dec-21
+
+
+            > **Note**: This field is only returned for ''closed'' bills (meaning the billing period has ended and the bill has been emitted). If the billing period is still ongoing, we return `null`.
+
+            '
+          example: apr-2020
+        bill_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: 'The date that the bill is due to be paid, in `YYYY-MM-DD` format.
+
+
+            > **Note**: This field is only returned for ''closed'' bills (meaning the billing period has ended and the bill has been emitted). If the billing period is still ongoing, we return `null`.
+
+            '
+          example: '2023-06-17'
+        bill_internal_identification:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The institution''s internal identifier for the bill.
+
+
+            > **Note**: This field is only returned for ''closed'' bills (meaning the billing period has ended and the bill has been emitted). If the billing period is still ongoing, we return `null`.
+
+            '
+          example: 927921260199292792126508222219893192525A6
+        bill_status:
+          type:
+          - string
+          - 'null'
+          description: '**Note:** This field is not applicable for OFDA Brazil and will return `null`.
+
+            '
+          example: null
+        previous_bill_total:
+          type:
+          - string
+          - 'null'
+          description: '**Note:** This field is not applicable for OFDA Brazil and will return `null`.
+
+            '
+          example: null
+        bill_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^-?\d{1,15}\.\d{2,4}$
+          description: The bill amount, as of `collected_at`. For more information, see `credit_card_bill`.
+          example: 300
+        card_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The credit card number.
+
+
+            **Note:** Often, this is just the last four digit of the credit card.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '4453'
+        fee_type:
+          $ref: '#/components/schemas/EnumTransactionCreditCardDataFeeType'
+        fee_type_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'Additional information regarding the fee.
+
+            '
+          example: ATM withdrawal in Curitiba.
+        credits_type:
+          $ref: '#/components/schemas/EnumTransactionCreditCardDataCreditType'
+        credits_type_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'Additional information regarding the credit type.
+
+            '
+          example: Some additional information.
+        installment_identifier:
+          type: string
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'An identifier for the installment, according to the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: PARCELA_896
+        number_of_installments:
+          type:
+          - integer
+          - 'null'
+          maximum: 999
+          description: 'The total number of installments for the card transaction, if applicable.
+
+            '
+          example: 4
+        credit_card_bill:
+          $ref: '#/components/schemas/TransactionCreditCardBill'
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    PatchBody:
+      type: object
+      description: A JSON object containing a session UUID and a MFA token
+      required:
+      - session
       - link
       properties:
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'The session you want to resume. You need to use the `session` value
+
+            that is provided in the 428 Token Required response that you receive
+
+            after you make your POST request.
+
+            '
+          example: 6e7b283c6efa449c9c028a16b5c249fa
+        token:
+          $ref: '#/components/schemas/token'
         link:
           type: string
           format: uuid
-          description: The Link UUID to retrieve data for.
+          description: 'The `link.id` you want to resume. Must be the same `link.id` as the
+
+            one you receive in the 428 Token Required response that contains the
+
+            `session` ID.
+
+            '
+          example: 683005d6-f45c-4adb-b289-f1a12f50f80c
         save_data:
+          $ref: '#/components/schemas/save_data'
+    EnumAccountsLoanDataContractInstallmentFrequency:
+      type:
+      - string
+      - 'null'
+      enum:
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+      - NO_DEADLINE_REMAINING
+      - null
+      description: "The frequency of contracted installment payments, as defined when the contract was first signed. We return one of the following:\n\n  - `DAY`\n  - `WEEK`\n  - `MONTH`\n  - `YEAR`\n  - `NO_DEADLINE_REMAINING`\n  - `null`\n"
+      example: MONTH
+    TransactionMerchantData:
+      type:
+      - object
+      - 'null'
+      description: "Additional data regarding the merchant involved in the transaction.\nWe only return merchant information for new transactions made from *checking* or *credit card* accounts.\n> **Get merchant information**\n We retrieve the merchant information for a transaction as part of our transaction categorization product, turning raw data into actionable insights. To enable this product, just <a href=\"https://belvo.com/contact/?utm_source=documentation\" target=\"_blank\">reach out</a> to us, and we'll get right to it.\n"
+      properties:
+        logo:
+          type:
+          - string
+          - 'null'
+          description: The URL to the merchant's logo.
+          example: https://logo.clearbit.com/asesor-contable.es
+        website:
+          type:
+          - string
+          - 'null'
+          description: The URL to the merchant's website.
+          example: https://merchants-r-us.com
+        merchant_name:
+          type: string
+          description: The name of the merchant.
+          example: Merchants R Us Global
+    AccountLoanDataContractedChargesOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      description: 'Details regarding any contracted charges.
+
+        '
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumAccountLoanDataContractedChargeType'
+        info:
+          type:
+          - string
+          - 'null'
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'Additional information regarding the contracted charge.
+
+            '
+          example: Late fee
+        rate:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^[01]\.\d{6}$
+          description: 'The percentage rate of the charge, calculated based on the amount of the loan.
+
+            '
+          example: 0.062
+    token:
+      type: string
+      description: The MFA token generated by the institution which is required to continue a session.
+      example: 1234ab
+    collected_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp when the data point was collected.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    EnumTransactionCreditCardDataCreditType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - REVOLVING_CREDIT
+      - BILL_INSTALLMENT_PAYMENT
+      - LOAN
+      - OTHERS
+      - null
+      description: "Other types of credit that have been contracted on the card. We return one of the following values:\n\n  - `REVOLVING_CREDIT`\n  - `BILL_INSTALLMENT_PAYMENT`\n  - `LOAN`\n  - `OTHERS`\n  - `null`\n"
+      example: BILL_INSTALLMENT_PAYMENT
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    AccountLoanDataOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      required:
+      - collected_at
+      - loan_code
+      - contract_amount
+      - total_effectove_cost
+      - loan_type
+      - outstanding_balance
+      - interest_rates
+      - fees
+      - collaterals
+      - balloon_payments
+      - installments_contract_term_frequency
+      - installment_frequency
+      - installment_frequency_info
+      - first_installment_due_date
+      - number_of_installments_total
+      - number_of_installments_outstanding
+      - number_of_installments_paid
+      - number_of_installments_past_due
+      - disbursement_dates
+      - settlement_date
+      - contract_start_date
+      - contract_end_date
+      - contract_remaining_frequency
+      - contract_remaining_total
+      - amortization_schedule
+      - amortization_schedule_info
+      - consignee_id
+      - contract_number
+      - monthly_payment
+      - principal
+      - payment_day
+      - outstanding_principal
+      - credit_limit
+      - last_period_balance
+      - interest_rate
+      - limit_day
+      - cutting_day
+      - cutting_date
+      - last_payment_date
+      - no_interest_payment
+      description: The loan options associated with this account.
+      properties:
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        loan_code:
+          type: string
+          minLength: 22
+          maxLength: 67
+          pattern: ^\d{22,67}$
+          description: 'The country-specific standardized contract number.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '92792126019929279212650822221989319252576'
+        contract_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The initial total loan amount when the contract was signed, calculated by the institution. This amount includes the principal + interest + taxes + fees.
+
+            '
+          example: 202000
+        total_effective_cost:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The initial total effective cost of the loan.
+
+            '
+          example: 209000
+        loan_type:
+          type: string
+          description: 'The type of the loan, according to the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: HOME_EQUITY
+        outstanding_balance:
+          type:
+          - number
+          - 'null'
+          format: float
+          minLength: 4
+          maxLength: 20
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The amount remaining to pay in total, including interest.
+
+            '
+          example: 182000
+        interest_rates:
+          type: array
+          description: 'Breakdown of the interest applied to the loan. With OF Brazil, we highly recommend using the information in `interest_rate_data` for in-depth information.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLoanDataInterestRateOpenFinanceBrazil'
+        fees:
+          type:
+          - array
+          - 'null'
+          description: 'Breakdown of the fees applied to the loan.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLoanDataFeesOpenFinanceBrazil'
+        contracted_charges:
+          type:
+          - array
+          - 'null'
+          description: ''
+          items:
+            $ref: '#/components/schemas/AccountLoanDataContractedChargesOpenFinanceBrazil'
+        collaterals:
+          type:
+          - array
+          - 'null'
+          description: 'Details regarding any loan collaterals that the individual or business supplied.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLoanDataCollateralsOpenFinanceBrazil'
+        balloon_payments:
+          type:
+          - array
+          - 'null'
+          description: 'Detailed information regarding any balloon payments for the loan, if applicable.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLoanDataBalloonPaymentsOpenFinanceBrazil'
+        installments_contract_term_frequency:
+          $ref: '#/components/schemas/EnumAccountsLoanDataContractInstallmentFrequency'
+        installment_frequency:
+          $ref: '#/components/schemas/EnumAccountLoanDataInstallmentFrequency'
+        installment_frequency_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: ^[\w\W\s]{0,99}$$
+          description: 'Additional information regarding the `installment_frequency`.
+
+            '
+          example: Both the term and requency are the same.
+        first_installment_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date when the first installment of the loan is to be paid, in `YYYY-MM-DD` format.
+
+            '
+          example: '2020-03-01'
+        number_of_installments_total:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 999999999
+          description: 'The total number of installments required to pay the loan.
+
+            '
+          example: 60
+        number_of_installments_outstanding:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 999999999
+          description: 'The number of installments left to pay.
+
+            '
+          example: 48
+        number_of_installments_paid:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 999999999
+          description: 'The number of installments already paid.
+
+            '
+          example: 32
+        number_of_installments_past_due:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 999
+          description: 'The number of installments that are overdue.
+
+            '
+          example: 2
+        disbursement_dates:
+          type:
+          - array
+          - 'null'
+          minItems: 1
+          description: 'An array of dates when the loan was disbursed.
+
+            '
+          items:
+            type:
+            - string
+            - 'null'
+            maxLength: 10
+            pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+            description: 'The date that the loan was disbursed, in `YYYY-MM-DD` format.
+
+              '
+            example: '2021-09-23'
+        settlement_date:
+          type:
+          - string
+          - 'null'
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date that the loan was settled, in `YYYY-MM-DD` format.
+
+            '
+          example: '2021-09-23'
+        contract_start_date:
+          type: string
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date when the loan contract was signed, in `YYYY-MM-DD` format.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '2020-03-01'
+        contract_end_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          maxLength: 10
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date when the loan is expected to be completed, in `YYYY-MM-DD` format.
+
+            '
+          example: '2027-10-01'
+        contract_remaining_frequency:
+          $ref: '#/components/schemas/EnumAccountLoanDataContractRemainingFrequency'
+        contract_remaining_total:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 999999999
+          description: 'The total number of installments remaining on the loan.
+
+            '
+          example: 20
+        amortization_schedule:
+          type: string
+          description: 'The loan amortization schedule.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: SEM_SISTEMA_AMORTIZACAO
+        amortization_schedule_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+          pattern: '[\w\W\s]*'
+          description: 'Additional information regarding the `amortization_schedule`.
+
+            '
+          example: No need for a schedule.
+        consignee_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 14
+          pattern: ^\d{14}$
+          description: 'The ID of the consignee of the loan.
+
+            '
+          example: '60500998000135'
+        contract_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 100
+          pattern: ^\d{1,100}$
+          description: 'The contract number of the loan, as given by the institution.
+
+            '
+          example: '1324926521496'
+        monthly_payment:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        principal:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        payment_day:
+          type:
+          - string
+          - 'null'
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        outstanding_principal:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        credit_limit:
+          type:
+          - number
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        last_period_balance:
+          type:
+          - number
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        interest_rate:
+          type:
+          - number
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        limit_day:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        cutting_day:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        cutting_date:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        no_interest_payment:
+          type:
+          - number
+          - 'null'
+          deprecated: true
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+    AccountLoanDataInterestRateOpenFinanceBrazil:
+      type: object
+      required:
+      - name
+      - type
+      - value
+      - interest_rate_data
+      description: 'Breakdown of the interest applied to the loan. With OF Brazil, we highly recommend using the `interest_rate_data` object for in-depth information.
+
+
+        > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+        '
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: 'The name of the type of interest rate applied to the loan.
+
+
+            **Note:** For OFDA Brazil, we recommend you use the `interest_rate_data.tax_type` parameter.
+
+            '
+          example: NOMINAL
+        type:
+          $ref: '#/components/schemas/EnumAccountLoanDataInterestRateType'
+        value:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The interest rate (in percent or currency value).
+
+
+            **Note:** For OFDA Brazil, we recommend you use the `interest_rate_data.pre_fixed_rate` and `interest_rate_data.post_fixed_rate`parameter.
+
+            '
+          example: 7.85
+        interest_rate_data:
+          $ref: '#/components/schemas/AccountLoanDataInterestRateDataOpenFinanceBrazil'
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumCreditCardLimitType:
+      type: string
+      enum:
+      - TOTAL_LIMIT
+      - MODAL_LIMIT
+      description: "The type of limit. We return one of the following values:\n\n  - `TOTAL_LIMIT`\n  - `MODAL_LIMIT`\n\n  > **Non-nullable:** A value must be returned by Brazil's open finance network.\n"
+      example: TOTAL_LIMIT
+    InstitutionAccount:
+      type: object
+      description: Details regarding the institution.
+      properties:
+        name:
+          type: string
+          example: erebor_mx_retail
+          description: The name of the institution, as designated by Belvo.
+        type:
+          $ref: '#/components/schemas/EnumInstitutionType'
+    AccountOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      title: Account Object (OFDA Brazil)
+      x-tags:
+      - Accounts
+      description: 'Details regarding the account.
+
+        '
+      required:
+      - id
+      - link
+      - institution
+      - collected_at
+      - created_at
+      - last_accessed_at
+      - category
+      - balance_type
+      - type
+      - subtype
+      - name
+      - number
+      - agency
+      - check_digit
+      - balance
+      - currency
+      - public_identification_name
+      - public_identification_value
+      - internal_identification
+      - credit_data
+      - loan_data
+      - funds_data
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        link:
+          $ref: '#/components/schemas/link'
+        institution:
+          $ref: '#/components/schemas/InstitutionAccount'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        last_accessed_at:
+          $ref: '#/components/schemas/last_accessed_at'
+        category:
+          $ref: '#/components/schemas/EnumAccountCategoryOpenFinance'
+        balance_type:
+          type:
+          - string
+          - 'null'
+          description: 'Indicates whether this account is either an `ASSET` or a `LIABILITY`. You can consider the balance of an `ASSET` as being positive, while the balance of a `LIABILITY` as negative.
+
+            '
+          example: ASSET
+        overdraft:
+          $ref: '#/components/schemas/AccountOverdraftOpenFinanceBrazil'
+        type:
+          type: string
+          description: 'The account type, as designated by the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: STANDARD_NACIONAL
+        subtype:
+          type: string
+          description: 'The account subtype, as designated by the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: FINANCIAMENTO_HABITACIONAL_SFH
+        name:
+          type:
+          - string
+          - 'null'
+          description: The account name, as given by the institution.
+          example: Cuenta Perfiles- M.N. - MXN-666
+        number:
+          type:
+          - string
+          - 'null'
+          description: 'The account number, as designated by the institution.
+
+            '
+          example: '4057068115181'
+        agency:
+          type:
+          - string
+          - 'null'
+          maxLength: 4
+          pattern: ^\d{1,4}$
+          description: 'The branch code where the product was opened.
+
+            '
+          example: '6272'
+        check_digit:
+          type:
+          - string
+          - 'null'
+          maxLength: 2
+          pattern: '[\w\W\s]*'
+          description: 'The check digit of the product''s number, if applicable.
+
+            '
+          example: '7'
+        balance:
+          $ref: '#/components/schemas/AccountBalanceOpenFinanceBrazil'
+        currency:
+          type: string
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `balances` field is available.
+
+            '
+          example: BRL
+        public_identification_name:
+          type:
+          - string
+          - 'null'
+          description: 'The public name for the type of identification. For 🇧🇷 Brazilian savings and checking accounts, this field will be `AGENCY/ACCOUNT`.
+
+            '
+          example: AGENCY/ACCOUNT
+        public_identification_value:
+          type:
+          - string
+          - 'null'
+          description: 'The value for the `public_identification_name`.
+
+
+            For 🇧🇷 OFDA Brazilian savings and checking accounts, this field will be the agency and bank account number, separated by a slash. For example: `0444/45722-0`.
+
+
+            For 🇧🇷 OFDA Brazilian credit card accounts, we will return a string of concatenated credit card numbers associated with the account. For example: "8763,9076,5522"
+
+            '
+          example: 0444/45722-0
+        internal_identification:
+          type: string
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The institution''s internal identification for the account.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `balances` field is available.
+
+            '
+          example: '92792126019929279212650822221989319252576'
+        credit_data:
+          $ref: '#/components/schemas/AccountCreditDataOpenFinanceBrazil'
+        loan_data:
+          $ref: '#/components/schemas/AccountLoanDataOpenFinanceBrazil'
+        funds_data:
+          type:
+          - string
+          - 'null'
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TransactionLoanDataOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      required:
+      - is_detached
+      - installment_id
+      - fees
+      - charges
+      description: Information regarding the loan transactional data, if applicable.
+      properties:
+        is_detached:
           type: boolean
-          default: true
-    RetrieveTransactionsRequest:
-      allOf:
-      - $ref: '#/components/schemas/RetrieveRequest'
-      - type: object
-        required:
-        - date_from
-        properties:
-          date_from:
-            type: string
-            format: date
-          date_to:
-            type: string
-            format: date
-          account:
-            type: string
-    Pagination:
+          description: 'Boolean to indicate whether or not this loan payment was part of the original payment schedule.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: true
+        installment_id:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The institution''s unique ID for this payment installment.
+
+            '
+          example: WGx0aExYcEJMVm93TFRsZFcyRXRla0V0V2pBdE9Wd3RYWH
+        fees:
+          type: array
+          description: Details regarding the fees associated with this payment. Only applicable when `is_detached` = `true`.
+          items:
+            $ref: '#/components/schemas/TransactionLoanDataFees'
+        charges:
+          type: array
+          minItems: 0
+          description: Details regarding the charges associated with this payment. Only applicable when `is_detached` = `true`.
+          items:
+            $ref: '#/components/schemas/TransactionLoanDataCharges'
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TokenRequiredResponse:
+      type: object
+      description: MFA Token Required
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`token_required`) that allows you to classify and handle the error programmatically.
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#428-token_required" target="_blank">428 token_required errors</a>.
+
+            '
+          example: token_required
+        message:
+          type: string
+          description: "A short description of the error. \nFor `token_required` errors, the description is:\n  \n  - `A MFA token is required by the institution to login`.\n"
+          example: A MFA token is required by the institution to login
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'A 32-character unique ID of the login session (matching a regex pattern of: `[a-f0-9]{32}`).
+
+            '
+          example: 2675b703b9d4451f8d4861a3eee54449
+        expiry:
+          type: integer
+          format: int32
+          description: Session duration time in seconds.
+          example: 9600
+        link:
+          type: string
+          format: uuid
+          description: 'Unique identifier created by Belvo, used to reference the current
+
+            Link.
+
+            '
+          example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        token_generation_data:
+          type: object
+          description: Details on how to generate the token.
+          properties:
+            instructions:
+              type: string
+              description: Instructions for token generation.
+              example: Use this code to generate the token
+            type:
+              type: string
+              description: 'Type of the data to generate the token (QR code, numeric
+
+                challenge).
+
+                '
+              example: numeric
+            value:
+              type: string
+              description: Value to use to generate the token.
+              example: '12345'
+            expects_user_input:
+              type: boolean
+              description: 'Indicates whether the user needs to provide input in order to complete the authentication.
+
+                When set to `false`, your user may need to:
+
+                - confirm the login on another device
+
+                - scan a QR code
+
+                You will still need to make a PATCH call to complete the request.
+
+                '
+              example: true
+              default: true
+    TransactionCounterparty:
+      type:
+      - object
+      - 'null'
+      required:
+      - type
+      - document_number
+      - clearing_code
+      - agency
+      - check_digit
+      - number
+      description: Information regarding the other party of this transaction, if available.
+      properties:
+        type:
+          $ref: '#/components/schemas/EnumTransactionCounterpartyType'
+        document_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 11
+          pattern: ^\d{11}$
+          description: "The document number of the representative.\n\n**Note**: \n\nFor Brazil:\n  - When the `type` is `INDIVIDUAL`, this is the CPF number.\n  - When the `type` is `COMPANY`, this is the CNPJ number.\n"
+          example: '73677831148'
+        clearing_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^\d{3}$
+          description: 'The banking clearing code.
+
+            '
+          example: '001'
+        agency:
+          type:
+          - string
+          - 'null'
+          maxLength: 4
+          pattern: ^\d{1,4}$
+          description: 'The branch code where the account was opened.
+
+            '
+          example: '6272'
+        check_digit:
+          type:
+          - string
+          - 'null'
+          maxLength: 2
+          pattern: '[\w\W\s]*'
+          description: 'The check digit of the account number, if applicable.
+
+            '
+          example: '7'
+        number:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+          pattern: ^\d{8,20}$
+          description: 'The account number of the product.
+
+            '
+          example: '24550245'
+    EnumAccountLoanDataInterestRateDataReferenceIndexType:
+      type: string
+      enum:
+      - WITHOUT_INDEX_TYPE
+      - PRE_FIXED
+      - POST_FIXED
+      - FLOATING
+      - INDEXED_PRICE
+      - RURAL_CREDIT
+      - OTHER_INDEX
+      description: "The reference index rate. We return one of the following values:\n\n  - `WITHOUT_INDEX_TYPE`\n  - `PRE_FIXED`\n  - `POST_FIXED`\n  - `FLOATING`\n  - `INDEXED_PRICE`\n  - `RURAL_CREDIT`\n  - `OTHER_INDEX`\n\n  > **Non-nullable:** A value must be returned by Brazil's open finance network.\n"
+      example: FLOATING
+    EnumTransactionType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - OUTFLOW
+      - INFLOW
+      - null
+      description: 'The direction of the transaction:
+
+        - `INFLOW` indicates money coming into the account.
+
+        - `OUTFLOW` indicates money going out of the account.
+
+        - `null` when no information was present regarding the direction of the transaction.
+
+        '
+      example: INFLOW
+    EnumAccountLoanDataInstallmentFrequency:
+      type: string
+      enum:
+      - IRREGULAR
+      - WEEKLY
+      - FORTNIGHTLY
+      - MONTHLY
+      - BIMONTHLY
+      - QUARTERLY
+      - BIANNUALLY
+      - ANNUALLY
+      - OTHER
+      description: "The frequency that the installments are paid. We return one of the following values:\n\n  - `IRREGULAR`\n  - `WEEKLY`\n  - `FORTNIGHTLY`\n  - `MONTHLY`\n  - `BIMONTHLY`\n  - `QUARTERLY`\n  - `BIANNUALLY`\n  - `ANNUALLY`\n  - `OTHER`\n\n  > **Non-nullable:** A value must be returned by Brazil's open finance network.\n"
+      example: MONTHLY
+    EnumTransactionCreditCardDataFeeType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - ANNUAL_FEE
+      - NATIONAL_WITHDRAWAL
+      - INTERNATIONAL_WITHDRAWAL
+      - EMERGENCY_CREDIT_EVALUATION_FEE
+      - DUPLICATE_ISSUANCE_FEE
+      - PAYMENT_FEE
+      - SMS_FEE
+      - OTHERS
+      - null
+      description: "The fee that can be charged for a card transaction. We return one of the following values:\n\n  - `ANNUAL_FEE`\n  - `NATIONAL_WITHDRAWAL`\n  - `INTERNATIONAL_WITHDRAWAL`\n  - `EMERGENCY_CREDIT_EVALUATION_FEE`\n  - `DUPLICATE_ISSUANCE_FEE`\n  - `PAYMENT_FEE`\n  - `SMS_FEE`\n  - `OTHERS`\n  - `null`\n"
+      example: NATIONAL_WITHDRAWAL
+    link_request:
+      type: string
+      format: uuid
+      description: The `link.id` you want to retrieve information for.
+      example: c81a1dea-6dd6-4999-8b9f-541ee8197058
+    TransactionLoanDataFees:
+      type:
+      - object
+      - 'null'
+      required:
+      - name
+      - code
+      - amount
+      description: Details regarding the fees associated with this payment. Only applicable when `is_detached` = `true`.
+      properties:
+        name:
+          type: string
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'The name of the fee.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network when the `fees` field is present.
+
+            '
+          example: Reavaliação periódica do bem
+        code:
+          type: string
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'The institution''s code for the fee.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network when the `fees` field is present.
+
+            '
+          example: aval_bem
+        amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^-?\d{1,15}\.\d{2,4}$
+          description: 'The amount of the fee.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network when the `fees` field is present.
+
+            '
+          example: 8903.77
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    AccountCreditDataCardsOpenFinanceBrazil:
+      type: object
+      required:
+      - is_multiple
+      - identification_number
+      description: Details regarding all the cards associated with the account.
+      properties:
+        is_multiple:
+          type: boolean
+          description: 'Boolean to indicate if this account has multiple credit cards.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: false
+        identification_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The credit card number.
+
+
+            **Note:** Often, this is just the last four digit of the credit card.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '4453'
+    AccountLoanDataCollateralsOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      description: Details regarding any loan collaterals that the individual or business supplied.
+      required:
+      - type
+      - subtype
+      - currency
+      - amount
+      properties:
+        type:
+          type: string
+          description: 'The type of collateral, as defined by the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `collaterals` field is available.
+
+            '
+          example: OPERACOES_GARANTIDAS_PELO_GOVERNO
+        subtype:
+          type: string
+          description: 'The subtype of the collateral, as defined by the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `collaterals` field is available.
+
+            '
+          example: CCR_CONVENIO_CREDITOS_RECIPROCOS
+        currency:
+          type: string
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `collaterals` field is available.
+
+            '
+          example: BRL
+        amount:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The total amount of the bill.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `collaterals` field is available.
+
+            '
+          example: 45391.89
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnumAccountLoanDataInterestRateDataRateType:
+      type: string
+      enum:
+      - SIMPLE
+      - COMPOUND
+      description: "The type of interest rate. We return one of the following values:\n\n  - `SIMPLE`\n  - `COMPOUND`\n\n  > **Non-nullable:** A value must be returned by Brazil's open finance network.\n"
+      example: SIMPLE
+    AccountCreditDataLimitsOpenFinanceBrazil:
+      type: object
+      description: 'Detailed information regarding the credit limits for the credit cards.
+
+
+        > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+        '
+      required:
+      - identification_number
+      - credit_limit
+      - used_amount
+      - available_amount
+      - is_limit_flexible
+      - type
+      - consolidation_type
+      - line_name
+      - line_name_additional_info
+      properties:
+        identification_number:
+          type:
+          - string
+          - 'null'
+          minLength: 1
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The credit card number.
+
+
+            **Note:** Often, this is just the last four digit of the credit card.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '4453'
+        credit_limit:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The limit of the credit card.
+
+            '
+          example: 1000.04
+        used_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The amount used.
+
+            '
+          example: 400.04
+        available_amount:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The amount still available.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 600
+        is_limit_flexible:
+          type: boolean
+          description: 'Boolean to indicate if the `credit_limit` is flexible.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: false
+        type:
+          $ref: '#/components/schemas/EnumCreditCardLimitType'
+        consolidation_type:
+          type: string
+          description: 'Indicates whether or not the credit limit is consolidated or individual.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: INDIVIDUAL
+        line_name:
+          type:
+          - string
+          - 'null'
+          description: 'The credit limit line name.
+
+            '
+          example: CREDITO_A_VISTA
+        line_name_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+          pattern: '[\w\W\s]*'
+          description: 'Additional information about the line name.
+
+            '
+          example: Informações adicionais e complementares
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    date_to:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date you want to stop getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_to` cannot be greater than today''s date (in other words, no future dates).
+
+        '
+      example: '2020-10-05'
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TransactionOpenFinanceBrazil:
+      type: object
+      title: Transaction Object (Brazil)
+      x-tags:
+      - Transactions
+      required:
+      - id
+      - internal_identification
+      - account
+      - collected_at
+      - created_at
+      - value_date
+      - accounting_date
+      - amount
+      - local_currency_amount
+      - balance
+      - currency
+      - description
+      - observations
+      - merchant
+      - category
+      - subcategory
+      - reference
+      - type
+      - status
+      - credit_card_data
+      - counterparty
+      - loan_data
+      - payment_type
+      - operation_type
+      - operation_type_additional_info
+      - mcc
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        internal_identification:
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The institution''s internal identification for the transaction.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: TXpRMU9UQTROMWhZV2xSU1FUazJSMDl
+        account:
+          $ref: '#/components/schemas/AccountOpenFinanceBrazil'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        value_date:
+          type: string
+          format: date
+          pattern: ^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$
+          description: 'The date when the transaction occurred, in `YYYY-MM-DD` format, in `YYYY-MM-DD` format.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: '2019-10-23'
+        transacted_at:
+          type: string
+          format: date-time
+          pattern: (^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])T(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)\.(?:[0-9]){3}Z$)
+          description: 'The ISO-8601 timestamp of when the transaction occurred (in the UTC timezone).
+
+
+            > **Note:** For transactions that occurred before 31.01.2024, the timestamp may only indicate the day (for example, `2016-01-29T00:00:00.000Z`). However, transactions that occurred after this date must include the date and time (`2024-02-20T12:29:03.374Z`).
+
+
+            > **Institutions not abiding by this format:**
+
+            > Some institutions may not provide the exact time of the transaction. In this case, the timestamp will be set to `00:00:00.000Z`.
+
+            > Belvo has identified the following institutions as not abiding by the regulation and have raised the issue with regulators: Bradesco, Itau, and Sicoob.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network for **credit card and checking account transactions**.
+
+            '
+          example: '2024-02-20T12:29:03.374Z'
+        accounting_date:
+          type:
+          - string
+          - 'null'
+          description: 'The date when the transaction was processed and accounted for by the institution, in `YYYY-MM-DD` format.
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network for **credit card transactions**.'
+          example: '2019-10-23'
+        inferred_accounting_date:
+          type: string
+          format: date
+          description: 'In the case that the transaction occured on a weekend or public holiday, Belvo will infer the date that the transaction is accounted for by the institution. Typically, this is the next business day.
+
+            '
+          example: '2019-10-23'
+        amount:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The transaction amount.
+
+            ℹ️ The amount displayed is always positive as we indicate the direction of the transaction in the `type` parameter.
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 2145.45
+        local_currency_amount:
+          type:
+          - number
+          - 'null'
+          format: float
+          maxLength: 20
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The value of the transaction in the local currency.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network for **credit card transactions**.
+
+            '
+          example: 7623.64
+        balance:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        currency:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The three-letter currency code (ISO-4217).
+
+            '
+          example: BRL
+        description:
+          type:
+          - string
+          - 'null'
+          description: 'The description of transaction provided by the institution. Usually this
+
+            is the text that the end user sees in the online platform.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: SEVEN BUDDHAS RFC:XXXXXXXXXX
+        observations:
+          type:
+          - string
+          - 'null'
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        merchant:
+          $ref: '#/components/schemas/TransactionMerchantData'
+        category:
+          $ref: '#/components/schemas/EnumTransactionCategory'
+        subcategory:
+          $ref: '#/components/schemas/EnumTransactionSubcategory'
+        reference:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          description: '**Note:** This field is not applicable for OF Brazil and will return null.
+
+            '
+          example: null
+        type:
+          $ref: '#/components/schemas/EnumTransactionType'
+        status:
+          $ref: '#/components/schemas/EnumTransactionStatus'
+        credit_card_data:
+          $ref: '#/components/schemas/TransactionCreditCardDataOpenFinanceBrazil'
+        counterparty:
+          $ref: '#/components/schemas/TransactionCounterparty'
+        loan_data:
+          $ref: '#/components/schemas/TransactionLoanDataOpenFinanceBrazil'
+        payment_type:
+          $ref: '#/components/schemas/EnumTransactionPaymentType'
+        operation_type:
+          type: string
+          maxLength: 50
+          pattern: ^[A-Za-z_]{0,50}$
+          description: 'The type of transaction. For example, a PIX payment or a deposit.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network for **non-loan account transactions**.
+
+            '
+          example: TRANSFERENCIA_MESMA_INSTITUICAO
+        operation_type_additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 140
+          pattern: ^\S[\s\S]*$
+          description: 'Additional information regarding the `operation_type`, if applicable.
+
+            '
+          example: Internal transfer.
+        mcc:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          pattern: ^[0-9]{4}$
+          description: 'The four-digit (ISO-18245 compliant) Merchant Category Code (MCC) for the transaction. This field is only applicable for credit card transactions.
+
+            '
+          example: 5137
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
       type: object
       properties:
         count:
           type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
         next:
           type:
           - string
           - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
         previous:
           type:
           - string
           - 'null'
-    Account:
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+    EnumAccountLoanDataContractRemainingFrequency:
+      type:
+      - string
+      - 'null'
+      enum:
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+      - NO_DEADLINE_REMAINING
+      - null
+      description: 'The frequency of the remaining contracted installment payments, as defined when the contract was first signed. We return one of the following:
+
+        - `DAY`
+
+        - `WEEK`
+
+        - `MONTH`
+
+        - `YEAR`
+
+        - `NO_DEADLINE_REMAINING`
+
+        - `null`
+
+        '
+      example: MONTH
+    EnumTransactionCounterpartyType:
+      type:
+      - string
+      - 'null'
+      enum:
+      - INDIVIDUAL
+      - COMPANY
+      - null
+      description: "The transaction counterparty type. We return one of the following values:\n\n  - `INDIVIDUAL`\n  - `COMPANY`\n  - `null`\n"
+      example: INDIVIDUAL
+    InvalidResourcesError:
       type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    save_data:
+      type: boolean
+      default: true
+      description: 'Indicates whether or not to persist the data in Belvo. By default, this is set to `true` and we return a 201 Created response.
+
+
+        When set to `false`, the data won''t be persisted and we return a 200 OK response.
+
+        '
+      example: true
+    EnumTransactionSubcategory:
+      type:
+      - string
+      - 'null'
+      enum:
+      - Electricity & Energy
+      - Rent
+      - Telecommunications
+      - Water
+      - Auto
+      - Credit Card
+      - Instalment
+      - Interest & Charges
+      - Mortgage
+      - Pay Advance
+      - Personal
+      - Adjustments
+      - Bank Fees
+      - Chargeback
+      - Refund
+      - Blocked Balances
+      - Alimony
+      - Alcohol & Tobacco
+      - Bakery & Coffee
+      - Bars & Nightclubs
+      - Convenience Store
+      - Delivery
+      - Groceries
+      - Restaurants
+      - Education
+      - Gyms & Fitness
+      - Hair & Beauty
+      - Health
+      - Home Decor & Appliances
+      - Laundry & Dry Cleaning
+      - Pharmacies
+      - Professional Services
+      - Veterinary Services
+      - Freelance
+      - Interest
+      - Retirement
+      - Salary
+      - Government
+      - Home Insurance
+      - Auto Insurance
+      - Health & Life Insurance
+      - Savings
+      - Fixed income
+      - Equity
+      - Investment Funds
+      - Derivatives
+      - Cryptocurrencies
+      - Apps, Software and Cloud Services
+      - Events, Parks and Museums
+      - Gambling
+      - Gaming
+      - Lottery
+      - Movie & Audio
+      - Books & News
+      - Clothing & Accessories
+      - Department Store
+      - Electronics
+      - E-commerce
+      - Gifts
+      - Office Supplies
+      - Pet Supplies
+      - Auto Tax & Fees
+      - Donation
+      - Government Fees
+      - Income Tax
+      - Real Estate Tax & Fees
+      - Tax Return
+      - Accommodation
+      - Auto Expenses
+      - Auto Rental
+      - Flights
+      - Gas
+      - Mileage Programs
+      - Parking & Tolls
+      - Public Transit
+      - Taxis & Rideshares
+      - Other
+      - null
+      description: "The transaction subcategory.\n\n  > **Get transaction categorization**\n  For clients not using our transaction categorization, we return `null` instead. To enable this feature, just <a href=\"https://belvo.com/contact/?utm_source=documentation\" target=\"_blank\">reach out</a> to us, and we'll get right to it.\n\n\nWe return one of the following enum values:\n\n  - `Electricity & Energy`\n  - `Rent`\n  - `Telecommunications`\n  - `Water`\n  - `Auto`\n  - `Credit Card`\n  - `Instalment`\n  - `Interest & Charges`\n  - `Mortgage`\n  - `Pay Advance`\n  - `Personal`\n  - `Adjustments`\n  - `Bank Fees`\n  - `Chargeback`\n  - `Refund`\n  - `Blocked Balances`\n  - `Alimony`\n  - `Alcohol & Tobacco`\n  - `Bakery & Coffee`\n  - `Bars & Nightclubs`\n  - `Convenience Store`\n  - `Delivery`\n  - `Groceries`\n  - `Restaurants`\n  - `Education`\n  - `Gyms & Fitness`\n  - `Hair & Beauty`\n  - `Health`\n  - `Home Decor & Appliances`\n  - `Laundry & Dry Cleaning`\n  - `Pharmacies`\n  - `Professional Services`\n  - `Veterinary Services`\n  - `Freelance`\n  - `Interest`\n  - `Retirement`\n  - `Salary`\n  - `Government`\n  - `Home Insurance`\n  - `Auto Insurance`\n  - `Health & Life Insurance`\n  - `Savings`\n  - `Fixed income`\n  - `Equity`\n  - `Investment Funds`\n  - `Derivatives`\n  - `Cryptocurrencies`\n  - `Apps, Software and Cloud Services`\n  - `Events, Parks and Museums`\n  - `Gambling`\n  - `Gaming`\n  - `Lottery`\n  - `Movie & Audio`\n  - `Books & News`\n  - `Clothing & Accessories`\n  - `Department Store`\n  - `Electronics`\n  - `E-commerce`\n  - `Gifts`\n  - `Office Supplies`\n  - `Pet Supplies`\n  - `Auto Tax & Fees`\n  - `Donation`\n  - `Government Fees`\n  - `Income Tax`\n  - `Real Estate Tax & Fees`\n  - `Tax Return`\n  - `Accommodation`\n  - `Auto Expenses`\n  - `Auto Rental`\n  - `Flights`\n  - `Gas`\n  - `Mileage Programs`\n  - `Parking & Tolls`\n  - `Public Transit`\n  - `Taxis & Rideshares`\n  - `Other`\n  - `null`\n"
+      example: Freelance
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TransactionCreditCardBill:
+      type:
+      - object
+      - 'null'
+      description: 'Information regarding the bill that this transaction appears on.
+
+        '
       properties:
         id:
           type: string
           format: uuid
-        link:
-          type: string
-          format: uuid
-        institution:
-          type: object
-          properties:
-            name:
-              type: string
-            type:
-              type: string
-        category:
-          type: string
-          example: CHECKING_ACCOUNT
-        type:
-          type: string
-        name:
-          type: string
-        number:
-          type: string
-        currency:
-          type: string
-          example: MXN
-        balance:
-          type: object
-          properties:
-            current:
-              type: number
-            available:
-              type: number
-        created_at:
-          type: string
-          format: date-time
-    PaginatedTransactions:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            items:
-              $ref: '#/components/schemas/Transaction'
-    Transaction:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        account:
-          $ref: '#/components/schemas/Account'
-        amount:
-          type: number
-        currency:
-          type: string
-        description:
-          type: string
-        value_date:
-          type: string
-          format: date
-        accounting_date:
-          type: string
-          format: date
-        type:
-          type: string
-          enum:
-          - INFLOW
-          - OUTFLOW
-        status:
-          type: string
-          enum:
-          - PROCESSED
-          - PENDING
-          - UNCATEGORIZED
-        category:
+          description: 'The unique identifier created by Belvo used to reference the current credit card bill.
+
+
+            > **Note**: This field is only returned for ''closed'' bills (meaning the billing period has ended and the bill has been emitted). If the billing period is still ongoing, we return `null`.
+
+            '
+          example: 8e9d13c2-af41-4a49-b43e-2da012bd1d11
+        internal_identification:
           type:
           - string
           - 'null'
-        merchant:
-          type:
-          - object
-          - 'null'
-          properties:
-            name:
-              type: string
-            logo:
-              type: string
-        created_at:
+          minLength: 1
+          maxLength: 100
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,99}$
+          description: 'The institution''s internal identifier for the bill.
+
+
+            > **Note**: This field is only returned for ''closed'' bills (meaning the billing period has ended and the bill has been emitted). If the billing period is still ongoing, we return `null`.
+
+            '
+          example: '92792126019929279212650822221989319252576'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
           type: string
-          format: date-time
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    AccountOverdraftOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      required:
+      - arranged
+      - used
+      - unarranged
+      properties:
+        arranged:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The agreed upon overdraft limit between the account holder and the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `overdraft` field is available.
+
+            '
+          example: 5000.5
+        used:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The overdraft value used.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `overdraft` field is available.
+
+            '
+          example: 1000.5
+        unarranged:
+          type: number
+          format: float
+          pattern: ^\d{1,15}\.\d{2,4}$
+          description: 'The overdraft used that was not arranged between the account holder and the institution.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network if the `overdraft` field is available.
+
+            '
+          example: 300.1
+    date_from:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date from which you want to start getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_from` cannot be greater than `date_to`.
+
+        '
+      example: '2020-08-05'
+    EnumAccountCreditCardNetwork:
+      type: string
+      enum:
+      - VISA
+      - MASTERCARD
+      - AMERICAN_EXPRESS
+      - DINERS_CLUB
+      - HIPERCARD
+      - BANDEIRA_PROPRIA
+      - CHEQUE_ELETRONICO
+      - ELO
+      - OTHER
+      description: "The credit network that the card is associated with. We return one of the following values:\n\n  - `VISA`\n  - `MASTERCARD`\n  - `AMERICAN_EXPRESS`\n  - `DINERS_CLUB`\n  - `HIPERCARD`\n  - `BANDEIRA_PROPRIA`\n  - `CHEQUE_ELETRONICO`\n  - `ELO`\n  - `OTHER`\n\n  > **Non-nullable:** A value must be returned by Brazil's open finance network.\n"
+      example: MASTERCARD
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    link:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: The `link.id` the data belongs to.
+      example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+    AccountLoanDataInterestRateDataOpenFinanceBrazil:
+      type:
+      - object
+      - 'null'
+      required:
+      - tax_type
+      - rate_type
+      - calculation_base
+      - reference_index_type
+      - reference_index_subtype
+      - reference_index_info
+      - pre_fixed_rate
+      - post_fixed_rate
+      - additional_info
+      description: Detailed information regarding the interest rate.
+      properties:
+        tax_type:
+          $ref: '#/components/schemas/EnumAccountLoanDataInterestRateDataTaxType'
+        rate_type:
+          $ref: '#/components/schemas/EnumAccountLoanDataInterestRateDataRateType'
+        type:
+          $ref: '#/components/schemas/EnumAccountLoanDataInterestRateType'
+        calculation_base:
+          type: string
+          pattern: ^[0-9]{2}\/[0-9]{3}$
+          description: 'The base calculation for the interest rate.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 30/360
+        reference_index_type:
+          $ref: '#/components/schemas/EnumAccountLoanDataInterestRateDataReferenceIndexType'
+        reference_index_subtype:
+          type:
+          - string
+          - 'null'
+          description: 'The subtype of the reference index rate.
+
+            '
+          example: TR_TBF
+        reference_index_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 140
+          pattern: ^[\w\W\s]{0,140}$
+          description: 'Additional information regarding the reference index rate.
+
+            '
+          example: Additional information
+        pre_fixed_rate:
+          type: number
+          format: float
+          pattern: ^[01]\.\d{6}$
+          description: 'The pre-fixed percentage rate of the interest rate.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 0.062
+        post_fixed_rate:
+          type: number
+          format: float
+          pattern: ^[01]\.\d{6}$
+          description: 'The post-fixed percentage rate of the interest rate.
+
+
+            > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+            '
+          example: 0.062
+        additional_info:
+          type:
+          - string
+          - 'null'
+          maxLength: 1200
+          pattern: '[\w\W\s]*'
+          description: 'Additional information regarding the interest rate.
+
+            '
+          example: Additional information
+    EnumAccountCategoryOpenFinance:
+      type:
+      - string
+      - 'null'
+      enum:
+      - ADVANCE_DEPOSIT_ACCOUNT
+      - CHECKING_ACCOUNT
+      - CREDIT_CARD
+      - FINANCING_ACCOUNT
+      - INVESTMENT_ACCOUNT
+      - INVOICE_FINANCING_ACCOUNT
+      - LOAN_ACCOUNT
+      - PENSION_FUND_ACCOUNT
+      - SAVINGS_ACCOUNT
+      - UNCATEGORIZED
+      description: "The type of account.\nWe return one of the following enum values:\n  - `ADVANCE_DEPOSIT_ACCOUNT`\n  - `CHECKING_ACCOUNT`\n  - `CREDIT_CARD`\n  - `FINANCING_ACCOUNT`\n  - `INVESTMENT_ACCOUNT`\n  - `INVOICE_FINANCING_ACCOUNT`\n  - `LOAN_ACCOUNT`\n  - `PENSION_FUND_ACCOUNT`\n  - `SAVINGS_ACCOUNT`\n  - `UNCATEGORIZED`\n"
+      example: CHECKING_ACCOUNT
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+    EnumAccountLoanDataInterestRateType:
+      type: string
+      enum:
+      - MONTHLY
+      - YEARLY
+      description: 'The period that the interest is applied to the loan.
+
+
+        > **Non-nullable:** A value must be returned by Brazil''s open finance network.
+
+        '
+      example: MONTHLY
+  responses:
+    428_token_required_error:
+      description: MFA Token Required
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TokenRequiredResponse'
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+    202_accepted_response:
+      description: Request Accepted (when `X-Belvo-Request-Mode` is `async`)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              request_id:
+                type: string
+                description: The unique ID for this request. We recommend you store this value to later identify which webhook event relates to an asynchronous request.
+                example: b5d0106ac9cc43d5b36199fe831f6bbe
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
   securitySchemes:
     basicAuth:
       type: http
       scheme: basic
-      description: HTTP Basic authentication using your Secret Key ID as the username and your Secret Key Password as the password.
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

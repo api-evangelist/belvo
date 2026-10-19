@@ -1,0 +1,3757 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Risk Insights API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Risk Insights
+paths:
+  /api/risk-insights/:
+    get:
+      tags:
+      - Risk Insights
+      operationId: ListRiskInsights
+      summary: List risk insights
+      description: '## ▶️ Usage
+
+
+        With the List Risk Insights method, you can:
+
+
+        1. List risk insights related to a specific `link.id` (using the `link` query parameter).
+
+        2. Get the details of a specific `risk-insight.id` (using the `id` query parameter).
+
+        3. **[Not Recommended]** List all risk insights related to your Belvo account (without using any query parameters).
+
+
+        ## 📖 Pagination
+
+
+        This method returns a paginated response (default: 100 items per page). You can use the `page_size` query parameter to increase the number of items returned to a maximum of 1000 items. You can use the `page` query parameter to navigate through the results. For more details on how to navigate Belvo''s paginated responses, see our Pagination Tips article.
+
+
+        ## 🔦 Filtering Responses
+
+
+        Please see the query list below for a list of fields that you can filter your responses by. For more information on how to use filters, see our Filtering responses article.'
+      parameters:
+      - $ref: '#/components/parameters/link'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/link__in'
+      - $ref: '#/components/parameters/account'
+      - $ref: '#/components/parameters/account__in'
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/id__in'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of risk insights objects.
+                      items:
+                        $ref: '#/components/schemas/RiskInsights'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    post:
+      tags:
+      - Risk Insights
+      operationId: RetrieveRiskInsights
+      summary: Retrieve risk insights for a link
+      description: 'Request the risk insights for a given link ID.
+
+
+        If you need to know the currency of the account, just do a GET Details to the accounts endpoint (using the ID you receive from the accounts response).'
+      parameters:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - link
+              properties:
+                link:
+                  $ref: '#/components/schemas/link_request'
+                token:
+                  $ref: '#/components/schemas/token'
+                save_data:
+                  $ref: '#/components/schemas/save_data'
+      responses:
+        '200':
+          description: Ok (when save_data=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskInsights'
+        '201':
+          description: Created (when save_data=true)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskInsights'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/risk-insights/{id}/:
+    get:
+      tags:
+      - Risk Insights
+      operationId: DetailRiskInsights
+      summary: Get a risk insight's details
+      description: Get the details of a specific risk insight.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `risk-insights.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RiskInsights'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    delete:
+      tags:
+      - Risk Insights
+      operationId: DestroyRiskInsights
+      summary: Delete a risk insight
+      description: Delete a specific risk insight from your Belvo account.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `risk-insights.id` that you want to delete
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  parameters:
+    omit:
+      name: omit
+      in: query
+      description: Omit certain fields from being returned in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    fields:
+      name: fields
+      in: query
+      description: Return only the specified fields in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    account:
+      name: account
+      in: query
+      description: 'The `account.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding either the `link.id` or the `account.id` filters in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    link:
+      name: link
+      in: query
+      description: 'The `link.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding the `link.id` filter in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    account__in:
+      name: account__in
+      in: query
+      description: Return results only for these `account.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 85b77707-90ef-46fd-9059-5a757f24247a
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    link__in:
+      name: link__in
+      in: query
+      description: Return results only for these `link.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 5722d0ba-69d7-42dc-8ff5-33767b83c5d6
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    id:
+      name: id
+      in: query
+      description: Return information only for this resource `id`.
+      schema:
+        type: string
+        format: uuid
+        example: 24ccab1d-3a86-4136-a6eb-e04bf52b356f
+  schemas:
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RiskInsightsCategoryMetrics:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/EnumTransactionCategory'
+        subcategory:
+          $ref: '#/components/schemas/EnumTransactionSubcategory'
+        net_amount_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The net amount of the transactions for this category in the last three months (calculated as the total incoming - total outgoing transactions for this category).
+          example: 642.76
+        category_inflow_ratio_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The ratio of `net_amount_3m` divided by the sum of all incoming categorized transactions (including the current category) for the same period.
+
+
+            Note: If there are no inflow transactions for the period, this value will return `null`.
+
+            '
+          example: 1
+        trend_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: The net category transaction trend (incoming - outgoing transactions for the category) for the period.
+          example: 0
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    save_data:
+      type: boolean
+      default: true
+      description: 'Indicates whether or not to persist the data in Belvo. By default, this is set to `true` and we return a 201 Created response.
+
+
+        When set to `false`, the data won''t be persisted and we return a 200 OK response.
+
+        '
+      example: true
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RiskInsightsCreditCardMetrics:
+      type:
+      - object
+      - 'null'
+      required:
+      - num_accounts
+      - sum_credit_limit
+      - sum_credit_used
+      - credit_card_limit_utilization
+      description: 'Aggregated metrics calculated based on the user''s credit card accounts.
+
+
+        > Credit card metrics illustrate a customer''s credit card habits, revealing how many credit card accounts a customer has, their total credit limit, how much of that limit they''re using, and the rate of their credit card limit utilization.
+
+        '
+      properties:
+        num_accounts:
+          type: integer
+          format: int32
+          minimum: 0
+          description: 'Number of credit cards accounts associated to the user.
+
+            '
+          example: 2
+        sum_credit_limit:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'Sum total of all credit cards'' limits.
+
+            '
+          example: 106560
+        sum_credit_used:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'Sum total of all credit used.
+
+            '
+          example: 101020.14
+        credit_card_limit_utilization:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The percentage of the credit card limit used.
+
+            '
+          example: 0.95
+    EnumTransactionSubcategory:
+      type:
+      - string
+      - 'null'
+      enum:
+      - Electricity & Energy
+      - Rent
+      - Telecommunications
+      - Water
+      - Auto
+      - Credit Card
+      - Instalment
+      - Interest & Charges
+      - Mortgage
+      - Pay Advance
+      - Personal
+      - Adjustments
+      - Bank Fees
+      - Chargeback
+      - Refund
+      - Blocked Balances
+      - Alimony
+      - Alcohol & Tobacco
+      - Bakery & Coffee
+      - Bars & Nightclubs
+      - Convenience Store
+      - Delivery
+      - Groceries
+      - Restaurants
+      - Education
+      - Gyms & Fitness
+      - Hair & Beauty
+      - Health
+      - Home Decor & Appliances
+      - Laundry & Dry Cleaning
+      - Pharmacies
+      - Professional Services
+      - Veterinary Services
+      - Freelance
+      - Interest
+      - Retirement
+      - Salary
+      - Government
+      - Home Insurance
+      - Auto Insurance
+      - Health & Life Insurance
+      - Savings
+      - Fixed income
+      - Equity
+      - Investment Funds
+      - Derivatives
+      - Cryptocurrencies
+      - Apps, Software and Cloud Services
+      - Events, Parks and Museums
+      - Gambling
+      - Gaming
+      - Lottery
+      - Movie & Audio
+      - Books & News
+      - Clothing & Accessories
+      - Department Store
+      - Electronics
+      - E-commerce
+      - Gifts
+      - Office Supplies
+      - Pet Supplies
+      - Auto Tax & Fees
+      - Donation
+      - Government Fees
+      - Income Tax
+      - Real Estate Tax & Fees
+      - Tax Return
+      - Accommodation
+      - Auto Expenses
+      - Auto Rental
+      - Flights
+      - Gas
+      - Mileage Programs
+      - Parking & Tolls
+      - Public Transit
+      - Taxis & Rideshares
+      - Other
+      - null
+      description: "The transaction subcategory.\n\n  > **Get transaction categorization**\n  For clients not using our transaction categorization, we return `null` instead. To enable this feature, just <a href=\"https://belvo.com/contact/?utm_source=documentation\" target=\"_blank\">reach out</a> to us, and we'll get right to it.\n\n\nWe return one of the following enum values:\n\n  - `Electricity & Energy`\n  - `Rent`\n  - `Telecommunications`\n  - `Water`\n  - `Auto`\n  - `Credit Card`\n  - `Instalment`\n  - `Interest & Charges`\n  - `Mortgage`\n  - `Pay Advance`\n  - `Personal`\n  - `Adjustments`\n  - `Bank Fees`\n  - `Chargeback`\n  - `Refund`\n  - `Blocked Balances`\n  - `Alimony`\n  - `Alcohol & Tobacco`\n  - `Bakery & Coffee`\n  - `Bars & Nightclubs`\n  - `Convenience Store`\n  - `Delivery`\n  - `Groceries`\n  - `Restaurants`\n  - `Education`\n  - `Gyms & Fitness`\n  - `Hair & Beauty`\n  - `Health`\n  - `Home Decor & Appliances`\n  - `Laundry & Dry Cleaning`\n  - `Pharmacies`\n  - `Professional Services`\n  - `Veterinary Services`\n  - `Freelance`\n  - `Interest`\n  - `Retirement`\n  - `Salary`\n  - `Government`\n  - `Home Insurance`\n  - `Auto Insurance`\n  - `Health & Life Insurance`\n  - `Savings`\n  - `Fixed income`\n  - `Equity`\n  - `Investment Funds`\n  - `Derivatives`\n  - `Cryptocurrencies`\n  - `Apps, Software and Cloud Services`\n  - `Events, Parks and Museums`\n  - `Gambling`\n  - `Gaming`\n  - `Lottery`\n  - `Movie & Audio`\n  - `Books & News`\n  - `Clothing & Accessories`\n  - `Department Store`\n  - `Electronics`\n  - `E-commerce`\n  - `Gifts`\n  - `Office Supplies`\n  - `Pet Supplies`\n  - `Auto Tax & Fees`\n  - `Donation`\n  - `Government Fees`\n  - `Income Tax`\n  - `Real Estate Tax & Fees`\n  - `Tax Return`\n  - `Accommodation`\n  - `Auto Expenses`\n  - `Auto Rental`\n  - `Flights`\n  - `Gas`\n  - `Mileage Programs`\n  - `Parking & Tolls`\n  - `Public Transit`\n  - `Taxis & Rideshares`\n  - `Other`\n  - `null`\n"
+      example: Freelance
+    EnumTransactionCategory:
+      type:
+      - string
+      - 'null'
+      enum:
+      - Bills & Utilities
+      - Credits & Loans
+      - Deposits
+      - Fees & Charges
+      - Food & Groceries
+      - Home & Life
+      - Income & Payments
+      - Insurance
+      - Investments & Savings
+      - Online Platforms & Leisure
+      - Personal Shopping
+      - Taxes
+      - Transfers
+      - Transport & Travel
+      - Unknown
+      - Withdrawal & ATM
+      - null
+      description: "The name of the transaction category.\n\n> **Get transaction categorization**\nWith transaction categorization, we clean and categorize transactions for you, turning raw data into actionable insights. To enable this feature, just <a href=\"https://belvo.com/contact/?utm_source=documentation\" target=\"_blank\">reach out</a> to us, and we'll get right to it.\n\nWe return one of the following enum values:\n\n  - `Bills & Utilities`\n  - `Credits & Loans`\n  - `Deposits`\n  - `Fees & Charges`\n  - `Food & Groceries`\n  - `Home & Life`\n  - `Income & Payments`\n  - `Insurance`\n  - `Investments & Savings`\n  - `Online Platforms & Leisure`\n  - `Personal Shopping`\n  - `Taxes`\n  - `Transfers`\n  - `Transport & Travel`\n  - `Unknown`*\n  - `Withdrawal & ATM`\n  - `null`\n\n\n  \\* For clients not using our Transaction Categorization product, we return `null` instead.\n"
+      example: Income & Payments
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RiskInsightsLoansMetrics:
+      type:
+      - object
+      - 'null'
+      description: 'Aggregated metrics calculated based on the user''s loan accounts and checking accounts that have an overdraft.
+
+
+        > Loan metrics help in understanding a customer''s borrowing and repayment behavior, which can help in assessing their ability to take on additional credit and potential default risks.
+
+        '
+      required:
+      - num_accounts
+      - sum_loans_principal
+      - sum_loans_outstanding_principal
+      - sum_loans_monthly_payment
+      - loan_limit_utilization
+      - overdraft_limit
+      - overdraft_limit_utilization
+      properties:
+        num_accounts:
+          type: integer
+          format: int32
+          description: 'The number of loan accounts associated with the user.
+
+            '
+          example: 1
+        sum_loans_principal:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'Sum total of the principal for all of the user''s loan accounts.
+
+            '
+          example: 5000
+        sum_loans_outstanding_principal:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'Sum total of the outstanding principal for all the user''s loan accounts.
+
+            '
+          example: 2000
+        sum_loans_monthly_payment:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'Sum total of the monthly payments for all the user''s loan accounts.
+
+            '
+          example: 400
+        loan_limit_utilization:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The percentage of the loan limit used.
+
+            '
+          example: 0.3
+        overdraft_limit:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total overdraft limit of all checking and savings accounts.
+
+            '
+          example: 900
+        overdraft_limit_utilization:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The percentage of the overdraft limit used.
+
+            '
+          example: 0.4
+    TokenRequiredResponse:
+      type: object
+      description: MFA Token Required
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`token_required`) that allows you to classify and handle the error programmatically.
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#428-token_required" target="_blank">428 token_required errors</a>.
+
+            '
+          example: token_required
+        message:
+          type: string
+          description: "A short description of the error. \nFor `token_required` errors, the description is:\n  \n  - `A MFA token is required by the institution to login`.\n"
+          example: A MFA token is required by the institution to login
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'A 32-character unique ID of the login session (matching a regex pattern of: `[a-f0-9]{32}`).
+
+            '
+          example: 2675b703b9d4451f8d4861a3eee54449
+        expiry:
+          type: integer
+          format: int32
+          description: Session duration time in seconds.
+          example: 9600
+        link:
+          type: string
+          format: uuid
+          description: 'Unique identifier created by Belvo, used to reference the current
+
+            Link.
+
+            '
+          example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        token_generation_data:
+          type: object
+          description: Details on how to generate the token.
+          properties:
+            instructions:
+              type: string
+              description: Instructions for token generation.
+              example: Use this code to generate the token
+            type:
+              type: string
+              description: 'Type of the data to generate the token (QR code, numeric
+
+                challenge).
+
+                '
+              example: numeric
+            value:
+              type: string
+              description: Value to use to generate the token.
+              example: '12345'
+            expects_user_input:
+              type: boolean
+              description: 'Indicates whether the user needs to provide input in order to complete the authentication.
+
+                When set to `false`, your user may need to:
+
+                - confirm the login on another device
+
+                - scan a QR code
+
+                You will still need to make a PATCH call to complete the request.
+
+                '
+              example: true
+              default: true
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RiskInsights:
+      type: object
+      title: Risk Insights Object
+      x-tags:
+      - Risk Insights
+      required:
+      - id
+      - link
+      - created_at
+      - accounts
+      - assets_metrics
+      - transactions_metrics
+      - balances_metrics
+      - cashflow_metrics
+      - credit_cards_metrics
+      - loans_metrics
+      - category_metrics
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        link:
+          $ref: '#/components/schemas/link'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        accounts:
+          type:
+          - array
+          - 'null'
+          description: An array of Belvo-generated account numbers (UUIDs) that were used during the risk insights analysis. If no accounts were found, we return an empty array.
+          items:
+            type: string
+            format: uuid
+            description: The Belvo-generated ID for the account.
+            example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+          example:
+          - 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+          - 00293c8e-1152-440b-9892-3c071fb88672
+          - cf638fba-ef45-4c10-bc6f-adecc4b2bf4e
+          - 3861a5da-ae9b-4f20-a632-a9294489d5ac
+          - 1f60315b-236d-498e-be7a-92bc613d329b
+          - a2c8da63-ed51-41e6-891a-4ae7e784463a
+        assets_metrics:
+          $ref: '#/components/schemas/RiskInsightsAssetMetrics'
+        credit_cards_metrics:
+          $ref: '#/components/schemas/RiskInsightsCreditCardMetrics'
+        loans_metrics:
+          $ref: '#/components/schemas/RiskInsightsLoansMetrics'
+        balances_metrics:
+          $ref: '#/components/schemas/RiskInsightsBalanceMetrics'
+        transactions_metrics:
+          $ref: '#/components/schemas/RiskInsightsTransactionMetrics'
+        cashflow_metrics:
+          $ref: '#/components/schemas/RiskInsightsCashflowMetrics'
+        category_metrics:
+          type: array
+          description: 'An array of aggregate metrics regarding the transaction categories and subcategories that Belvo has identified within the user''s transaction history.
+
+
+            In the array, Belvo only returns categories that have been identified.
+
+            '
+          items:
+            $ref: '#/components/schemas/RiskInsightsCategoryMetrics'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RiskInsightsAssetMetrics:
+      type:
+      - object
+      - 'null'
+      description: 'Aggregate details regarding the assets used in the risk insight analysis. For asset metrics, we only consider checking and savings accounts.
+
+
+
+        > Asset metrics can provide a snapshot of your user''s wealth and liquid assets, indicating how they manage their wealth and their current financial status.
+
+        '
+      required:
+      - institutions
+      - num_accounts
+      - num_checking_accounts
+      - num_savings_accounts
+      - checking_accounts_balance
+      - savings_accounts_balance
+      properties:
+        institutions:
+          type:
+          - array
+          - 'null'
+          description: "An array of institutions from which account information was retrieved for the user. \n\n> **Note**: For most use cases, this array will only return one item.\n"
+          items:
+            type: string
+            description: The name of the institution
+            example: erebor_mx_retail
+          example:
+          - erebor_mx_retail
+        num_assets_accounts:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The total number of accounts found for the user.
+
+            '
+          example: 1
+        num_checking_accounts:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The total number of checking accounts found for the user.
+
+            '
+          example: 1
+        num_savings_accounts:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The total number of savings accounts found for the user.
+
+            '
+          example: 1
+        checking_accounts_balance:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total closing balance of all checking accounts.
+
+            '
+          example: 35901.46
+        savings_accounts_balance:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total closing balance of all savings accounts.
+
+            '
+          example: 300.02
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RiskInsightsTransactionMetrics:
+      type:
+      - object
+      - 'null'
+      description: "Aggregated metrics calculated based on the user's transactions from checking, savings, credit card, and loan accounts.\n\n\n> ℹ️ **Note**\n>\n> If there is not enough transactional data for a given period, we return `null` for calculated fields and `0` for 'count-based' fields. For example, if the account has only been open for five days (or you have provided data just for five days), we return values for `_3d`, `_1w`, and `_1m`, however:\n> \n> - `mean_num_transactions_3m` will return `null` as there is no data for months two and three (calculated field).\n> - `num_transactions_3m` will return `0` as there is no data for months two and three ('count-based' field)\n"
+      required:
+      - num_transactions_3d
+      - num_transactions_1w
+      - num_transactions_1m
+      - num_transactions_3m
+      - num_transactions_6m
+      - num_transactions_12m
+      - max_num_transactions_3d
+      - max_num_transactions_1w
+      - max_num_transactions_1m
+      - max_num_transactions_3m
+      - max_num_transactions_6m
+      - max_num_transactions_12m
+      - mean_num_transactions_3d
+      - mean_num_transactions_1w
+      - mean_num_transactions_1m
+      - mean_num_transactions_3m
+      - mean_num_transactions_6m
+      - mean_num_transactions_12m
+      - num_incoming_transactions_3d
+      - num_incoming_transactions_1w
+      - num_incoming_transactions_1m
+      - num_incoming_transactions_3m
+      - num_incoming_transactions_6m
+      - num_incoming_transactions_12m
+      - max_num_incoming_transactions_3d
+      - max_num_incoming_transactions_1w
+      - max_num_incoming_transactions_1m
+      - max_num_incoming_transactions_3m
+      - max_num_incoming_transactions_6m
+      - max_num_incoming_transactions_12m
+      - mean_num_incoming_transactions_3d
+      - mean_num_incoming_transactions_1w
+      - mean_num_incoming_transactions_1m
+      - mean_num_incoming_transactions_3m
+      - mean_num_incoming_transactions_6m
+      - mean_num_incoming_transactions_12m
+      - sum_incoming_amount_3d
+      - sum_incoming_amount_1w
+      - sum_incoming_amount_1m
+      - sum_incoming_amount_3m
+      - sum_incoming_amount_6m
+      - sum_incoming_amount_12m
+      - max_incoming_amount_3d
+      - max_incoming_amount_1w
+      - max_incoming_amount_1m
+      - max_incoming_amount_3m
+      - max_incoming_amount_6m
+      - max_incoming_amount_12m
+      - mean_incoming_amount_3d
+      - mean_incoming_amount_1w
+      - mean_incoming_amount_1m
+      - mean_incoming_amount_3m
+      - mean_incoming_amount_6m
+      - mean_incoming_amount_12m
+      - num_outgoing_transactions_3d
+      - num_outgoing_transactions_1w
+      - num_outgoing_transactions_1m
+      - num_outgoing_transactions_3m
+      - num_outgoing_transactions_6m
+      - num_outgoing_transactions_12m
+      - max_num_outgoing_transactions_3d
+      - max_num_outgoing_transactions_1w
+      - max_num_outgoing_transactions_1m
+      - max_num_outgoing_transactions_3m
+      - max_num_outgoing_transactions_6m
+      - max_num_outgoing_transactions_12m
+      - mean_num_outgoing_transactions_3d
+      - mean_num_outgoing_transactions_1w
+      - mean_num_outgoing_transactions_1m
+      - mean_num_outgoing_transactions_3m
+      - mean_num_outgoing_transactions_6m
+      - mean_num_outgoing_transactions_12m
+      - sum_outgoing_amount_3d
+      - sum_outgoing_amount_1w
+      - sum_outgoing_amount_1m
+      - sum_outgoing_amount_3m
+      - sum_outgoing_amount_6m
+      - sum_outgoing_amount_12m
+      - max_outgoing_amount_3d
+      - max_outgoing_amount_1w
+      - max_outgoing_amount_1m
+      - max_outgoing_amount_3m
+      - max_outgoing_amount_6m
+      - max_outgoing_amount_12m
+      - mean_outgoing_amount_3d
+      - mean_outgoing_amount_1w
+      - mean_outgoing_amount_1m
+      - mean_outgoing_amount_3m
+      - mean_outgoing_amount_6m
+      - mean_outgoing_amount_12m
+      - days_without_transactions_3d
+      - days_without_transactions_1w
+      - days_without_transactions_1m
+      - days_without_transactions_3m
+      - days_without_transactions_6m
+      - days_without_transactions_12m
+      - days_since_last_transaction
+      - days_since_last_incoming_transaction
+      - days_since_last_outgoing_transaction
+      - days_history
+      properties:
+        num_transactions_3d:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of transactions analyzed to determine the risk insights for the last three days (incoming and outgoing).
+
+            '
+          example: 26
+        num_transactions_1w:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of transactions analyzed to determine the risk insights for the last week (incoming and outgoing).
+
+            '
+          example: 46
+        num_transactions_1m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of transactions analyzed to determine the risk insights for the last month (incoming and outgoing).
+
+            '
+          example: 168
+        num_transactions_3m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of transactions analyzed to determine the risk insights for the last three months (incoming and outgoing).
+
+            '
+          example: 460
+        num_transactions_6m:
+          type: integer
+          format: int32
+          default: 670
+          description: 'The total number of transactions analyzed to determine the risk insights for the last six months (incoming and outgoing).
+
+            '
+          example: 472
+        num_transactions_12m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of transactions analyzed to determine the risk insights for the last twelve months (incoming and outgoing).
+
+            '
+          example: 496
+        max_num_transactions_3d:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of transactions for the last three days.
+
+            '
+          example: 10
+        max_num_transactions_1w:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of transactions for the last week.
+
+            '
+          example: 10
+        max_num_transactions_1m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of transactions for the last month.
+
+            '
+          example: 18
+        max_num_transactions_3m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of transactions for the last three months.
+
+            '
+          example: 18
+        max_num_transactions_6m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of transactions for the last six months.
+
+            '
+          example: 18
+        max_num_transactions_12m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of transactions for the last twelve months.
+
+            '
+          example: 18
+        mean_num_transactions_3d:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of transactions for the last three days.
+
+            '
+          example: 6.5
+        mean_num_transactions_1w:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of transactions for the last week.
+
+            '
+          example: 5.75
+        mean_num_transactions_1m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of transactions for the last month.
+
+            '
+          example: 5.42
+        mean_num_transactions_3m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of transactions for the last three months.
+
+            '
+          example: 5.05
+        mean_num_transactions_6m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of transactions for the last six months.
+
+            '
+          example: 2.61
+        mean_num_transactions_12m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of transactions for the last twelve months.
+
+            '
+          example: 1.37
+        num_incoming_transactions_3d:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of inflow transactions for the last three days.
+
+            '
+          example: 12
+        num_incoming_transactions_1w:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of inflow transactions for the last week.
+
+            '
+          example: 21
+        num_incoming_transactions_1m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of inflow transactions for the last month.
+
+            '
+          example: 80
+        num_incoming_transactions_3m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of inflow transactions for the last three months.
+
+            '
+          example: 229
+        num_incoming_transactions_6m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of inflow transactions for the last six months.
+
+            '
+          example: 238
+        num_incoming_transactions_12m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The total number of inflow transactions for the last twelve months.
+
+            '
+          example: 256
+        max_num_incoming_transactions_3d:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of inflow transactions for the last three days.
+
+            '
+          example: 6
+        max_num_incoming_transactions_1w:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of inflow transactions for the last week.
+
+            '
+          example: 6
+        max_num_incoming_transactions_1m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of inflow transactions for the last month.
+
+            '
+          example: 10
+        max_num_incoming_transactions_3m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of inflow transactions for the last three months.
+
+            '
+          example: 10
+        max_num_incoming_transactions_6m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of inflow transactions for the last six months.
+
+            '
+          example: 10
+        max_num_incoming_transactions_12m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of inflow transactions for the last twelve months.
+
+            '
+          example: 10
+        mean_num_incoming_transactions_3d:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of inflow transactions for the last three days.
+
+            '
+          example: 3
+        mean_num_incoming_transactions_1w:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of inflow transactions for the last week.
+
+            '
+          example: 2.62
+        mean_num_incoming_transactions_1m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of inflow transactions for the last month.
+
+            '
+          example: 2.58
+        mean_num_incoming_transactions_3m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of inflow transactions for the last three months.
+
+            '
+          example: 2.52
+        mean_num_incoming_transactions_6m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of inflow transactions for the last six months.
+
+            '
+          example: 1.31
+        mean_num_incoming_transactions_12m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of inflow transactions for the last twelve months.
+
+            '
+          example: 0.71
+        sum_incoming_amount_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all inflow transactions for the last three days.
+
+            '
+          example: 17142.16
+        sum_incoming_amount_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all inflow transactions for the last week.
+
+            '
+          example: 24825.92
+        sum_incoming_amount_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all inflow transactions for the last month.
+
+            '
+          example: 75993.36
+        sum_incoming_amount_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all inflow transactions for the last three months.
+
+            '
+          example: 198197.28
+        sum_incoming_amount_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all inflow transactions for the last six months.
+
+            '
+          example: 223697.28
+        sum_incoming_amount_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all inflow transactions for the last twelve months.
+
+            '
+          example: 274697.28
+        max_incoming_amount_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value inflow transaction in the last three days.
+
+            '
+          example: 3000
+        max_incoming_amount_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value inflow transaction in the last week.
+
+            '
+          example: 3000
+        max_incoming_amount_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value inflow transaction in the last month.
+
+            '
+          example: 3000
+        max_incoming_amount_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value inflow transaction in the last three months.
+
+            '
+          example: 3000
+        max_incoming_amount_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value inflow transaction in the last six months.
+
+            '
+          example: 3000
+        max_incoming_amount_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value inflow transaction in the last twelve months.
+
+            '
+          example: 3000
+        mean_incoming_amount_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean incoming value of all transactions in the last three days.
+
+            '
+          example: 1428.51
+        mean_incoming_amount_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean incoming value of all transactions in the last week.
+
+            '
+          example: 1182.19
+        mean_incoming_amount_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean incoming value of all transactions in the last month.
+
+            '
+          example: 949.92
+        mean_incoming_amount_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean incoming value of all transactions in the last three months.
+
+            '
+          example: 865.49
+        mean_incoming_amount_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean incoming value of all transactions in the last six months.
+
+            '
+          example: 939.9
+        mean_incoming_amount_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean incoming value of all transactions in the last twelve months.
+
+            '
+          example: 1073.04
+        num_outgoing_transactions_3d:
+          type: integer
+          format: int32
+          default: 0
+          description: 'To total number of outflow transactions in the last three days.
+
+            '
+          example: 14
+        num_outgoing_transactions_1w:
+          type: integer
+          format: int32
+          default: 0
+          description: 'To total number of outflow transactions in the last week.
+
+            '
+          example: 25
+        num_outgoing_transactions_1m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'To total number of outflow transactions in the last month.
+
+            '
+          example: 88
+        num_outgoing_transactions_3m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'To total number of outflow transactions in the last three months.
+
+            '
+          example: 231
+        num_outgoing_transactions_6m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'To total number of outflow transactions in the last six months.
+
+            '
+          example: 234
+        num_outgoing_transactions_12m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'To total number of outflow transactions in the last twelve months.
+
+            '
+          example: 240
+        max_num_outgoing_transactions_3d:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of outflow transactions for the last three days.
+
+            '
+          example: 6
+        max_num_outgoing_transactions_1w:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of outflow transactions for the last week.
+
+            '
+          example: 6
+        max_num_outgoing_transactions_1m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of outflow transactions for the last month.
+
+            '
+          example: 8
+        max_num_outgoing_transactions_3m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of outflow transactions for the last three months.
+
+            '
+          example: 9
+        max_num_outgoing_transactions_6m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of outflow transactions for the last six months.
+
+            '
+          example: 9
+        max_num_outgoing_transactions_12m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The maximum number of outflow transactions for the last twelve months.
+
+            '
+          example: 9
+        mean_num_outgoing_transactions_3d:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of outflow transactions for the last three days.
+
+            '
+          example: 3.5
+        mean_num_outgoing_transactions_1w:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of outflow transactions for the last week.
+
+            '
+          example: 3.12
+        mean_num_outgoing_transactions_1m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of outflow transactions for the last month.
+
+            '
+          example: 2.84
+        mean_num_outgoing_transactions_3m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of outflow transactions for the last three months.
+
+            '
+          example: 2.54
+        mean_num_outgoing_transactions_6m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of outflow transactions for the last six months.
+
+            '
+          example: 1.29
+        mean_num_outgoing_transactions_12m:
+          type: number
+          format: float
+          default: 0
+          description: 'The mean number of outflow transactions for the last twelve months.
+
+            '
+          example: 0.66
+        sum_outgoing_amount_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all outflow transactions for the last three days.
+
+            '
+          example: 18246.95
+        sum_outgoing_amount_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all outflow transactions for the last week.
+
+            '
+          example: 26362.25
+        sum_outgoing_amount_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all outflow transactions for the last month.
+
+            '
+          example: 78243.82
+        sum_outgoing_amount_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all outflow transactions for the last three months.
+
+            '
+          example: 192608.77
+        sum_outgoing_amount_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all outflow transactions for the last six months.
+
+            '
+          example: 201608.77
+        sum_outgoing_amount_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The total sum of all outflow transactions for the last twelve months.
+
+            '
+          example: 219608.77
+        max_outgoing_amount_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value outflow transaction in the last three days.
+
+            '
+          example: 3000
+        max_outgoing_amount_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value outflow transaction in the last week.
+
+            '
+          example: 3000
+        max_outgoing_amount_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value outflow transaction in the last month.
+
+            '
+          example: 3000
+        max_outgoing_amount_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value outflow transaction in the last three months.
+
+            '
+          example: 3000
+        max_outgoing_amount_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value outflow transaction in the last six months.
+
+            '
+          example: 3000
+        max_outgoing_amount_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value outflow transaction in the last twelve months.
+
+            '
+          example: 3000
+        mean_outgoing_amount_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean outgoing value of all transaction in the last three days.
+
+            '
+          example: 1303.35
+        mean_outgoing_amount_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean outgoing value of all transaction in the last week.
+
+            '
+          example: 1054.49
+        mean_outgoing_amount_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean outgoing value of all transaction in the last month.
+
+            '
+          example: 889.13
+        mean_outgoing_amount_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean outgoing value of all transaction in the last three months.
+
+            '
+          example: 833.8
+        mean_outgoing_amount_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean outgoing value of all transaction in the last six months.
+
+            '
+          example: 861.58
+        mean_outgoing_amount_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean outgoing value of all transaction in the last twelve months.
+
+            '
+          example: 915.04
+        days_without_transactions_3d:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days that no transactions occurred within the last three days.
+
+            '
+          example: 0
+        days_without_transactions_1w:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days that no transactions occurred within the last week.
+
+            '
+          example: 0
+        days_without_transactions_1m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days that no transactions occurred within the last month.
+
+            '
+          example: 0
+        days_without_transactions_3m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days that no transactions occurred within the last three months.
+
+            '
+          example: 0
+        days_without_transactions_6m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days that no transactions occurred within the last six months.
+
+            '
+          example: 87
+        days_without_transactions_12m:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days that no transactions occurred within the last twelve months.
+
+            '
+          example: 261
+        days_since_last_transaction:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days since the last transaction occurred.
+
+            '
+          example: 0
+        days_since_last_incoming_transaction:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days since the last inflow transaction occurred.
+
+            '
+          example: 0
+        days_since_last_outgoing_transaction:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days since the last outflow transaction occurred.
+
+            '
+          example: 0
+        days_history:
+          type: integer
+          format: int32
+          default: 0
+          description: 'The number of days between when the risk insight request was made and the first transaction.
+
+            '
+          example: 365
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    link_request:
+      type: string
+      format: uuid
+      description: The `link.id` you want to retrieve information for.
+      example: c81a1dea-6dd6-4999-8b9f-541ee8197058
+    RiskInsightsBalanceMetrics:
+      type:
+      - object
+      - 'null'
+      description: Balance metrics calculated based on the user's balances from checking and savings accounts.
+      required:
+      - closing_balance
+      - min_balance_3d
+      - min_balance_1w
+      - min_balance_1m
+      - min_balance_3m
+      - min_balance_6m
+      - min_balance_12m
+      - mean_balance_3d
+      - mean_balance_1w
+      - mean_balance_1m
+      - mean_balance_3m
+      - mean_balance_6m
+      - mean_balance_12m
+      - max_balance_3d
+      - max_balance_1w
+      - max_balance_1m
+      - max_balance_3m
+      - max_balance_6m
+      - max_balance_12m
+      - std_balance_3d
+      - std_balance_1w
+      - std_balance_1m
+      - std_balance_3m
+      - std_balance_6m
+      - std_balance_12m
+      - balance_trend_3d
+      - balance_trend_1w
+      - balance_trend_1m
+      - balance_trend_3m
+      - balance_trend_6m
+      - balance_trend_12m
+      - days_balance_below_0_3d
+      - days_balance_below_0_1w
+      - days_balance_below_0_1m
+      - days_balance_below_0_3m
+      - days_balance_below_0_6m
+      - days_balance_below_0_12m
+      - days_balance_below_mean_3d
+      - days_balance_below_mean_1w
+      - days_balance_below_mean_1m
+      - days_balance_below_mean_3m
+      - days_balance_below_mean_6m
+      - days_balance_below_mean_12m
+      - days_balance_below_x_3d
+      - days_balance_below_x_1w
+      - days_balance_below_x_1m
+      - days_balance_below_x_3m
+      - days_balance_below_x_6m
+      - days_balance_below_x_12m
+      - balance_threshold_x
+      properties:
+        closing_balance:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance of all the accounts at the `collected_at` time.
+
+            '
+          example: 35901.46
+        min_balance_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The minimum balance in the last three days.
+
+            '
+          example: 35417.68
+        min_balance_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The minimum balance in the last week).
+
+            '
+          example: 34150.5
+        min_balance_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The minimum balance in the last month.
+
+            '
+          example: 33990.59
+        min_balance_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The minimum balance in the last three months.
+
+            '
+          example: 33990.59
+        min_balance_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The minimum balance in the six last months.
+
+            '
+          example: 33990.59
+        min_balance_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The minimum balance in the last twelve months.
+
+            '
+          example: 33990.59
+        mean_balance_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean balance in the last three days.
+
+            '
+          example: 35659.57
+        mean_balance_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean balance in the last week.
+
+            '
+          example: 35077.1
+        mean_balance_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean balance in the last month.
+
+            '
+          example: 34816.08
+        mean_balance_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean balance in the last three months.
+
+            '
+          example: 34816.08
+        mean_balance_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean balance in the last six months.
+
+            '
+          example: 34816.08
+        mean_balance_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean balance in the last twelve months.
+
+            '
+          example: 34816.08
+        max_balance_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The maximum balance in the last three days.
+
+            '
+          example: 35901.46
+        max_balance_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The maximum balance in the last week.
+
+            '
+          example: 35901.46
+        max_balance_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The maximum balance in the last month.
+
+            '
+          example: 35901.46
+        max_balance_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The maximum balance in the last three months.
+
+            '
+          example: 35901.46
+        max_balance_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The maximum balance in the last six months.
+
+            '
+          example: 35901.46
+        max_balance_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The maximum balance in the last twelve months.
+
+            '
+          example: 35901.46
+        std_balance_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance standard deviation in the last three days.
+
+            '
+          example: 279.31
+        std_balance_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance standard deviation in the last week.
+
+            '
+          example: 764.03
+        std_balance_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance standard deviation in the last month.
+
+            '
+          example: 586.55
+        std_balance_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance standard deviation in the last three months.
+
+            '
+          example: 586.55
+        std_balance_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance standard deviation in the last six months.
+
+            '
+          example: 586.55
+        std_balance_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance standard deviation in the last twelve months.
+
+            '
+          example: 586.55
+        balance_trend_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance trend of the user in the last three days.
+
+            '
+          example: 193.51
+        balance_trend_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance trend of the user in the last week.
+
+            '
+          example: 290.18
+        balance_trend_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance trend of the user in the last month.
+
+            '
+          example: 22.6
+        balance_trend_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance trend of the user in the last three months.
+
+            '
+          example: 22.6
+        balance_trend_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance trend of the user in the last six months.
+
+            '
+          example: 22.6
+        balance_trend_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The balance trend of the user in the last twelve months.
+
+            '
+          example: 22.6
+        days_balance_below_0_3d:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to 0 in the last three days.
+
+            '
+          example: 0
+        days_balance_below_0_1w:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to 0 in the last week.
+
+            '
+          example: 0
+        days_balance_below_0_1m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to 0 in the last month.
+
+            '
+          example: 0
+        days_balance_below_0_3m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to 0 in the last three months.
+
+            '
+          example: 0
+        days_balance_below_0_6m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to 0 in the last six months.
+
+            '
+          example: 0
+        days_balance_below_0_12m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to 0 in the last twelve months.
+
+            '
+          example: 0
+        days_balance_below_mean_3d:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the mean balance of the account is less than or equal to the amount specified in `mean_daily_balance_3d`.
+
+            '
+          example: 2
+        days_balance_below_mean_1w:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the mean balance of the account is less than or equal to the amount specified in `mean_daily_balance_1w`.
+
+            '
+          example: 3
+        days_balance_below_mean_1m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the mean balance of the account is less than or equal to the amount specified in `mean_daily_balance_1m`.
+
+            '
+          example: 17
+        days_balance_below_mean_3m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the mean balance of the account is less than or equal to the amount specified in `mean_daily_balance_3m`.
+
+            '
+          example: 17
+        days_balance_below_mean_6m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the mean balance of the account is less than or equal to the amount specified in `mean_daily_balance_6m`.
+
+            '
+          example: 17
+        days_balance_below_mean_12m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the mean balance of the account is less than or equal to the amount specified in `mean_daily_balance_12m`.
+
+            '
+          example: 17
+        days_balance_below_x_3d:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to the amount specified in `balance_threshold_x` in the last three days.
+
+            '
+          example: 0
+        days_balance_below_x_1w:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to the amount specified in `balance_threshold_x` in the last week.
+
+            '
+          example: 0
+        days_balance_below_x_1m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to the amount specified in `balance_threshold_x` in the last month.
+
+            '
+          example: 0
+        days_balance_below_x_3m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to the amount specified in `balance_threshold_x` in the last three months.
+
+            '
+          example: 0
+        days_balance_below_x_6m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to the amount specified in `balance_threshold_x` in the last six months.
+
+            '
+          example: 0
+        days_balance_below_x_12m:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The number of days that the total balance of the account is less than or equal to the amount specified in `balance_threshold_x` in the last twelve months.
+
+            '
+          example: 0
+        balance_threshold_x:
+          type: number
+          format: float
+          description: 'The threshold used to compute `days_balance_below_x_period`. Please note, this is value is country specific (both in terms of the amount and the currency).
+
+            '
+          example: 1000
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    token:
+      type: string
+      description: The MFA token generated by the institution which is required to continue a session.
+      example: 1234ab
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    RiskInsightsCashflowMetrics:
+      type:
+      - object
+      - 'null'
+      description: "Aggregate metrics calculated based on the user's transactions from checking, savings, credit, and loan accounts. However, internal transfers (transfers between accounts belonging to the same link) are not used in the calculation.\n\n{% admonition type=\"info\" %}\n  If there is not enough transactional data for a given period, we return `null`. For example, if the account has only been open for 15 days (or you have only provided data for just 15 days), we return values for `_3d`, `_1w`, and `_1m`, however for `_3m` we will return `null` as there is no data for months two and three.\n{% /admonition %}\n"
+      required:
+      - max_positive_3d
+      - max_positive_1w
+      - max_positive_1m
+      - max_positive_3m
+      - max_positive_6m
+      - max_positive_12m
+      - max_negative_3d
+      - max_negative_1w
+      - max_negative_1m
+      - max_negative_3m
+      - max_negative_6m
+      - max_negative_12m
+      - mean_positive_3d
+      - mean_positive_1w
+      - mean_positive_1m
+      - mean_positive_3m
+      - mean_positive_6m
+      - mean_positive_12m
+      - mean_negative_3d
+      - mean_negative_1w
+      - mean_negative_1m
+      - mean_negative_3m
+      - mean_negative_6m
+      - mean_negative_12m
+      - sum_positive_3d
+      - sum_positive_1w
+      - sum_positive_1m
+      - sum_positive_3m
+      - sum_positive_6m
+      - sum_positive_12m
+      - sum_positive_trend_3d
+      - sum_positive_trend_1w
+      - sum_positive_trend_1m
+      - sum_positive_trend_3m
+      - sum_positive_trend_6m
+      - sum_positive_trend_12m
+      - sum_negative_3d
+      - sum_negative_1w
+      - sum_negative_1m
+      - sum_negative_3m
+      - sum_negative_6m
+      - sum_negative_12m
+      - sum_negative_trend_3d
+      - sum_negative_trend_1w
+      - sum_negative_trend_1m
+      - sum_negative_trend_3m
+      - sum_negative_trend_6m
+      - sum_negative_trend_12m
+      - positive_to_negative_ratio_3d
+      - positive_to_negative_ratio_1w
+      - positive_to_negative_ratio_1m
+      - positive_to_negative_ratio_3m
+      - positive_to_negative_ratio_6m
+      - positive_to_negative_ratio_12m
+      - net_cashflow_3d
+      - net_cashflow_1w
+      - net_cashflow_1m
+      - net_cashflow_3m
+      - net_cashflow_6m
+      - net_cashflow_12m
+      - net_cashflow_trend_3d
+      - net_cashflow_trend_1w
+      - net_cashflow_trend_1m
+      - net_cashflow_trend_3m
+      - net_cashflow_trend_6m
+      - net_cashflow_trend_12m
+      properties:
+        max_positive_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of positive cash flow transactions in the last three days.
+
+            '
+          example: 1850.12
+        max_positive_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of positive cash flow transactions the last week.
+
+            '
+          example: 3808.99
+        max_positive_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of positive cash flow transactions the last month.
+
+            '
+          example: 4012.61
+        max_positive_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of positive cash flow transactions the last three months.
+
+            '
+          example: 5001.08
+        max_positive_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of positive cash flow transactions the last six months.
+
+            '
+          example: 8500
+        max_positive_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of positive cash flow transactions the last twelve months.
+
+            '
+          example: 8500
+        max_negative_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of negative cash flow transactions in the last three days.
+
+            '
+          example: 3375.43
+        max_negative_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of negative cash flow transactions in the last week.
+
+            '
+          example: 3375.43
+        max_negative_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of negative cash flow transactions in the last month.
+
+            '
+          example: 5305.92
+        max_negative_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of negative cash flow transactions in the last three months.
+
+            '
+          example: 7535.85
+        max_negative_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of negative cash flow transactions in the last six months.
+
+            '
+          example: 7535.85
+        max_negative_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The highest value of negative cash flow transactions in the last twelve months.
+
+            '
+          example: 7535.85
+        mean_positive_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the positive cash flow transactions in the last three days.
+
+            '
+          example: 1410.54
+        mean_positive_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the positive cash flow transactions in the last week.
+
+            '
+          example: 1665.74
+        mean_positive_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the positive cash flow transactions in the last month.
+
+            '
+          example: 1827.36
+        mean_positive_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the positive cash flow transactions in the last three months.
+
+            '
+          example: 1881.58
+        mean_positive_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the positive cash flow transactions in the last six months.
+
+            '
+          example: 2102.19
+        mean_positive_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the positive cash flow transactions in the last twelve months.
+
+            '
+          example: 2502.06
+        mean_negative_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the negative cash flow transactions in the last three days.
+
+            '
+          example: 3373.48
+        mean_negative_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the negative cash flow transactions in the last week.
+
+            '
+          example: 2477.04
+        mean_negative_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the negative cash flow transactions in the last month.
+
+            '
+          example: 1904.96
+        mean_negative_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the negative cash flow transactions in the last three months.
+
+            '
+          example: 1838.47
+        mean_negative_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the negative cash flow transactions in the last six months.
+
+            '
+          example: 1877.63
+        mean_negative_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The mean value of the negative cash flow transactions in the last twelve months.
+
+            '
+          example: 1948.51
+        sum_positive_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a positive cash flow in the last three days.
+
+            '
+          example: 5642.16
+        sum_positive_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a positive cash flow in the last week.
+
+            '
+          example: 13325.92
+        sum_positive_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a positive cash flow in the last month.
+
+            '
+          example: 52993.36
+        sum_positive_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a positive cash flow in the last three months.
+
+            '
+          example: 163697.28
+        sum_positive_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a positive cash flow in the last six months.
+
+            '
+          example: 189197.28
+        sum_positive_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a positive cash flow in the last twelve months.
+
+            '
+          example: 240197.28
+        sum_positive_trend_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The positive cash flow trend based on the sum of all positive transactions in the last three days.
+
+            '
+          example: 98.902
+        sum_positive_trend_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The positive cash flow trend based on the sum of all positive transactions in the last week.
+
+            '
+          example: -84.0393
+        sum_positive_trend_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The positive cash flow trend based on the sum of all positive transactions in the last month.
+
+            '
+          example: 22.7315
+        sum_positive_trend_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The positive cash flow trend based on the sum of all positive transactions in the last three months.
+
+            '
+          example: 1.8398
+        sum_positive_trend_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The positive cash flow trend based on the sum of all positive transactions in the last six months.
+
+            '
+          example: -17.1869
+        sum_positive_trend_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The positive cash flow trend based on the sum of all positive transactions in the last twelve months.
+
+            '
+          example: -25.9856
+        sum_negative_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a negative cash flow in the last three days.
+
+            '
+          example: 6746.95
+        sum_negative_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a negative cash flow in the last week.
+
+            '
+          example: 14862.25
+        sum_negative_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a negative cash flow in the last month.
+
+            '
+          example: 55243.82
+        sum_negative_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a negative cash flow in the last three months.
+
+            '
+          example: 158108.77
+        sum_negative_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a negative cash flow in the last six months.
+
+            '
+          example: 167108.77
+        sum_negative_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The sum total of all transactions leading to a negative cash flow in the last twelve months.
+
+            '
+          example: 185108.77
+        sum_negative_trend_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The negative cash flow trend based on the sum of all negative transactions in the last three days.
+
+            '
+          example: -3.91
+        sum_negative_trend_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The negative cash flow trend based on the sum of all negative transactions in the last week.
+
+            '
+          example: 254.2517
+        sum_negative_trend_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The negative cash flow trend based on the sum of all negative transactions in the last month.
+
+            '
+          example: 58.376
+        sum_negative_trend_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The negative cash flow trend based on the sum of all negative transactions in the last three months.
+
+            '
+          example: 2.5895
+        sum_negative_trend_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The negative cash flow trend based on the sum of all negative transactions in the last six months.
+
+            '
+          example: -1.4824
+        sum_negative_trend_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The negative cash flow trend based on the sum of all negative transactions in the last twelve months.
+
+            '
+          example: -4.2394
+        positive_to_negative_ratio_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The ratio between sum_positive / sum_negative  in the last three days.
+
+
+            ℹ️ If the ratio is greater than `1`, it means that the user has more income than outgoing, indicating that they spend less than they earn.
+
+
+            **Note**: In the case that there have been no outgoing transactions, the value will be `null`.
+
+            '
+          example: 0.84
+        positive_to_negative_ratio_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The ratio between sum_positive / sum_negative  in the last week.
+
+
+            ℹ️ If the ratio is greater than `1`, it means that the user has more income than outgoing, indicating that they spend less than they earn.
+
+
+            **Note**: In the case that there have been no outgoing transactions, the value will be `null`.
+
+            '
+          example: 0.9
+        positive_to_negative_ratio_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The ratio between sum_positive / sum_negative  in the last month.
+
+
+            ℹ️ If the ratio is greater than `1`, it means that the user has more income than outgoing, indicating that they spend less than they earn.
+
+
+            **Note**: In the case that there have been no outgoing transactions, the value will be `null`.
+
+            '
+          example: 0.96
+        positive_to_negative_ratio_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The ratio between sum_positive / sum_negative  in the last three months.
+
+
+            ℹ️ If the ratio is greater than `1`, it means that the user has more income than outgoing, indicating that they spend less than they earn.
+
+
+            **Note**: In the case that there have been no outgoing transactions, the value will be `null`.
+
+            '
+          example: 1.04
+        positive_to_negative_ratio_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The ratio between sum_positive / sum_negative  in the last six months.
+
+
+            ℹ️ If the ratio is greater than `1`, it means that the user has more income than outgoing, indicating that they spend less than they earn.
+
+
+            **Note**: In the case that there have been no outgoing transactions, the value will be `null`.
+
+            '
+          example: 1.13
+        positive_to_negative_ratio_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The ratio between sum_positive / sum_negative  in the last twelve months.
+
+
+            ℹ️ If the ratio is greater than `1`, it means that the user has more income than outgoing, indicating that they spend less than they earn.
+
+
+            **Note**: In the case that there have been no outgoing transactions, the value will be `null`.
+
+            '
+          example: 1.3
+        net_cashflow_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow in the last three days.
+
+            '
+          example: -1104.79
+        net_cashflow_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow in the last week.
+
+            '
+          example: -1536.33
+        net_cashflow_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow in the last month.
+
+            '
+          example: -2250.46
+        net_cashflow_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow in the last three months.
+
+            '
+          example: 5588.51
+        net_cashflow_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow in the last six months.
+
+            '
+          example: 22088.51
+        net_cashflow_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow in the last twelve months.
+
+            '
+          example: 55088.51
+        net_cashflow_trend_3d:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow trend in the last three days months.
+
+            '
+          example: 1448.683
+        net_cashflow_trend_1w:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow trend in the last week.
+
+            '
+          example: 163.8856
+        net_cashflow_trend_1m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow trend in the last month.
+
+            '
+          example: 1.3034
+        net_cashflow_trend_3m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow trend in the last three months.
+
+            '
+          example: -0.472
+        net_cashflow_trend_6m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow trend in the last six months.
+
+            '
+          example: -15.1286
+        net_cashflow_trend_12m:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: 'The net cash flow trend in the last twelve months.
+
+            '
+          example: -21.5511
+    link:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: The `link.id` the data belongs to.
+      example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+  responses:
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    428_token_required_error:
+      description: MFA Token Required
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TokenRequiredResponse'
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

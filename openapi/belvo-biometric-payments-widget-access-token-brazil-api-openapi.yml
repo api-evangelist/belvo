@@ -1,0 +1,985 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Biometric payments Widget Access Token…
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Biometric payments Widget Access Token (Brazil)
+  description: Use the Biometric payments widget token request to create an access token for Biometric payments.
+paths:
+  /payments/br/token/:
+    post:
+      tags:
+      - Biometric payments Widget Access Token (Brazil)
+      summary: Generate a payment widget access token
+      operationId: GeneratePaymentWidgetAccessToken
+      description: Generate a payment widget access token for the Biometric payments enrollment or payment process.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BiometricPaymentWidgetRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetToken'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  schemas:
+    WidgetToken:
+      type: object
+      properties:
+        access:
+          type: string
+          description: The access token to be used to authenticate the widget.
+          example: jwt_test_ey..........
+        refresh:
+          type: string
+          description: The refresh token to be used to authenticate the widget.
+          example: jwt_test_ey..........
+    CustomerPaymentWidget:
+      title: Customer CPF
+      type: object
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 11
+          description: 'The customer''s CPF  number.
+
+            '
+          example: '10187609363'
+        name:
+          type: string
+          minLength: 5
+          maxLength: 200
+          description: 'The full name of the customer you want to create or list enrollments for.
+
+            '
+          example: Gustavo Veloso
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    BrandingBiometricWidget:
+      type: object
+      description: Add customized branding elements to the Biometric payments widget.
+      required:
+      - company_name
+      properties:
+        color_scheme:
+          type: string
+          enum:
+          - LIGHT
+          - DARK
+          description: 'The color scheme of the widget. You can choose between `LIGHT` and `DARK`. By default, the widget uses the `LIGHT` color scheme.
+
+
+            > 📘 Customizing the color scheme
+
+            >
+
+            > If you want to further customize the colors for these modes, please see the `theme` parameter.
+
+            '
+          default: LIGHT
+          example: LIGHT
+        company_name:
+          type: string
+          description: 'The name of the company that will be displayed in the widget.
+
+            '
+          example: Acme Inc.
+    CustomerIdPaymentWidget:
+      title: Belvo Customer ID
+      type: string
+      format: uuid
+      description: Belvo's unique ID to reference the customer.
+      example: c860809f-e96d-4d50-9588-f40ffab77302
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    CallbackUrlsBiometricPaymentWidget:
+      type: object
+      description: 'In the `callback_urls` object, you **must** add links to where your user should be redirected to in the following cases:
+
+
+        - success (your user successfully completed the enrollment or payment process)
+
+        - exit (your user exited the widget before they completed the enrollment or payment process)
+
+        '
+      required:
+      - success
+      - exit
+      properties:
+        success:
+          type: string
+          description: The URL your user is redirected to when they successfully complete the enrollment or payment.
+          example: your_deeplink_here://success
+        exit:
+          type: string
+          description: The URL your user is redirected to when they exit the process before completing the enrollment or payment.
+          example: your_deeplink_here://exit
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ThemeBiometricWidget:
+      type: object
+      description: 'Use the `theme` array to add further customization to your chosen color scheme. For details regarding all the possible customizations, please see our dedicated <a href="https://developers.belvo.com/docs/branding-and-customization-biometric-pix-widget" target="_blank">Branding and Customization (Biometric payments widget)</a> guide.
+
+        '
+      required:
+      - css_key
+      - value
+      properties:
+        css_key:
+          type: string
+          description: 'Widget CSS variable name.
+
+            '
+          example: --color-primary-base
+        value:
+          type: string
+          description: The HEX code for the `css_key`.
+          example: '#907AD6'
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    BiometricPaymentWidgetRequest:
+      type: object
+      title: Payment Widget (Biometric payments) Access Token
+      required:
+      - use_cases
+      - widget
+      properties:
+        use_cases:
+          type: array
+          minItems: 1
+          maxItems: 2
+          description: "The use case of the Biometric payments widget. You can choose:\n\n  - `ENROLLMENT`: Use this option to enroll the user's device in the Biometric payments service.\n  - `PAYMENT_INTENT`: Use this option if you want to create a payment for a Biometric payments transaction.\n\n> \U0001F4D8 Using the widget for both enrollment and payments.\n>\n> If you pass both the `ENROLLMENT` and `PAYMENT_INTENT` use cases, the widget will first enroll the user and then create a payment intent.\n"
+          items:
+            type: string
+            enum:
+            - ENROLLMENT
+            - PAYMENT_INTENT
+          example:
+          - ENROLLMENT
+          - PAYMENT_INTENT
+        widget:
+          type: object
+          required:
+          - callback_urls
+          - branding
+          description: 'The `widget` object contains additional information about how to set up the widget, including enrollment details\*, payment information\*, and callback URLs.
+
+
+            > 📘 Conditionally requireed objects
+
+            >
+
+            > The `enrollment` and `payment_intent` objects are conditionally required, based on the `use_cases` you provide. To simplify your integration, we recommend you always pass both use cases (`ENROLLMENT` as well as `PAYMENT_INTENT`), and then pass both the `enrollment` and `payment_intent` objects.
+
+            '
+          properties:
+            enrollment:
+              $ref: '#/components/schemas/EnrollmentBiometricPaymentWidget'
+            payment_intent:
+              $ref: '#/components/schemas/PaymentIntentBiometricWidget'
+            callback_urls:
+              $ref: '#/components/schemas/CallbackUrlsBiometricPaymentWidget'
+            branding:
+              $ref: '#/components/schemas/BrandingBiometricWidget'
+            top_tier_institutions:
+              type: array
+              minItems: 1
+              maxItems: 5
+              uniqueItems: true
+              description: "(Optional) An array of institutions to initially display in the widget (users will still be able to search for other institutions). You can select between 1 to 5 institutions from the available list. The institutions will display in the order you provide them in the array. If you do not pass this parameter, the widget will display all available institutions. \n"
+              items:
+                type: string
+                enum:
+                - nubank_retail
+                - inter_retail
+                - picpay_retail
+                - mercadopago_retail
+                - itau_retail
+                - santander_retail
+                - c6_retail
+                - bradesco_retail
+                - banco_do_brasil_retail
+                - sicredi_retail
+                - btg_retail
+                - caixa_retail
+                - pan_retail
+                - pagseguro_retail
+              example:
+              - nubank_retail
+              - picpay_retail
+              - mercadopago_retail
+              - itau_retail
+            theme:
+              type: array
+              description: 'Use the `theme` array to add further customization to your chosen color scheme. For details regarding all the possible customizations, please see our dedicated <a href="https://developers.belvo.com/docs/branding-and-customization-biometric-pix-widget" target="_blank">Branding and Customization (Biometric payments widget)</a> guide.
+
+                '
+              items:
+                $ref: '#/components/schemas/ThemeBiometricWidget'
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    IndividualRequestBiometricPix:
+      type: object
+      title: INDIVIDUAL
+      description: Details about the payment method used for Biometric payments.
+      required:
+      - open_finance_biometric_pix
+      properties:
+        open_finance_biometric_pix:
+          type: object
+          description: Details regarding the payment method used for Biometric payments by individual customers.
+          required:
+          - beneficiary_bank_account
+          properties:
+            beneficiary_bank_account:
+              type: string
+              format: uuid
+              description: 'Belvo''s unique ID used to identify the beneficiary''s bank account.
+
+                '
+              example: a80d5a9d-20ae-479a-8dd7-ff3443bcbbfc
+            enrollment:
+              type: string
+              format: uuid
+              description: 'The `enrollment.id` for the payment intent.
+
+
+                > 📘 Note
+
+                >
+
+                > If you pass the `enrollment.id` in the request, the widget will skip the "List enrollments" screen and automatically prompt the user for their biometric scan.
+
+                '
+              example: 7dc245e3-5f75-4534-bafa-431fc0893593
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    EnrollmentBiometricPaymentWidget:
+      type: object
+      description: The `enrollment` object contains key information that is required in order to enroll the user's device with their institution or to list the enrollments associated with the user.
+      required:
+      - type
+      - details
+      - metadata
+      properties:
+        type:
+          type: string
+          enum:
+          - open_finance_biometric_pix
+          description: "The type of enrollment. For \U0001F1E7\U0001F1F7 Brazil's OFPI, can be either:\n\n  - `open_finance_biometric_pix`: For biometric payments using the PIX network.\n"
+          example: open_finance_biometric_pix
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        details:
+          type: object
+          required:
+          - customer
+          description: 'The details of the enrollment to be created.
+
+            '
+          properties:
+            name:
+              type: string
+              maxLength: 140
+              description: 'A human-readable name for the device enrollment.
+
+                '
+              example: 600f1b4a-Mobile
+            customer:
+              description: 'The customer you want to create or list enrollments for. You can provide either the Belvo ID or the CPF for the customer.
+
+
+                > 📘 New customers
+
+                >
+
+                > If you provide a CPF for a user that does not exist in Belvo, we will create a new customer with the provided CPF.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/CustomerIdPaymentWidget'
+              - $ref: '#/components/schemas/CustomerPaymentWidget'
+            institution:
+              type: string
+              format: uuid
+              description: '**Optional**: Belvo''s unique ID to reference the payer''s institution.
+
+
+                If you provide the institution ID, the widget will skip the institution selection step.
+
+                '
+              example: 600f1b4a-1ef9-4f89-b341-1a35f0c32cc0
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+    external_id__payments:
+      type: string
+      format: uuid
+      description: "An additional unique identifier for the resource for internal purposes.\n\n{% admonition type=\"success\" name=\"Highly Recommended\" %}\n  We recommend using this field to store your own unique identifier for each resource (customer, bank account, payment intent, or enrollment). This can be useful for tracking the resource in your system and for debugging purposes.\n{% /admonition %}\n"
+      example: 4b8a81a0-e33c-45a6-8567-479efb105f73
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    PaymentIntentBiometricWidget:
+      type: object
+      title: Payment Intent for Biometric payments
+      description: 'Create a payment using Biometric payments in Brazil (OFPI).
+
+        '
+      required:
+      - amount
+      - description
+      - allowed_payment_method_types
+      - payment_method_details
+      - metadata
+      properties:
+        amount:
+          type: string
+          title: string
+          pattern: \d+(?:\.\d{1,2})?
+          example: '1234.12'
+          description: 'Amount to be paid by your customer. For OFPI, you can send through numbers with up to two decimal points, separated by a `.` period. For example: `1234.12`
+
+            '
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        description:
+          type: string
+          description: 'A human-readable description of the payment.
+
+            '
+          example: Shoe payment
+        statement_description:
+          type: string
+          maxLength: 50
+          description: 'A description that will appear on the customer''s bank statement (recommended).
+
+
+
+            > **Note**: If you do not use the `statement_description` parameter, the `description` value will be used as the statement description.
+
+            '
+          example: Super Shoe Store - Brown Sneakers
+        allowed_payment_method_types:
+          type: array
+          description: "A list of payment method types allowed in this payment intent. For \U0001F1E7\U0001F1F7 Brazil's OFPI, can be either:\n\n  - `open_finance`: For regular payments.\n  - `open_finance_biometric_pix`: For biometric payments using the PIX network.\n"
+          minItems: 1
+          maxItems: 1
+          items:
+            type: string
+            enum:
+            - open_finance_biometric_pix
+            description: 'Selected payment method type. For Biometric payments in Brazil, this must be set to `open_finance_biometric_pix`.
+
+              '
+            example: open_finance_biometric_pix
+        payment_method_details:
+          $ref: '#/components/schemas/IndividualRequestBiometricPix'
+        metadata:
+          type: object
+          description: 'Optional and customizable object where you can provide any additional key-value pairs for your internal purposes. For example, an internal reference number.
+
+
+
+            ⚠️ **Note**: You can only provide up to 50 keys (keys can have up to 50 characters each and each value can be up to 500 characters). We do not support nested objects, only ASCII values.
+
+            '
+          example:
+            internal_reference_id: GGq73487w2
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+  responses:
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

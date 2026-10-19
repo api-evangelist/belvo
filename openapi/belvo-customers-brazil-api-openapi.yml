@@ -1,0 +1,984 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Customers (Brazil) API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Customers (Brazil)
+  description: 'A **customer** is the payer that''s going to push funds into your bank account. You need to create a customer in order to receive inflow payments to your organization''s bank account.
+
+
+    {% admonition type="info" name="Resource Versioning" %}
+
+    This endpoint supports resource-level versioning. By including the header `X-Belvo-API-Resource-Version: Payments-BR.V2`, you can access the latest (V2) request and response formats. If the header is not provided, the default (V1) format will be used. See the API documentation for details on the differences between versions.
+
+    {% /admonition %}'
+paths:
+  /payments/br/customers/:
+    post:
+      tags:
+      - Customers (Brazil)
+      operationId: CreateCustomerBrazil
+      summary: Create a new customer
+      description: Create a new customer to send or request funds.
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/CreateCustomerV2'
+              - $ref: '#/components/schemas/CreateCustomerOfpi'
+      responses:
+        '201':
+          description: OK (Created)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/CustomerV2'
+                - $ref: '#/components/schemas/CustomerOfpi'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400_validation_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    get:
+      tags:
+      - Customers (Brazil)
+      operationId: ListCustomersBrazil
+      summary: List all customers
+      description: List all customers associated with your Belvo account.
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/customer__type'
+      - $ref: '#/components/parameters/external_id__payments'
+      - $ref: '#/components/parameters/external_id__in__payments'
+      - $ref: '#/components/parameters/search'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: Array of customer objects.
+                      items:
+                        oneOf:
+                        - $ref: '#/components/schemas/CustomerV2'
+                        - $ref: '#/components/schemas/CustomerOfpi'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /payments/br/customers/{id}/:
+    get:
+      tags:
+      - Customers (Brazil)
+      operationId: DetailCustomerBrazil
+      summary: Get details about a customer
+      description: Get the details about a specific customer
+      parameters:
+      - $ref: '#/components/parameters/header_version'
+      - name: id
+        required: true
+        in: path
+        description: The `customer.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+          example: a3b92311-1888-449f-acaa-49ae28d68fcd
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/CustomerV2'
+                - $ref: '#/components/schemas/CustomerOfpi'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  schemas:
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    CustomerOfpi:
+      type: object
+      title: V1 - Customer
+      required:
+      - id
+      - created_at
+      - created_by
+      - customer_type
+      - name
+      - country
+      - email
+      - identifier
+      - identifier_type
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        created_by:
+          $ref: '#/components/schemas/created_by'
+        customer_type:
+          $ref: '#/components/schemas/EnumCustomerType'
+        name:
+          type:
+          - string
+          - 'null'
+          minLength: 5
+          maxLength: 200
+          description: 'The full name of the customer.
+
+            '
+          example: Gustavo Veloso
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        country:
+          $ref: '#/components/schemas/EnumPaymentsCountry'
+        email:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+          description: 'The customer''s email address.
+
+            '
+          example: gustavo.veloso@musicabrazil.br
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 14
+          description: 'The document number of the customer''s ID (depending on the `identifier_type`).
+
+            '
+          example: 00000000000191
+        identifier_type:
+          $ref: '#/components/schemas/EnumCustomerIdentifierTypeOfpi'
+        address:
+          type:
+          - string
+          - 'null'
+          minLength: 5
+          maxLength: 150
+          description: 'The customers physical address.
+
+            '
+          example: Rua de Gustavo Veloso 432, 70200 Brasilia
+        phone:
+          type:
+          - string
+          - 'null'
+          pattern: \+55\d{11}$
+          description: 'The customer''s phone number.
+
+            '
+          example: '+5511987654321'
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    created_by:
+      type: string
+      format: uuid
+      description: The unique ID for the user that created this item.
+      example: bcef7f35-67f2-4b19-b009-cb38795faf09
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    EnumPaymentsCountry:
+      type:
+      - string
+      - 'null'
+      enum:
+      - BRA
+      - 'null'
+      maxLength: 3
+      description: 'The customer''s country of residence.
+
+        -  BRA (🇧🇷 Brazil)
+
+        '
+      example: BRA
+    400_validation_error:
+      type: object
+      title: Validation Error
+      required:
+      - code
+      - message
+      - request_id
+      description: 'This error occurs when the parameters provided did not match the expected fields or the item you are trying to create is already in our database, leading to a field validation errors.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`null`, `does_not_exist`, `required`, `already_registered`, `invalid_choice`, `max_length`, `min_length`, `blank`, `null`, `cancellation_error`, `idempotency_key_invalid`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: required
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nThe description can be (among others):\n\n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n  - `This customer is already registered`\n  - `Ensure this field has at least 2 characters.`\n  - `Ensure this field has no more than 4 characters.`\n  - `Entered value is not valid.`\n  - `You must set all required fields: username, password, username_type.`\n  - `Payment Intent cannot be canceled because it is not SCHEDULED.`\n  - `Payment Intent cannot be canceled as the cutoff time (23:59:00) has passed.`\n  - `The provided idempotency key is invalid.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+
+            > **Note**: This field is only present when the error is related to a specific field.
+
+            '
+          example: institution
+    EnumCustomerType:
+      type: string
+      enum:
+      - INDIVIDUAL
+      - BUSINESS
+      minLength: 8
+      maxLength: 10
+      description: "The type of customer. Can be either:\n\n  - `INDIVIDUAL`\n  - `BUSINESS` (Brazil OFPI only)\n"
+      example: INDIVIDUAL
+    updated_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was updated in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    CustomerV2:
+      type: object
+      title: V2 - Customer
+      required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - identifier
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        updated_at:
+          $ref: '#/components/schemas/updated_at'
+        name:
+          type: string
+          maxLength: 120
+          pattern: ^([A-Za-zÀ-ÖØ-öø-ÿ,.@:&*+_<>()!?/\\$%\d' -]{0,120})$
+          description: The full name or business name of the customer.
+          example: Frangos Enlatados
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 14
+          pattern: ^(?:[0-9]{11}|[0-9]{14})$
+          description: 'The CPF (11 digits) or CNPJ (14 digits) of the customer.
+
+            '
+          example: '12345678901122'
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    CreateCustomerOfpi:
+      type: object
+      title: V1 - Create Customer
+      description: Create a customer for Payment Initiation
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 14
+          description: 'The customer''s CPF or CNPJ number.
+
+            '
+          example: '10187609363'
+        name:
+          type: string
+          minLength: 5
+          maxLength: 200
+          description: 'The full name of the customer you want to create.
+
+            '
+          example: Gustavo Veloso
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+        email:
+          type: string
+          pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+          description: 'The customer''s email address.
+
+            '
+          example: gustavo.veloso@musicabrazil.br
+        phone:
+          type:
+          - string
+          - 'null'
+          pattern: \+55\d{11}$
+          description: 'The customer''s phone number.
+
+            '
+          example: '+5511987654321'
+        address:
+          type:
+          - string
+          - 'null'
+          description: 'The customer''s physical address.
+
+            '
+          example: Rua de Gustavo Veloso 432, 70200 Brasilia
+    EnumCustomerIdentifierTypeOfpi:
+      type: string
+      enum:
+      - CPF
+      - CNPJ
+      description: 'The customer''s ID document type. For Brazil, this can be either:
+
+
+        - `CPF` (when `customer_type` is `INDIVIDUAL`)
+
+        - `CNPJ` (when `customer_type` is `BUSINESS`)
+
+        '
+      example: CPF
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    external_id__payments:
+      type: string
+      format: uuid
+      description: "An additional unique identifier for the resource for internal purposes.\n\n{% admonition type=\"success\" name=\"Highly Recommended\" %}\n  We recommend using this field to store your own unique identifier for each resource (customer, bank account, payment intent, or enrollment). This can be useful for tracking the resource in your system and for debugging purposes.\n{% /admonition %}\n"
+      example: 4b8a81a0-e33c-45a6-8567-479efb105f73
+    CreateCustomerV2:
+      type: object
+      title: V2 - Create Customer
+      required:
+      - identifier
+      - name
+      properties:
+        identifier:
+          type: string
+          minLength: 11
+          maxLength: 14
+          pattern: ^(?:[0-9]{11}|[0-9]{14})$
+          description: 'The CPF (11 digits) or CNPJ (14 digits) of the customer.
+
+            '
+          example: '12345678901122'
+        name:
+          type: string
+          maxLength: 120
+          pattern: ^([A-Za-zÀ-ÖØ-öø-ÿ,.@:&*+_<>()!?/\\$%\d' -]{0,120})$
+          description: The full name or business name of the customer.
+          example: Frangos Enlatados
+        external_id:
+          $ref: '#/components/schemas/external_id__payments'
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+  parameters:
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    external_id__in__payments:
+      name: external_id__in
+      in: query
+      description: Return objects with these external IDs.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 446bdd9f-5b3e-4c05-9159-7a5c87cfc810
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    external_id__payments:
+      name: external_id
+      in: query
+      description: Return objects with this external ID.
+      schema:
+        type: string
+        format: uuid
+        example: 295ebb46-65b8-47de-85cd-34ffbc327c09
+    search:
+      name: search
+      in: query
+      description: "Return results that match the description you searched for. \n\n**Note:**\n\nThis filter supports both full and partial search queries, with a minimum of three characters required.\n\nFor example, searching for `trai` may match the following values:\n\n  - `Awesome training sneakers` \n  - `Training equipment`\n\nSearching for `car` may match the following values:\n\n        - `Carlos Vives`\n        - `Carmen Domínguez` \n        - `carlos.vives@musicabrazil.br`\n"
+      schema:
+        type: string
+        minLength: 3
+        example: trai
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    header_version:
+      name: X-Belvo-API-Resource-Version
+      in: header
+      description: "Header indicating which version of the Payment API you want to use. Currently this is only applicable for Bank Accounts, Customers, and Payment Authorizations in Brazil. In the case that you are using our Payment Authorizations product, then you **must** send through this header set to `Payments-BR.V2`.\n\n{% admonition type=\"warning\" name=\"Coming Soon\" %}\n  This version is in Coming Soon. As such, minor changes or bugs may occur. If you encounter any issues, please contact your Belvo representative.\n{% /admonition %}\n"
+      schema:
+        type: string
+        enum:
+        - Payments-BR.V2
+        example: Payments-BR.V2
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    customer__type:
+      name: customer__type
+      in: query
+      description: Return results only for this customer type (either `INDIVIDUAL` or `BUSINESS`).
+      schema:
+        type: string
+        enum:
+        - INDIVIDUAL
+        - BUSINESS
+        example: INDIVIDUAL
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+  responses:
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)

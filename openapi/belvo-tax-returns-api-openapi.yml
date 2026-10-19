@@ -1,0 +1,4521 @@
+openapi: 3.2.0
+info:
+  title: Belvo API Docs Tax returns API
+  version: 1.223.0
+  description: '# Introduction
+
+
+    Reach new audiences and convert more users by easily and safely connecting to their financial data, understanding their behavior and enabling instant payments with open finance. Through our API, you can access:
+
+
+    ## Available Information and Payment Methods
+
+
+    Belvo is an open banking API for Latin America that allows companies to access banking and fiscal information in a secure as well as agile way. Through our API, you can access:
+
+
+    - Banking Information in Brazil
+
+    - Employment Information in Brazil
+
+    - Employment Information in Mexico
+
+    - Fiscal Information in Mexico
+
+    - Fiscal Information in Chile
+
+
+    You can also use our API to make payments in:
+
+
+    - Brazil
+
+    - Mexico
+
+
+    ## Data Dictionaries
+
+
+    If you woud like the response documentation in Excel or CSV form, please download them from our public GitHub Reposiitory: Belvo Open Finance Data Dictionaries. Our EXCEL and CSV files are additionally localized into Spanish and Portuguese (Brazil). ## Environments
+
+
+    We currently offer two environments: sandbox and production. ### Sandbox
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - ⚪️ Payment Initiation
+
+
+    Use our Sandbox environment to build your integration. We offer dummy data that mimics that of real-world use cases, which means you can test out all the endpoints, use the widget, and implement webhooks - just as you would with real-world data! All you need to get started with the Sandbox environment is to get your API keys. We really recommend that you start creating your integration in this environment. ### Production
+
+
+    Available for:
+
+
+    - 🟢 Aggregation and Enrichment
+
+    - 🟢 Payment Initiation
+
+
+    After you have tested your integration in the Sandbox environment and are ready to go live, you''ll need to request access to our Production environment. After you request access, our Sales Team will get in contact with you to schedule a meeting just to ensure your needs are met, and then you''ll just need to go through a certification process with one of our engineers to make sure that your integration is running optimally. To prepare for the certification meeting, just follow our Integration checklist. Once your integration is certified, all you''ll need to do is:
+
+
+    - [ ] Request Production API keys (and change your Sandbox API keys in the code to these new ones). - [ ] Change the base URL that you make requests to from `sandbox.belvo.com` to `api.belvo.com`. - [ ] If you''re using webhooks, make sure to set a Production URL for your webhooks. ## Response codes
+
+
+    We use the following HTTP status code in the response depending on the
+
+    success or failure:
+
+
+    | Status Code | Description |
+
+    |-----------|-------|
+
+    | `200` | ✅ **Success** - The content is available in the response body. |
+
+    | `201` | ✅ **Success** - The content was created successfully on Belvo. |
+
+    | `204` | ✅ **Success** - No content to return. |
+
+    | `400` | ❌ **Bad Request Error** - Request returned an error, detail in the content.|
+
+    | `401` | ❌ **Unauthorized** - The Belvo credentials provided are not valid.|
+
+    | `404` | ❌ **Not Found** - The resource you try to access cannot be found.|
+
+    | `405` | ❌ **Method Not Allowed** - The HTTP method you are using is not accepted for this resource.|
+
+    | `408` | ❌ **Request Timeout** - The request timed out and was terminated by the server.|
+
+    | `428` | ❌ **MFA Token Required** - MFA token was required by the institution to connect. |
+
+    | `500` | ❌ **Internal Server Error** - The detail of the error is available in the response body.|
+
+
+    ## Error handling
+
+
+    Belvo API errors are returned in JSON format. For example, an error might look like this:
+
+
+    ```json
+
+    [
+
+    {
+
+    "request_id": "a6e1c493d7a29d91aed4338e6fcf077d",
+
+    "message": "This field is required.",
+
+    "code": "required",
+
+    "field": "link"
+
+    }
+
+    ]
+
+    ```
+
+
+    Typically, an error response will have the following parameters:
+
+
+    - `request_id`: a unique ID for the request, you should share it with the Belvo support team for investigations. - `message`: human-readable description of the error. - `code`: a unique code for the error.'
+  contact:
+    name: Need help?
+    url: https://developers.belvo.com
+    email: support@belvo.com
+  x-logo:
+    url: https://files.readme.io/5111448-belvo-for-developers.svg
+    altText: Belvo Logo
+servers:
+- url: https://sandbox.belvo.com
+  description: Sandbox
+security:
+- basicAuth: []
+tags:
+- name: Tax returns
+paths:
+  /api/tax-returns/:
+    get:
+      tags:
+      - Tax returns
+      operationId: ListTaxReturns
+      summary: List tax returns
+      description: '## ▶️ Usage
+
+
+        With the List Tax Returns method, you can:
+
+
+        1. List tax returns related to a specific `link.id` (using the `link` query parameter).
+
+        2. Get the details of a specific `tax-return.id` (using the `id` query parameter).
+
+        3. **[Not Recommended]** List all tax returns related to your Belvo account (without using any query parameters).
+
+
+        ## 📖 Pagination
+
+
+        This method returns a paginated response (default: 100 items per page). You can use the `page_size` query parameter to increase the number of items returned to a maximum of 1000 items. You can use the `page` query parameter to navigate through the results. For more details on how to navigate Belvo''s paginated responses, see our Pagination Tips article.
+
+
+        ## 🔦 Filtering Responses
+
+
+        Please see the query list below for a list of fields that you can filter your responses by. For more information on how to use filters, see our Filtering responses article.
+
+
+        ## 🔔 Multiple Schemas
+
+
+        As a link can have both yearly and monthly tax returns, the response will include a mix of these two types of tax returns (and thus difference schemas).'
+      parameters:
+      - $ref: '#/components/parameters/link'
+      - $ref: '#/components/parameters/page_size'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/link__in'
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/id__in'
+      - $ref: '#/components/parameters/created_at'
+      - $ref: '#/components/parameters/created_at__gt'
+      - $ref: '#/components/parameters/created_at__gte'
+      - $ref: '#/components/parameters/created_at__lt'
+      - $ref: '#/components/parameters/created_at__lte'
+      - $ref: '#/components/parameters/created_at__range'
+      - $ref: '#/components/parameters/ejercicio'
+      - $ref: '#/components/parameters/ejercicio__lt'
+      - $ref: '#/components/parameters/ejercicio__lte'
+      - $ref: '#/components/parameters/ejercicio__gt'
+      - $ref: '#/components/parameters/ejercicio__gte'
+      - $ref: '#/components/parameters/ejercicio__range'
+      - $ref: '#/components/parameters/tipo_declaracion'
+      - $ref: '#/components/parameters/tipo_declaracion__in'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/common_pagination_properties'
+                - properties:
+                    results:
+                      type: array
+                      description: "An array of:\n\n  - Tax Return Personal (Yearly) objects\n  - Tax Return Personal (Monthly) objects\n  - Tax Return Business (Yearly) objects\n  - Tax Return Business (Monthly) objects\n  \n  > \U0001F6A7 Multiple Schemas\n  >\n  > As a link can have both yearly and monthly tax returns, the response will include a mix of these two types of tax returns (and thus difference schemas).\n"
+                      items:
+                        anyOf:
+                        - $ref: '#/components/schemas/TaxReturnPersonal'
+                        - $ref: '#/components/schemas/TaxReturnPersonalMonthly'
+                        - $ref: '#/components/schemas/TaxReturnBusiness'
+                        - $ref: '#/components/schemas/TaxReturnBusinessMonthly'
+              examples:
+                TaxReturnPersonal:
+                  $ref: '#/components/examples/TaxReturnPersonalListPaginated'
+                TaxReturnPersonalMonthlyPFAE:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPaginatedPFAE'
+                TaxReturnPersonalMonthlyPFAI:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPaginatedPFAI'
+                TaxReturnBusiness:
+                  $ref: '#/components/examples/TaxReturnBusinessListPaginated'
+                TaxReturnBusinessMonthly:
+                  $ref: '#/components/examples/TaxReturnBusinessListMonthlyPaginated'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    post:
+      tags:
+      - Tax returns
+      operationId: RetrieveTaxReturns
+      summary: Retrieve tax returns for a link
+      description: Retrieve tax return information for a specific fiscal link.
+      parameters:
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/TaxReturnsMonthlyRequest'
+              - $ref: '#/components/schemas/TaxReturnsYearlyRequest'
+      responses:
+        '200':
+          description: Ok (when `save_data=false`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/TaxReturnPersonal'
+                  - $ref: '#/components/schemas/TaxReturnPersonalMonthly'
+                  - $ref: '#/components/schemas/TaxReturnBusiness'
+                  - $ref: '#/components/schemas/TaxReturnBusinessMonthly'
+              examples:
+                TaxReturnPersonal:
+                  $ref: '#/components/examples/TaxReturnPersonalList'
+                TaxReturnPersonalMonthlyPFAE:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPFAE'
+                TaxReturnPersonalMonthlyPFAI:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPFAI'
+                TaxReturnBusiness:
+                  $ref: '#/components/examples/TaxReturnBusinessList'
+                TaxReturnBusinessMonthly:
+                  $ref: '#/components/examples/TaxReturnBusinessListMonthly'
+        '201':
+          description: Created (when `save_data=true`)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/TaxReturnPersonal'
+                  - $ref: '#/components/schemas/TaxReturnPersonalMonthly'
+                  - $ref: '#/components/schemas/TaxReturnBusiness'
+                  - $ref: '#/components/schemas/TaxReturnBusinessMonthly'
+              examples:
+                TaxReturnPersonal:
+                  $ref: '#/components/examples/TaxReturnPersonalList'
+                TaxReturnPersonalMonthlyPFAE:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPFAE'
+                TaxReturnPersonalMonthlyPFAI:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPFAI'
+                TaxReturnBusiness:
+                  $ref: '#/components/examples/TaxReturnBusinessList'
+                TaxReturnBusinessMonthly:
+                  $ref: '#/components/examples/TaxReturnBusinessListMonthly'
+        '400':
+          $ref: '#/components/responses/400_bad_request_error'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+  /api/tax-returns/{id}/:
+    get:
+      tags:
+      - Tax returns
+      operationId: DetailTaxReturn
+      summary: Get a tax return's details
+      description: Get the details of a specific tax return.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The `tax-return.id` you want to get detailed information about.
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/omit'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/TaxReturnPersonal'
+                - $ref: '#/components/schemas/TaxReturnPersonalMonthly'
+                - $ref: '#/components/schemas/TaxReturnBusiness'
+                - $ref: '#/components/schemas/TaxReturnBusinessMonthly'
+              examples:
+                TaxReturnPersonal:
+                  $ref: '#/components/examples/TaxReturnPersonalListDetail'
+                TaxReturnPersonalMonthlyPFAE:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPFAEDetail'
+                TaxReturnPersonalMonthlyPFAI:
+                  $ref: '#/components/examples/TaxReturnPersonalListMonthlyPFAIDetail'
+                TaxReturnBusiness:
+                  $ref: '#/components/examples/TaxReturnBusinessListDetail'
+                TaxReturnBusinessMonthly:
+                  $ref: '#/components/examples/TaxReturnBusinessListMonthlyDetail'
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+    delete:
+      tags:
+      - Tax returns
+      operationId: DestroyTaxReturn
+      summary: Delete a tax return
+      description: Delete a specific tax return from your Belvo account.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the tax return you want to delete.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401_unauthorized_error'
+        '403':
+          $ref: '#/components/responses/403_access_denied_error'
+        '404':
+          $ref: '#/components/responses/404_not_found_error'
+        '408':
+          $ref: '#/components/responses/408_request_timeout_error'
+        '428':
+          $ref: '#/components/responses/428_token_required_error'
+        '500':
+          $ref: '#/components/responses/500_unexpected_error'
+components:
+  parameters:
+    omit:
+      name: omit
+      in: query
+      description: Omit certain fields from being returned in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    created_at__lte:
+      name: created_at__lte
+      in: query
+      description: Return items that were last updated in Belvo's database before or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-03-30'
+    link:
+      name: link
+      in: query
+      description: 'The `link.id` you want to filter by.
+
+
+        ℹ️ We highly recommend adding the `link.id` filter in order to improve your performance.
+
+        '
+      schema:
+        type: string
+        format: uuid
+        example: 8848bd0c-9c7e-4f53-a732-ec896b11d4c4
+    ejercicio__lt:
+      name: ejercicio__lt
+      in: query
+      description: Return tax returns for before this year (`YYYY`).
+      schema:
+        type: integer
+        pattern: ^[0-9]{4}$
+        minimum: 1900
+        minLength: 4
+        maxLength: 4
+        example: 2017
+    page_size:
+      name: page_size
+      in: query
+      description: 'Indicates how many results to return per page. By default we return 100 results per page.
+
+
+        ℹ️ The minimum number of results returned per page is 1 and the maximum is 1000. If you enter a value greater than 1000, our API will default to the maximum value (1000).
+
+        '
+      schema:
+        type: integer
+        format: int32
+        default: 100
+        minimum: 1
+        maximum: 1000
+        example: 100
+    id:
+      name: id
+      in: query
+      description: Return information only for this resource `id`.
+      schema:
+        type: string
+        format: uuid
+        example: 24ccab1d-3a86-4136-a6eb-e04bf52b356f
+    ejercicio__lte:
+      name: ejercicio__lte
+      in: query
+      description: Return tax returns for this year and earlier (`YYYY`).
+      schema:
+        type: integer
+        pattern: ^[0-9]{4}$
+        minimum: 1900
+        minLength: 4
+        maxLength: 4
+        example: 2017
+    ejercicio__gt:
+      name: ejercicio__gt
+      in: query
+      description: Return tax returns for after this year (`YYYY`).
+      schema:
+        type: integer
+        pattern: ^[0-9]{4}$
+        minimum: 1900
+        minLength: 4
+        maxLength: 4
+        example: 2017
+    created_at__range:
+      name: created_at__range
+      in: query
+      description: Return accounts that were last updated in Belvo's database between two dates (in `YYYY-MM-DD` format). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: string
+          format: date
+          example: '2022-03-03'
+        example:
+        - '2022-01-01'
+        - '2022-12-31'
+    ejercicio__range:
+      name: ejercicio__range
+      in: query
+      description: Return tax returns for this range of years (`YYYY`). The first value indicates the start of the range and the second value indicates the end of the range.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 2
+        items:
+          type: integer
+          pattern: ^[0-9]{4}$
+          minimum: 1900
+          minLength: 4
+          maxLength: 4
+          example: 2017
+        example:
+        - 2015
+        - 2021
+    ejercicio:
+      name: ejercicio
+      in: query
+      description: Return tax returns for exactly this year (`YYYY`).
+      schema:
+        type: integer
+        pattern: ^[0-9]{4}$
+        minimum: 1900
+        minLength: 4
+        maxLength: 4
+        example: 2017
+    link__in:
+      name: link__in
+      in: query
+      description: Return results only for these `link.id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 5722d0ba-69d7-42dc-8ff5-33767b83c5d6
+    created_at__gte:
+      name: created_at__gte
+      in: query
+      description: Return items that were last updated in Belvo's database after or on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-04'
+    fields:
+      name: fields
+      in: query
+      description: Return only the specified fields in the response. For more information, see our <a href="https://developers.belvo.com/docs/searching-and-filtering" target="_blank">Filtering responses</a> DevPortal article.
+      schema:
+        type: string
+    tipo_declaracion__in:
+      name: tipo_declaracion__in
+      in: query
+      description: Return tax returns with these declaration types.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: Commercial
+    page:
+      name: page
+      in: query
+      description: A page number within the paginated result set.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 1
+    tipo_declaracion:
+      name: tipo_declaracion
+      in: query
+      description: Return tax returns with this declaration type.
+      schema:
+        type: string
+        example: Normal
+    id__in:
+      name: id__in
+      in: query
+      description: Return information for these resource `id`s.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+          example: 6b3dea0f-be29-49d1-aabe-1a6d588642e6
+    created_at__lt:
+      name: created_at__lt
+      in: query
+      description: Return items that were last updated in Belvo's database before this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-04-01'
+    created_at:
+      name: created_at
+      in: query
+      description: Return items that were last updated in Belvo's database on this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+    ejercicio__gte:
+      name: ejercicio__gte
+      in: query
+      description: Return tax returns for this year or later (`YYYY`).
+      schema:
+        type: integer
+        pattern: ^[0-9]{4}$
+        minimum: 1900
+        minLength: 4
+        maxLength: 4
+        example: 2017
+    created_at__gt:
+      name: created_at__gt
+      in: query
+      description: Return items that were last updated in Belvo's database after this date (in `YYYY-MM-DD` format).
+      schema:
+        type: string
+        format: date
+        example: '2022-05-05'
+  schemas:
+    TaxReturnBusiness:
+      type: object
+      additionalProperties: true
+      title: Tax Return Business (Yearly)
+      x-tags:
+      - Tax returns
+      required:
+      - id
+      - collected_at
+      - created_at
+      - informacion_general
+      - datos_adicionales
+      - estado_resultados
+      - estado_posicion_financiera_balance
+      - conciliacion_entre_resultado_contable_fiscal
+      - deducciones_autorizadas
+      - cifras_cierre_ejercicio
+      - determinacion_del_impuesto_sobre_la_renta
+      - dividendos_o_utilidades_distribuidos
+      - detalle_pago_r1_isr_personas_morales
+      - pdf
+      - receipt_pdf
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        informacion_general:
+          type:
+          - object
+          - 'null'
+          description: 'General information regarding the tax return (year, RFC, return type,
+
+            person/company name, and so on).
+
+            '
+        datos_adicionales:
+          type:
+          - object
+          - 'null'
+          description: Additional data regarding the tax return.
+        estado_resultados:
+          type:
+          - object
+          - 'null'
+          description: 'Detailed information about the legal entity''s yearly profit and loss.
+
+
+            > **Note**: For tax returns submitted for the 2022 tax year and later, this field will return null as it is no longer a required field when submitting your tax return.
+
+            '
+        estado_posicion_financiera_balance:
+          type:
+          - object
+          - 'null'
+          description: 'Details regarding balance sheet of the legal entity.
+
+
+            > **Note**: For tax returns submitted for the 2022 tax year and later, this field will return null as it is no longer a required field when submitting your tax return.
+
+            '
+        conciliacion_entre_resultado_contable_fiscal:
+          type:
+          - object
+          - 'null'
+          description: 'Details regarding the accounting reconciliation.
+
+
+            > **Note**: For tax returns submitted for the 2022 tax year and later, this field will return null as it is no longer a required field when submitting your tax return.
+
+            '
+        deducciones_autorizadas:
+          type:
+          - object
+          - 'null'
+          description: Details regarding the legal entity's deductions.
+        cifras_cierre_ejercicio:
+          type:
+          - object
+          - 'null'
+          description: Details regarding key numbers at the end of the fiscal exercise.
+        determinacion_del_impuesto_sobre_la_renta:
+          type:
+          - object
+          - 'null'
+          description: Details regarding the final tax return.
+        dividendos_o_utilidades_distribuidos:
+          type:
+          - object
+          - 'null'
+          description: Details regarding distributed dividends.
+        detalle_pago_r1_isr_personas_morales:
+          type:
+          - object
+          - 'null'
+          description: Details of the tax payment.
+        ingressos:
+          type:
+          - object
+          - 'null'
+          description: '> **Note**: Only applicable for tax return filed on or after 2022. For tax returns filed before 2022, this field will return `null`.
+
+
+            Details regarding the total amounts earned in the fiscal year.
+
+            '
+        determinacion:
+          type:
+          - object
+          - 'null'
+          description: '> **Note**: Only applicable for tax return filed on or after 2022. For tax returns filed before 2022, this field will return `null`.
+
+
+            Details regarding the tax due or tax credit.
+
+            '
+        pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: Tax return PDF as a binary.
+          example: =PDF-STRING=
+        receipt_pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: 'The acknowledgement receipt from the fiscal institution confirming that
+
+            they received the tax return.
+
+            '
+          example: =PDF-STRING=
+    InstitutionUnavailableError:
+      type: object
+      title: Institution Unavailable
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_unavailable`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_unavailable" target="_blank">400 institution_unavailable errors</a>.
+
+            '
+          example: institution_unavailable
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `institution_unavailable` errors, the description is:\n  \n  - `The financial institution is unavailable`.\n"
+          example: The financial institution is unavailable
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidFetchHistorical:
+      type: object
+      title: Invalid Fetch Resources
+      description: 'This error occurs when you attempted to create a link where you set `credentials_storage` to `nostore` and did not send any resources in the `fetch_resources`. For links where we don''t store credentials, you must send through an array of resources in `fetch_resources`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_fetch_resources`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_fetch_resources" target="_blank">400 invalid_fetch_resources errors</a>.
+
+            '
+          example: invalid_fetch_resources
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_fetch_resources` errors, the description can be one of the following:\n\n  - `Single links without stored credentials must fetch resources`\n  \n"
+          example: Single links without stored credentials must fetch resources
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TaxReturnPersonal:
+      type: object
+      additionalProperties: true
+      title: Tax Return Personal (Yearly)
+      x-tags:
+      - Tax returns
+      required:
+      - informacion_general
+      - sueldos_salarios
+      - servicios_profesionales
+      - dividendos
+      - deducciones_personales
+      - retenciones
+      - determinacion_impuesto
+      - pdf
+      - receipt_pdf
+      - collected_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        link:
+          $ref: '#/components/schemas/link'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        informacion_general:
+          type:
+          - object
+          - 'null'
+          description: 'General information on the tax return (year, RFC, return type,
+
+            person/company name, and so on).
+
+            '
+        sueldos_salarios:
+          type:
+          - object
+          - 'null'
+          description: 'Details regarding the income information together combined with withheld
+
+            taxes.
+
+            '
+        servicios_profesionales:
+          type:
+          - object
+          - 'null'
+          description: 'Details regarding the income and tax information from professional
+
+            services provided.
+
+            '
+        deducciones_personales:
+          type:
+          - object
+          - 'null'
+          description: List of all personal tax deductions.
+        determinacion_impuesto:
+          type:
+          - object
+          - 'null'
+          description: Details regarding the final tax return.
+        retenciones:
+          type:
+          - object
+          - 'null'
+          description: Details on the already withheld taxes.
+        dividendos:
+          type:
+          - object
+          - 'null'
+          description: Details regarding dividends.
+        datos_informativos:
+          type:
+          - object
+          - 'null'
+          description: Extra informative data on the tax return.
+        pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: Tax return PDF as a binary.
+          example: =PDF-STRING=
+        receipt_pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: 'The acknowledgement receipt from the fiscal institution confirming that
+
+            they received the tax return.
+
+            '
+          example: =PDF-STRING=
+    request_id:
+      type: string
+      pattern: '[a-f0-9]{32}'
+      description: 'A 32-character unique ID of the request (matching a regex pattern of: `[a-f0-9]{32}`). Provide this ID when contacting the Belvo support team to accelerate investigations.
+
+        '
+      example: 9e7b283c6efa449c9c028a16b5c249fb
+    InstitutionInactiveError:
+      type: object
+      title: Institution Inactive
+      description: 'This error occurs when we (Belvo) have deactivated the institution in our API.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_inactive`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_inactive" target="_blank">400 institution_inactive errors</a>.
+
+            '
+          example: institution_inactive
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_inactive` errors, the description is:\n  \n  - `The institution has been temporarily deactivated`.\n"
+          example: The institution has been temporarily deactivated
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    ConsentWithoutAccountsError:
+      type: object
+      title: Consent Without Accounts
+      description: 'This error occurs when your user has removed accounts associated with the consent they provided. For example, when your user first generated their consent, they had a checking and a loan account at the institution but has closed those accounts since then.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`consent_without_accounts`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-consent_without_accounts" target="_blank">401 consent_without_accounts errors</a>.
+
+            '
+          example: consent_without_accounts
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TooManySessionsError:
+      type: object
+      title: Too Many Sessions
+      description: "This error occurs when:\n\n  - a user is attempting to log in to their institution via Belvo while also already being logged in to their institution on a web browser or mobile app.\n  - you make a request for information while Belvo is scraping data from the institution for that user.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`too_many_sessions`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-too_many_sessions" target="_blank">400 too_many_sessions errors</a>.
+
+            '
+          example: too_many_sessions
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `too_many_sessions` errors, the description is:\n  \n  - `Impossible to login, a session is already opened with the institution for these credentials`.\n"
+          example: Impossible to login, a session is already opened with the institution for these credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    collected_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp when the data point was collected.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    NotFoundError:
+      type: object
+      title: Not Found
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`not_found`) that allows you to classify and handle the error programmatically.
+
+            '
+          example: not_found
+        message:
+          type: string
+          description: "A short description of the error.\n\n\nFor `not_found` errors, the description is:\n\n  - `Not found`\n"
+          example: Not found
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InstitutionDownError:
+      type: object
+      title: Institution Down
+      description: 'This error occurs when the institution''s website that you''re trying to access is down due to maintenance or other issues, which means Belvo is unable to create new links or retrieve new data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`institution_down`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-institution_down" target="_blank">400 institution_down errors</a>.
+
+            '
+          example: institution_down
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `institution_down` errors, the description is:\n  \n  - `The financial institution is down, try again later`.\n"
+          example: The financial institution is down, try again later
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    SessionExpiredError:
+      type: object
+      title: Session Expired
+      description: 'This error occurs when you try to resume a request session that has already expired. This is usually because the user took too long to provide their authentication token.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`session_expired`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-session_expired" target="_blank">400 session_expired errors</a>.
+
+            '
+          example: session_expired
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `session_expired` errors, the description is:\n  \n  - `The session you are trying to resume has expired, please start again from register/retrieve endpoint`.\n"
+          example: The session you are trying to resume has expired, please start again from register/retrieve endpoint
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    attach_pdf:
+      type: boolean
+      default: false
+      description: When set to `true`, you will receive the PDF in binary format in the response.
+      example: true
+    UnauthorizedError:
+      type: object
+      title: Unauthorized Error
+      description: 'This error occurs when you try to make an API call using incorrect Belvo API credentials (either your secret key or secret password, or both, are incorrect).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`authentication_failed`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#401-authentication_failed" target="_blank">401 authentication_failed errors</a>.
+
+            '
+          example: authentication_failed
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `authentication_failed` errors, the description is:\n\n  - `Invalid Secret Keys`.\n"
+          example: Invalid Secret Keys
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TokenRequiredResponse:
+      type: object
+      description: MFA Token Required
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`token_required`) that allows you to classify and handle the error programmatically.
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#428-token_required" target="_blank">428 token_required errors</a>.
+
+            '
+          example: token_required
+        message:
+          type: string
+          description: "A short description of the error. \nFor `token_required` errors, the description is:\n  \n  - `A MFA token is required by the institution to login`.\n"
+          example: A MFA token is required by the institution to login
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        session:
+          type: string
+          pattern: '[a-f0-9]{32}'
+          description: 'A 32-character unique ID of the login session (matching a regex pattern of: `[a-f0-9]{32}`).
+
+            '
+          example: 2675b703b9d4451f8d4861a3eee54449
+        expiry:
+          type: integer
+          format: int32
+          description: Session duration time in seconds.
+          example: 9600
+        link:
+          type: string
+          format: uuid
+          description: 'Unique identifier created by Belvo, used to reference the current
+
+            Link.
+
+            '
+          example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+        token_generation_data:
+          type: object
+          description: Details on how to generate the token.
+          properties:
+            instructions:
+              type: string
+              description: Instructions for token generation.
+              example: Use this code to generate the token
+            type:
+              type: string
+              description: 'Type of the data to generate the token (QR code, numeric
+
+                challenge).
+
+                '
+              example: numeric
+            value:
+              type: string
+              description: Value to use to generate the token.
+              example: '12345'
+            expects_user_input:
+              type: boolean
+              description: 'Indicates whether the user needs to provide input in order to complete the authentication.
+
+                When set to `false`, your user may need to:
+
+                - confirm the login on another device
+
+                - scan a QR code
+
+                You will still need to make a PATCH call to complete the request.
+
+                '
+              example: true
+              default: true
+    TaxReturnsYearlyRequest:
+      type: object
+      title: Yearly Tax Returns
+      description: Request body for yearly tax returns
+      required:
+      - link
+      - type
+      - year_to
+      - year_from
+      properties:
+        link:
+          $ref: '#/components/schemas/link_request'
+        attach_pdf:
+          $ref: '#/components/schemas/attach_pdf'
+        save_data:
+          $ref: '#/components/schemas/save_data'
+        type:
+          type: string
+          default: yearly
+          description: 'The type of tax return to return. For yearly tax returns this must be set to `yearly`.
+
+
+            By default, Belvo returns the yearly (annual) tax returns.
+
+            '
+        year_from:
+          type: string
+          pattern: ^(19|20)\d{2}$
+          description: The starting year you want to get data for, in `YYYY` format.
+          example: '2018'
+        year_to:
+          type: string
+          pattern: ^(19|20)\d{2}$
+          description: The year you want to stop getting data for, in `YYYY` format.
+          example: '2019'
+    link_request:
+      type: string
+      format: uuid
+      description: The `link.id` you want to retrieve information for.
+      example: c81a1dea-6dd6-4999-8b9f-541ee8197058
+    id:
+      type: string
+      format: uuid
+      description: 'Belvo''s unique identifier for the current item.
+
+        '
+      example: 0d3ffb69-f83b-456e-ad8e-208d0998d71d
+    AccessToResourceDenied:
+      type: object
+      title: Access to Belvo API denied
+      description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`access_to_resource_denied`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#403-access_to_resource_denied" target="_blank">403 access_to_resource_denied</a>.
+
+            '
+          example: access_to_resource_denied
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `access_to_resource_denied` errors, the description is:\n  \n  - `You don't have access to this resource.`.\n"
+          example: You don't have access to this resource.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    UnexpectedError:
+      type: object
+      title: Unexpected Error
+      description: 'This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unexpected_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#500-unexpected_error" target="_blank">500 unexpected_error errors</a>.
+
+            '
+          example: unexpected_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unexpected_error` errors, the description is:\n  \n  - `Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution`.\n"
+          example: Belvo is unable to process the request due to an internal system issue or to an unsupported response from an institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidLinkError:
+      type: object
+      title: Invalid Link
+      description: 'This error occurs when you try to access an account but the user credentials are no longer valid, prompting an error from the institution.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_link" target="_blank">400 invalid_link errors</a>.
+
+            '
+          example: invalid_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_link` errors, the description is:\n  \n  - `The link has been invalidated. You may need to update link credentials`.\n"
+          example: The link has been invalidated. You may need to update link credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    date_to:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date you want to stop getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_to` cannot be greater than today''s date (in other words, no future dates).
+
+        '
+      example: '2020-10-05'
+    InvalidCredentialsStorageError:
+      type: object
+      title: Invalid Credentials Storage
+      description: 'This error occurs when you attempted to create a **recurrent** link where you set `credentials_storage` to either `nostore` or to a date range between `1d` to `365d`.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_credentials_storage`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_credentials_storage" target="_blank">400 invalid_credentials_storage errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_credentials_storage` errors, the description can be one of the following:\n\n  - `Recurrent links must store the credentials`\n  \n"
+          example: Recurrent links must store the credentials
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    TaxReturnPersonalMonthly:
+      type: object
+      additionalProperties: true
+      title: Tax Return Personal (Monthly)
+      x-tags:
+      - Tax returns
+      required:
+      - informacion_general
+      - pdf
+      - type
+      - isr
+      - iva
+      - collected_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        informacion_general:
+          type:
+          - object
+          - 'null'
+          description: 'General information regarding the tax return (year, RFC, return type,
+
+            person/company name, and so on).
+
+            '
+        isr:
+          type:
+          - object
+          - 'null'
+          description: 'Information used to calculate the monthly provisional payments of the
+
+            income tax.
+
+            '
+        iva:
+          type:
+          - object
+          - 'null'
+          description: 'Information used to calculate the monthly provisional payments of the VAT
+
+            tax.
+
+            '
+        pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: Tax return PDF as a binary.
+          example: =PDF-STRING=
+        receipt_pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: 'The acknowledgement receipt from the fiscal institution confirming that
+
+            they received the tax return.
+
+            '
+          example: =PDF-STRING=
+        type:
+          type: string
+          description: The type of tax return. Can be either monthly or annual.
+          example: monthly
+    RequestTimeoutError:
+      type: object
+      title: Request Timeout
+      description: 'Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`request_timeout`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#408-request_timeout" target="_blank">408 request_timeout errors</a>.
+
+            '
+          example: request_timeout
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `request_timeout` errors, the description is:\n  \n  - `The request timed out, you can retry asking for less data by changing your query parameters`.\n"
+          example: The request timed out, you can retry asking for less data by changing your query parameters
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    common_pagination_properties:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: The total number of results in your Belvo account.
+          example: 130
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to next page of results. Each page consists of up to 100 items. If there are not enough results for an additional page, the value is `null`.
+
+
+            In our documentation example, we use `{endpoint}` as a placeholder value. In production, this value will be replaced by the actual endpoint you are currently using (for example, `accounts` or `owners`).
+
+            '
+          example: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'The URL to the previous page of results. If there is no previous page, the
+
+            value is `null`.
+
+            '
+          example: null
+    InvalidResourcesError:
+      type: object
+      title: Invalid Resources
+      description: 'This error occurs when you attempted to create a link where you added resources in `fetch_resources` that are unsupported by the institution.
+
+        '
+      properties:
+        field:
+          type: string
+          description: 'The request parameter that is causing the error. For invalid resources, this will be set to `resources`.
+
+            '
+          example: resources
+        code:
+          type: string
+          description: 'A unique error code (`invalid`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid` errors relating to `fetch_resources`, the description is:\n  \n  - `The institution only supports the following resources: (comma-separated list of supported resources)`.\n"
+          example: 'The institution only supports the following resources: EMPLOYMENT_RECORDS, OWNERS'
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    save_data:
+      type: boolean
+      default: true
+      description: 'Indicates whether or not to persist the data in Belvo. By default, this is set to `true` and we return a 201 Created response.
+
+
+        When set to `false`, the data won''t be persisted and we return a 200 OK response.
+
+        '
+      example: true
+    TaxReturnBusinessMonthly:
+      type: object
+      additionalProperties: true
+      title: Tax Return Business (Monthly)
+      x-tags:
+      - Tax returns
+      required:
+      - informacion_general
+      - determinacion_isr
+      - pdf
+      - type
+      - collected_at
+      - detalle_pago_isr
+      - determinacion_iva
+      - detalle_pago_iva
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        collected_at:
+          $ref: '#/components/schemas/collected_at'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+        informacion_general:
+          type:
+          - object
+          - 'null'
+          description: 'General information regarding the tax return (year, RFC, return type,
+
+            person/company name, and so on).
+
+            '
+        determinacion_isr:
+          type:
+          - object
+          - 'null'
+          description: Information used to calculate the provisional income tax for the period.
+        detalle_pago_isr:
+          type:
+          - object
+          - 'null'
+          description: Information on the monthly provisional payments for the income tax.
+        determinacion_iva:
+          type:
+          - object
+          - 'null'
+          description: Information used to calculate the provisional VAT tax for the period.
+        detalle_pago_iva:
+          type:
+          - object
+          - 'null'
+          description: Information on the monthly provisional payments for the VAT tax.
+        pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: Tax return PDF as a binary.
+          example: =PDF-STRING=
+        receipt_pdf:
+          type:
+          - string
+          - 'null'
+          format: binary
+          description: 'The acknowledgement receipt from the fiscal institution confirming that
+
+            they received the tax return.
+
+            '
+          example: =PDF-STRING=
+        type:
+          type:
+          - string
+          - 'null'
+          description: The type of tax return. Can be either monthly or annual.
+          example: monthly
+    created_at:
+      type: string
+      format: date-time
+      description: 'The ISO-8601 timestamp of when the data point was created in Belvo''s database.
+
+        '
+      example: '2022-02-09T08:45:50.406032Z'
+    UnconfirmedLinkError:
+      type: object
+      title: Unconfirmed Link
+      description: 'This error occurs when you try to access a link that was paused previously (and as such is not active now).
+
+
+        A Link''s status is set to `unconfirmed_link` when your user has not completed the Link creation process successfully (for example, they might not provide a valid MFA token).
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unconfirmed_link`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unconfirmed_link" target="_blank">400 unconfirmed_link errors</a>.
+
+            '
+          example: unconfirmed_link
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unconfirmed_link` errors, the description is:\n  \n  - `The link creation has not been completed yet`.\n"
+          example: The link creation has not been completed yet
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    LoginError:
+      type: object
+      title: Login Error
+      description: "This error can occur when:\n\n  - the credentials that your user provides are incorrect or missing.\n  - the MFA token your user provides is not supported by Belvo.\n  - there is an issue with the institution that prevents logins.\n  - the user's account is either locked or the user does not have permission to access their internet banking.\n"
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`login_error`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-login_error" target="_blank">400 login_error errors</a>.
+
+            '
+          example: login_error
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `login_error` errors, the description can be one of the following:\n\n  - `Invalid credentials provided to login to the institution`\n  - `A MFA token is required by the institution, but it's not supported yet by Belvo.`\n  - `Impossible to login, something unexpected happened while logging into the institution. Try again later.`\n  - `Login not attempted due to invalid credentials`\n  - `Missing credentials to login to the institution`\n  - `The user account access was forbidden by the institution`\n  - `The user account is locked, user needs to contact the institution to unlock it`\n  \n"
+          example: Invalid credentials provided to login to the institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    InvalidPeriodError:
+      type: object
+      title: Invalid Period
+      description: 'This error occurs when you request incomes for a link within a given date range, however, the period between `date_from` and `date_to` is less than 90 days.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`invalid_period`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-invalid_period" target="_blank">400 invalid_period errors</a>.
+
+            '
+          example: invalid_period
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `invalid_period` errors, the description is:\n  \n  - `The number of days between date_from and date_to must be at least 90 days`.\n"
+          example: The number of days between date_from and date_to must be at least 90 days
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    date_from:
+      type: string
+      format: date
+      pattern: ^\d{4}-\d{2}-\d{2}$
+      minLength: 10
+      maxLength: 10
+      description: 'The date from which you want to start getting data for, in `YYYY-MM-DD` format.
+
+
+
+        ⚠️ The value of `date_from` cannot be greater than `date_to`.
+
+        '
+      example: '2020-08-05'
+    UnsupportedOperationError:
+      type: object
+      title: Unsupported Operation
+      description: 'This error occurs when you try to access some data operation that Belvo does not support for an institution. For example, trying to access the Balances resource for fiscal institutions.
+
+        '
+      properties:
+        code:
+          type: string
+          description: 'A unique error code (`unsupported_operation`) that allows you to classify and handle the error programmatically.
+
+
+
+            ℹ️ Check our DevPortal for more information on how to handle <a href="https://developers.belvo.com/docs/belvo-api-errors#400-unsupported_operation" target="_blank">400 unsupported_operation errors</a>.
+
+            '
+          example: unsupported_operation
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor `unsupported_operation` errors, the description is:\n  \n  - `The resource you are trying to access is not supported by this institution`.\n"
+          example: The resource you are trying to access is not supported by this institution
+        request_id:
+          $ref: '#/components/schemas/request_id'
+    link:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: The `link.id` the data belongs to.
+      example: 30cb4806-6e00-48a4-91c9-ca55968576c8
+    TaxReturnsMonthlyRequest:
+      type: object
+      title: Monthly Tax Returns
+      description: Request body for monthly tax returns
+      required:
+      - link
+      - type
+      - date_from
+      - date_to
+      properties:
+        link:
+          $ref: '#/components/schemas/link_request'
+        attach_pdf:
+          $ref: '#/components/schemas/attach_pdf'
+        save_data:
+          $ref: '#/components/schemas/save_data'
+        type:
+          type: string
+          default: monthly
+          description: 'The type of tax return to return. For monthly tax returns, this field must be set to `monthly`.
+
+            '
+        date_from:
+          $ref: '#/components/schemas/date_from'
+        date_to:
+          $ref: '#/components/schemas/date_to'
+    ValidationError:
+      type: object
+      title: Validation Error
+      description: 'This error occurs when make a request that does not include all the required fields or includes invalid data.
+
+        '
+      properties:
+        code:
+          type: string
+          description: "A unique error code (`null`, `does_not_exist`, `required`) that allows you to classify and handle the error programmatically.\n\n\nℹ️ Check our DevPortal for more information on how to handle:\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-blank\" target=\"_blank\">400 blank errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-null\" target=\"_blank\">400 null errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-does_not_exist\" target=\"_blank\">400 does_not_exist errors</a>\n  - <a href=\"https://developers.belvo.com/docs/belvo-api-errors#400-required\" target=\"_blank\">400 required errors</a>\n"
+          example: required
+        message:
+          type: string
+          description: "A short description of the error. \n\n\nFor validation errors, the description can be (among others):\n  \n  - `This field is required.`\n  - `Object with name=narnia does not exist.`\n  - `This field may not be null.`\n  - `This field may not be blank.`\n"
+          example: This field is required.
+        request_id:
+          $ref: '#/components/schemas/request_id'
+        field:
+          type:
+          - string
+          - 'null'
+          description: 'Name of the field where the error was encountered.
+
+            '
+          example: link
+  responses:
+    428_token_required_error:
+      description: MFA Token Required
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TokenRequiredResponse'
+    408_request_timeout_error:
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Request Timeout
+            description: "Belvo has a limit regarding the time it takes to log in, retrieve account data, and log out. A timeout occurs when there is a very high amount of data and everything could not be obtained within the allotted time.\n  \n"
+            items:
+              $ref: '#/components/schemas/RequestTimeoutError'
+    400_bad_request_error:
+      description: Bad request error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/TooManySessionsError'
+              - $ref: '#/components/schemas/LoginError'
+              - $ref: '#/components/schemas/SessionExpiredError'
+              - $ref: '#/components/schemas/ValidationError'
+              - $ref: '#/components/schemas/InstitutionDownError'
+              - $ref: '#/components/schemas/InstitutionUnavailableError'
+              - $ref: '#/components/schemas/InstitutionInactiveError'
+              - $ref: '#/components/schemas/InvalidLinkError'
+              - $ref: '#/components/schemas/InvalidCredentialsStorageError'
+              - $ref: '#/components/schemas/InvalidFetchHistorical'
+              - $ref: '#/components/schemas/InvalidResourcesError'
+              - $ref: '#/components/schemas/UnconfirmedLinkError'
+              - $ref: '#/components/schemas/UnsupportedOperationError'
+              - $ref: '#/components/schemas/InvalidPeriodError'
+    401_unauthorized_error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/UnauthorizedError'
+              - $ref: '#/components/schemas/ConsentWithoutAccountsError'
+    403_access_denied_error:
+      description: Access to Belvo API denied
+      content:
+        application/json:
+          schema:
+            type: array
+            description: 'This error occurs when you try to access Belvo''s resource without the correct permissions.
+
+              '
+            items:
+              $ref: '#/components/schemas/AccessToResourceDenied'
+    500_unexpected_error:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: array
+            title: Unexpected Error
+            description: "This error occurs when we (Belvo) have encountered an internal system error (sorry about that) or due to an unsupported response from the institution.\n  \n"
+            items:
+              $ref: '#/components/schemas/UnexpectedError'
+    404_not_found_error:
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NotFoundError'
+  examples:
+    TaxReturnBusinessListMonthly:
+      summary: Business Monthly
+      description: Example of a monthly business tax return
+      value:
+      - collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          rfc: DPA950805RR2
+          denominacion_razon_social: Aloha Mahalo SC
+          tipo_declaracion: Normal
+          ejercicio: 2020
+          periodo_declaracion: Diciembre
+          fecha_hora_presentacion: '2021-01-18T19:24:00-06:00'
+          numero_operacion: '400475119'
+          tipo_complementaria: null
+        determinacion_isr:
+          personas_morales_regimen_general:
+            suma_ingresos_nominales_meses_anteriores_ejercicio: 69848414
+            estimulos_acreditables: null
+            ingresos_nominales_mes_que_declara: 6482479
+            reducciones: null
+            total_ingresos_nominales: 76330893
+            impuestos_del_periodo: 284098
+            coeficiente_utilidad: 0.2318
+            pagos_provisionales_efectuados_anterioridad: 303039
+            utilidad_fiscal_pago_provisional: 17693501
+            impuesto_retenido: 29925
+            ptu: null
+            otras_cantidades_a_cargo_contribuyente: null
+            iventario_acumulable: null
+            otras_cantidades_a_favor_contribuyente: null
+            anticipos_rendimientos_distribuidos_periodo: 16746509
+            diferencia_a_cargo: 0
+            perdidas_fiscales_ejercicios_anteriores_pendientes: null
+            estimulo_fiscal_deduccion_inmediata: null
+            impuesto_correspondiente_participacion_consolidable: null
+            deduccion_adicional_fomento_primer_empleo: null
+            porcentaje_participacion_consolidable: null
+            base_gravable_pago_provisional: 946992
+            impuesto_a_cargo: 0
+            isr_causado: 284098
+            ieps_alcohol: null
+        detalle_pago_isr:
+          r1_isr_personas_morales:
+            a_cargo: 0
+            acreditamiento_sorteo_buen_fin: null
+            parte_actualizada: null
+            diesel_marino: null
+            recargos: null
+            total_aplicaciones: 0
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 0
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: null
+            cantidad_a_cargo: 0
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            uso_infraestructura_carretera_cuota: null
+            cantidad_a_pagar: 0
+            otros_estimulos: null
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r12_isr_retenciones_por_salarios:
+            a_cargo: 415945
+            acreditamiento_sorteos: null
+            parte_actualizada: 0
+            diesel_marino: null
+            recargos: 0
+            total_aplicaciones: 379
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 415945
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: 379
+            cantidad_a_cargo: 415566
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 415566
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r13_isr_retenciones_por_asimilados_a_salarios:
+            a_cargo: 254588
+            acreditamiento_sorteos: null
+            parte_actualizada: 0
+            diesel_marino: null
+            recargos: 0
+            total_aplicaciones: 0
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 254588
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: null
+            cantidad_a_cargo: 254588
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 254588
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r14_isr_retenciones_por_servicios_profesionales:
+            a_cargo: 104482
+            acreditamiento_sorteos: null
+            parte_actualizada: 0
+            diesel_marino: null
+            recargos: 0
+            total_aplicaciones: 0
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 104482
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: null
+            cantidad_a_cargo: 104482
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 104482
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+        determinacion_iva:
+          montos_actos_actividades_pagados:
+            total_actos_actividades_pagados_tasa_16: 2094706
+            total_actos_actividades_pagados_importacion_bienes_tasa_11: null
+            total_actos_actividades_sujetos_estimulo_rfn: 0
+            total_actos_actividades_pagados_tasa_0: 0
+            total_actos_actividades_pagados_importacion_bienes_tasa_16: null
+            total_actos_actividades_pagados_no_paga_iva: 0
+          detalle_total_actos_actividades_pagados_tasa_16:
+            intereses_pagados_tasa_16: null
+            otros_actos_pagados_tasa_16: 2094706
+            regalias_pagadas_tasa_16: null
+            total_actos_pagados_tasa_16: 2094706
+          determinacion_iva_acreditable:
+            total_iva_actos_actividades_pagados_tasa_16: 335153
+            iva_trasladado_o_pagado_adquisicion_bienes_distintos_inversiones_actos_no_obligados_pago_impuesto: null
+            iva_pagado_sujeto_estimulo_rfn: null
+            iva_trasladado_o_pagado_importacion_inversiones_actos_no_obligados_pago_impuesto: null
+            total_actos_actividades_pagados_importacion_bienes_tasa_16: 0
+            iva_bienes_utilizados_indistintamente_actos_gravados_o_actos_no_obligados_pago_impuesto: 0
+            proporcion_utilizada_conforme_art_5: null
+            total_iva_trasladado_contribuyente: 335153
+            proporcion_utilizada_conforme_art_5_b: null
+            iva_trasladado_adquisicion_bienes_distintos_inversiones_actos_gravados: 335153
+            iva_pagado_importacion_adquisicion_bienes_distintos_inversiones_actos_gravados: null
+            iva_acreditable: 335153
+            monto_acreditable_actualizado_a_incrementar_derivado_ajuste: null
+            iva_pagado_importacion_inversiones_actos_gravados: null
+            total_iva_acreditable_periodo: 335153
+            total_iva_actos_actividades_gravados: 335153
+            total_actos_actividades_pagados_importacion_bienes_tasa_11: null
+            iva_trasladado_adquisicion_inversiones_actos_gravados: null
+            iva_acreditable_bienes_utilizados_indistintamente_actos_gravados_o_actos_no_obligados_pago_impuesto: null
+          determinacion_iva:
+            valor_actos_actividades_gravados_tasa_16: 6457950
+            otras_cantidades_a_favor_contribuyente: null
+            valor_actos_actividades_gravados_tasa_11: null
+            cantidad_a_cargo: 312421
+            valor_actos_actividades_gravados_tasa_0_exportacion: null
+            saldo_a_favor: null
+            valor_actos_actividades_gravados_tasa_9_otros: null
+            devolucion_inmediata_obtenida: null
+            suma_actos_actividades_gravados: 6457950
+            saldo_a_favor_periodo: 0
+            valor_actos_actividades_no_se_deba_pagar_impuesto_exentos: null
+            acreditamiento_saldo_favor_periodos_anteriores: null
+            impuesto_causado: 1033272
+            diferencia_a_cargo: 312421
+            cantidad_actualizada_a_reintegrarse_derivada_de_ajuste: null
+            ieps_acreditable_alcohol: null
+            iva_retenido_al_contribuyente: 385698
+            impuesto_a_cargo: 312421
+            total_iva_acreditable: 335153
+            remanente_saldo_favor_ieps_alcohol: null
+            otras_cantidades_a_cargo_contribuyente: null
+          detalle_valor_actos_actividades_gravados_tasa_16:
+            intereses_cobrados_tasa_16: null
+            otros_actos_actividades_gravados_tasa_16: 6457950
+            regalias_entre_partes_relacionadas_tasa_16: null
+            total_actos_actividades_gravados_tasa_16: 6457950
+        detalle_pago_iva:
+          r21_iva:
+            a_cargo: 312421
+            cretificados_tesofe: null
+            a_favor: null
+            diesel_marino: null
+            parte_actualizada: 0
+            total_aplicaciones: 0
+            recargos: 0
+            fecha_pago_realizado_anterioridad: null
+            multa_por_correccion: null
+            monto_pagado_anterioridad: null
+            total_de_contribuciones: 312421
+            importe_pagado_ultimas_48_hrs: null
+            credito_al_salario: null
+            cantidad_a_cargo: 312421
+            subsidio_empleo: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            diesel_automotriz_transporte: null
+            uso_infraestructura_carretera_cuota: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 312421
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r21_iva_retenciones:
+            a_cargo: 111448
+            diesel_marino: null
+            parte_actualizada: 0
+            total_aplicaciones: 0
+            recargos: 0
+            fecha_pago_realizado_anterioridad: null
+            multa_por_correccion: null
+            monto_pagado_anterioridad: null
+            total_de_contribuciones: 111448
+            importe_pagado_ultimas_48_hrs: null
+            credito_al_salario: null
+            cantidad_a_cargo: 111448
+            subsidio_empleo: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            otros_estimulos: null
+            cantidad_a_favor: null
+            cretificados_tesofe: null
+            cantidad_a_pagar: 111448
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+        pdf: ===PDF_BINARY====
+        receipt_pdf: ===PDF_BINARY====
+        type: monthly
+    TaxReturnPersonalListMonthlyPaginatedPFAI:
+      summary: Tax Return Personal Monthly (PFAI)
+      description: Example of a list of PFAI-type monthly personal tax returns
+      value:
+        count: 101
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          informacion_general:
+            rfc: null
+            nombre: null
+            tipo_declaracion: null
+            ejercicio: null
+            periodo_declaracion: null
+            fecha_hora_presentacion: null
+            numero_operacion: null
+          isr:
+            tipo: PFAE
+            determinacion:
+              ingresos_periodos_anteriores: 0
+              ingresos_periodo: 0
+              total_ingresos: 0
+              compras_gastos_periodos_anteriores: 1596
+              compra_gastos_periodo: 399
+              total_compras_gastos: 1995
+              base_gravable_pago_provisional: 0
+              isr_causado: 0
+              pagos_provisionales_efectuados_anterioridad: 0
+              isr_retenido_periodos_anteriores: 0
+              impuesto_retenido: 0
+              isr_cargo: 0
+              tipo_de_deduccíon: dedduccíon opicional
+              optas_por_el_cálculo_acumulado: 'NO'
+              deduccíon_opcional: 700
+              impuesto_predial: 0
+              total_deducciones_autorizadas: 700
+              tienes_facilidades_administrativas_o_estímulos_deducibles: 'NO'
+            detalle_del_pago:
+              a_cargo: 0
+              parte_actualizada: 0
+              recargos: 0
+              total_contribuciones: 0
+              total_aplicaciones: 0
+              cantidad_a_cargo: 0
+              cantidad_a_pagar: 0
+          iva:
+            determinacion:
+              actividades_gravadas_tasa_16: 0
+              actividades_gravadas_tasa_0: 0
+              actividades_exentas: 0
+              iva_cobrado_periodo_tasa_16: 0
+              iva_acreditable_periodo: 0
+              iva_retenido: 0
+              saldo_a_favor: null
+              impuesto_a_favor: null
+              impuesto_a_cargo: 54
+              cantidad_a_cargo: 54
+            detalle_del_pago:
+              total_contribuciones: 0
+              total_aplicaciones: 0
+              cantidad_a_cargo: 0
+              cantidad_a_pagar: 0
+              a_favor: null
+          pdf: ===PDF_BINARY====
+          receipt_pdf: ===PDF_BINARY====
+          type: monthly
+    TaxReturnBusinessList:
+      summary: Business Yearly
+      description: Example of a list of business tax returns
+      value:
+      - id: 02589c41-ba22-4d44-8558-8111cc751318
+        link: 19697249-01b8-443e-a451-76bfc5fbeebf
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          ejercicio: 2018
+          fecha_hora_presentacion: '2020-01-07T16:55:00-06:00'
+          numero_operacion: '000000000001'
+          periodo_declaracion: Del Ejercicio
+          rfc: ABC1111111A1
+          tipo_declaracion: Normal
+          tipo_complementaria: null
+          denominacion_razon_social: ACME CORP
+        datos_adicionales:
+          indica_si_optas_por_dictaminar_tus_estados_financieros: 'NO'
+          estas_obligado_a_presentar_la_informacion_sobre_tu_situacion_fiscal: 'NO'
+          estas_obligado_unicamente_por_supuesto_distinto_al_de_haber_realizado_operaciones_con_residentes_extranjero: SIN SELECCIÓN
+          ? estas_obligado_unicamente_por_supuesto_distinto_al_de_haber_realizado_operaciones_con_residentes_extranjero_inferiores_100mdp
+          : SIN SELECCIÓN
+          optas_por_presentar_informacion_sobre_tu_situacion_fiscal: SIN SELECCIÓN
+          indica_si_te_dedicas_exclisivamente_a_generacion_energia_fuentes_renovables_o_cogeneracion_electricidad_eficiente: 'NO'
+        estado_resultados:
+          ventas_servicios_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: 911165
+            total: 911165
+          ventas_servicios_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          devoluciones_descuentos_bonificaciones_ventas_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          devoluciones_descuentos_bonificaciones_ventas_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          ingresos_netos:
+            partes_relacionadas: null
+            partes_no_relacionadas: 911165
+            total: 911165
+          inventario_inicial: null
+          compras_netas_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          compras_netas_importacion:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          inventario_final: null
+          costo_mercancias: null
+          mano_de_obra:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          maquilas:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          gastos_indirectos_fabricacion:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          costo_ventas_servicios: null
+          utilidad_bruta: 911165
+          perdida_bruta: null
+          gastos_operacion:
+            partes_relacionadas: null
+            partes_no_relacionadas: 499540
+            total: 499540
+          utilidad_operacion: 411625
+          perdida_operacion: null
+          intereses_devengados_a_favor_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_devengados_a_favor_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_favor_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_favor_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          ganancia_cambiaria:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_devengados_a_cargo_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_devengados_a_cargo_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_cargo_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_cargo_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          perdida_cambiaria:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          resultado_posicion_monetaria_favorable:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          resultado_posicion_monetaria_desfavorable:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          otras_operaciones_financieras_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          otras_operaciones_financieras_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          otras_operaciones_financieras: null
+          resultado_integral_financiamiento: null
+          otros_gastos_nacionales: null
+          otros_gastos_extranjero: null
+          otros_gastos: null
+          otros_productos_nacionales: null
+          otros_productos_extranjero: null
+          otros_productos: null
+          ingresos_partidas_discontinuas_extraordinarias: null
+          gastos_partidas_discontinuas_extraordinarias: null
+          utilidad_antes_impuesto: 411625
+          perdida_antes_impuesto: null
+          isr: 113002
+          ietu: null
+          impac: null
+          ptu: null
+          utilidad_participacion_subsidiaria: null
+          perdida_participacion_subsidiaria: null
+          efectos_reexpresion_favorables_excepto_resultado_posicion_monetaria: null
+          efectos_reexpresion_desfavorables_excepto_resultado_posicion_monetaria: null
+          utilidad_neta: 298623
+          perdida_neta: null
+        estado_posicion_financiera_balance:
+          activo:
+            efectivo_caja_depositos_instituciones_credito_nacionales: 726644
+            efectivo_caja_depositos_instituciones_credito_extranjero: null
+            inversiones_valores_instituciones_nacionales_excepto_acciones: null
+            inversiones_valores_instituciones_extranjero_excepto_acciones: null
+            cuentas_documentos_por_cobrar_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            cuentas_documentos_por_cobrar_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            contribuciones_a_favor: null
+            inventarios: null
+            otros_activos_circulantes: 13277
+            inversiones_en_acciones_nacionales: null
+            inversiones_en_acciones_extranjero: null
+            inversiones_en_acciones_total: null
+            terrenos: null
+            construcciones: null
+            construcciones_en_proceso: null
+            maquinaria_y_equipo: null
+            mobiliario_y_equipo_oficina: null
+            equipo_de_computo: null
+            equipo_de_transporte: null
+            otros_activos_fijos: 12756
+            depreciacion_acumulada: -106
+            cargos_y_gastos_diferidos: 9319
+            amortizacion_acumulada: null
+            suma_activo: 761890
+          pasivo:
+            cuentas_documentos_por_pagar_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: 268227
+              total: 268227
+            cuentas_documentos_por_pagar_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            contribuciones_por_pagar: 223490
+            anticipos_de_clientes:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            aportaciones_futuros_aumentos_de_capital: null
+            otros_pasivos: null
+            suma_pasivo: 491717
+          capital_contable:
+            capital_social_proveniente_aportaciones: 10000
+            capital_social_proveniente_capitalizacion: null
+            reservas: null
+            otras_cuentas_capital: null
+            aportaciones_futuros_aumentos_de_capital: null
+            utilidades_acumuladas: null
+            utilidad_del_ejercicio: 298623
+            perdidas_acumuladas: -38450
+            perdida_del_ejercicio: null
+            exceso_en_actualizacion_capital: null
+            insuficiencia_en_actualizacion_capital: null
+            actualizacion_del_capital_contable: null
+            suma_capital_contable: 270173
+            suma_pasivo_mas_capital_contable: 761890
+        conciliacion_entre_resultado_contable_fiscal:
+          utilidad_o_perdida_neta: 298623
+          efectos_reexpresion: null
+          resultado_posicion_monetaria: null
+          utilidad_o_perdida_neta_historica: 298623
+          ingresos_fiscales_no_contables: 95
+          ajuste_anual_inflacion_acumulable: 95
+          anticipos_de_clientes: null
+          intereses_moratorios_efectivamente_cobrados: null
+          ganancia_en_enajenacion_acciones_por_reembolso_capital: null
+          ganancia_en_enajenacion_de_terrenos_y_activo_fijo: null
+          inventario_acumulable_del_ejercicio: null
+          otros_ingresos_fiscales_no_contables: null
+          deducciones_contables_no_fiscales: 117415
+          costo_de_ventas_contable: null
+          depreciacion_y_amortizacion_contable: 106
+          gastos_que_no_reunen_requisitos_fiscales: 4307
+          isr_ietu_impac_ptu: 113002
+          perdida_contable_enajenacion_de_acciones: null
+          perdida_contable_enajenacion_de_activo_fijo: null
+          perdida_en_participacion_subsidiaria: null
+          intereses_devengados_que_exceden_valor_mercado_y_moratorios_pagados_o_no: 0
+          otras_deducciones_contables_no_fiscales: 0
+          deducciones_fiscales_no_contables: 0
+          ajuste_anual_inflacion_deducible: null
+          costo_vendido_fiscal: null
+          deduccion_inversiones: null
+          estimulo_fiscal_por_deduccion_inmediata_inversiones: null
+          donacion_bienes_basicos_subsistencia_humana: 0
+          estimulo_fiscal_contratacion_personas_discapacidad_yo_mayores: 0
+          deduccion_impuesto_sobre_renta_retenido_personas_discapacidad_yo_mayores: 0
+          perdida_fiscal_en_enajenacion_acciones: null
+          perdida_fiscal_en_enajenacion_de_terrenos_y_activo_fijo: null
+          intereses_moratorios_efectivamente_pagados: null
+          otras_deducciones_fiscales_no_contables: null
+          ingresos_contables_no_fiscales: null
+          intereses_moratorios_devengados_a_favor_cobrados_o_no: null
+          anticipos_de_clientes_ejercicios_anteriores: null
+          saldos_a_favor_impuestos_y_su_actualizacion: null
+          utilidad_contable_enajenacion_de_activo_fijo: null
+          utilidad_contable_enajenacion_de_acciones: null
+          utilidad_en_participacion_subsidiaria: null
+          otros_ingresos_contables_no_fiscales: null
+          utilidad_o_perdida_fiscal_antes_de_ptu: 416133
+        deducciones_autorizadas:
+          sueldos_salarios: null
+          honorarios_pagados_a_personas_fisicas: null
+          regalias_y_asistencia_tecnica: null
+          donativos_otorgados: null
+          uso_o_goce_temporal_de_bienes_pagados_a_personas_fisicas: null
+          fletes_y_acarreos_pagados_a_parsonas_fisicas: null
+          contribuciones_pagadas_excepto_isr_ietu_impac_iva_ieps: null
+          seguros_fianzas: null
+          perdida_por_creditos_incobrables: null
+          viaticos_y_gastos_viaje: 59527
+          combustible_y_lubricantes: null
+          credito_al_salario_no_disminuido_de_contribuciones: null
+          aportaciones_sar_infonavit_y_jubilaciones_vejez: null
+          aportaciones_para_fondos_de_pensiones_y_jubilaciones: null
+          cuotas_imss: null
+          consumos_en_restaurantes: 11254
+          perdida_por_operaciones_financieras_derivadas: null
+          deduccion_por_concepto_de_ayuda_alimentaria_para_trabajadores: null
+          monto_total_pagos_que_sean_ingresos_exentos_para_trabajador: null
+          monto_deducible_al_47_pagos_son_ingresos_exentos_para_trabajador: null
+          monto_deducible_al_53_pagos_son_ingresos_exentos_para_trabajador: null
+          uso_o_goce_temporal_de_automoviles_baterias_electricas_o_electricos_con_motor_combustion_o_hidrogeno: null
+          otras_deducciones_autorizadas: 424346
+          total_deducciones_autorizadas: 495127
+        cifras_cierre_ejercicio:
+          perdidas_fiscales_de_ejercicios_anteriores_pendientes_de_amortizar_actualiazadas: null
+          saldo_promedio_anual_de_creditos: 142795
+          saldo_promedio_anual_de_deudas: 144765
+          coeficiente_de_utilidad_por_aplicar_en_ejercicio_siguiente: 0.4567
+          porcentaje_de_participacion_consolidable: null
+          isr_causado_en_exceso_del_impac_en_los_3_ejercicios_anteriores_pendientes_aplicar: null
+          saldo_actualizado_de_cuenta_de_utilidad_fiscal_neta_2013_y_anteriores: null
+          saldo_actualizado_de_cuenta_de_utilidad_fiscal_neta_a_partir_2014_y_anteriores: null
+          saldo_actualizado_de_cuenta_de_utilidad_fiscal_reinvertida: null
+          saldo_actualizado_de_cuenta_de_capital_de_aportacion: null
+          saldo_de_cuenta_de_utilidad_fiscal_neta_por_inversion_en_renovables: null
+        determinacion_del_impuesto_sobre_la_renta:
+          determinacion_del_impuesto_sobre_la_renta:
+            total_ingresos_acumulables: 911260
+            total_deducciones_autorizadas_y_deduccion_inmediata_inversiones: 495126
+            deduccion_adicional_por_pago_servicios_personales_en_operacion_maquila: null
+            utilidad_o_perdida_fiscal_antes_de_ptu: 416134
+            ptu_pagada_en_el_ejercicio: null
+            utilidad_fiscal_del_ejercicio: 416134
+            perdidas_fiscales_de_ejercicios_anteriores_que_se_aplican_en_ejercicio: 39462
+            resultado_fiscal: 376672
+            impuesto_causado_en_ejercicio: 113002
+            tienes_estimulos_fiscales_a_acreditar: SIN SELECCIÓN
+            impuesto_sobre_la_renta_del_ejercicio: 113002
+            pagos_provisionales_efectuados_enterados_a_federacion: null
+            impuesto_retenido_al_contribuyente: null
+            impuesto_acreditable_pagado_en_extranjero: null
+            impuesto_acreditable_por_dividendos_o_utilidades_distribuidos: null
+            otras_cantidades_a_cargo: null
+            otras_cantidades_a_favor: null
+            diferencia_a_cargo: 113002
+            isr_a_cargo_del_ejercicio: 113002
+            isr_a_favor_del_ejercicio: null
+          impuesto_sobre_ingresos_sujetos_a_regimenes_fiscales_preferentes: null
+          datos_informativos_ejercicio:
+            monto_aplicado_del_estimulo_fiscal_de_chatarrizacion: 0
+            monto_deducible_de_pagos_efectuados_por_uso_o_goce_temporal_automoviles: 0
+            impac_recuperado_en_ejercicio_derivado_de_deconsolidacion: 0
+            ingresos_obtenidos_por_apoyos_gubernamentales: 0
+            gastos_realidados_en_ejercicio_por_proyectos_en_investigacion_desarrollo_tecnologico: 0
+            credito_fiscal_autorizado_en_ejercicio_por_proyectos_en_investigacion_desarrollo_tecnologico_pendiente_aplicar: 0
+            credito_fiscal_autorizado_en_ejercicio_por_proyectos_de_inversion_en_artes_pendiente_aplicar: 0
+            ? credito_fiscal_autorizado_en_ejercicio_por_inversion_en_proyectos_programas_para_deporte_de_alto_rendimiento_pendiente_aplicar
+            : 0
+            saldo_pendiente_aplicar_por_inversion_en_equipos_de_alimentacion_vehiculos_electricos: 0
+            credito_fiscal_autorizado_en_ejercicio_a_produccion_distribucion_cinematografica_nacional_pendiente_aplicar: 0
+          datos_informativos_ejercicios_anteriores_aplicados_en_ejercicio:
+            total_estimulo_produccion_y_distribucion_cinematografica_nacional_ejercicios_anteriores_aplicado_en_ejercicio: null
+            ? saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_inversion_en_proyectos_programas_para_deporte_alto_rendimiento_pendiente_aplicar
+            : 0
+            saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_proyectos_investigacion_desarrollo_tecnologico_pendiente_aplicar: 0
+            saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_proyectos_inversion_artes_pendiente_aplicar: 0
+            saldo_credito_fiscal_autorizado_ejercicios_anteriores_a_produccion_distribucion_nacional_pendiente_aplicar: 0
+        dividendos_o_utilidades_distribuidos:
+          provenientes_de_cuenta_de_utilidad_fisica_neta_cufin_generada_en_2013_y_anteriores: null
+          provenientes_de_cuenta_de_utilidad_fisica_neta_cufin_generada_a_partir_de_2014: null
+          provenientes_de_cuenta_de_utilidad_fisica_neta_reinvertida_cufinre: null
+          no_provenientes_de_cufin_ni_cufinre_en_efectivo: null
+          no_provenientes_de_cufin_ni_cufinre_en_acciones: null
+          monto_del_impuesto_pagado_no_proveniente_de_cufin_ni_cufinre: null
+          monto_del_impuesto_pagado_de_utilidades_provenientes_de_cufinre: null
+          ? provenientes_de_cuenta_de_utilidad_fiscal_neta_por_inversion_en_energia_de_fuentes_renovables_o_sistemas_cogeneracion_electricidad_eficiente
+          : null
+        detalle_pago_r1_isr_personas_morales:
+          a_cargo: 113002
+          parte_actualizada: null
+          recargos: null
+          multa_por_correccion: null
+          total_contribuciones: 113002
+          desea_aplicar_alguna_compensacion_o_estimulo: 'NO'
+          cantidad_a_cargo: 113002
+          opta_por_pagar_parcialidades: SIN SELECCIÓN
+          importe_de_primera_parcialidad: null
+          importe_sin_primera_parcialidad: null
+          cantidad_a_favor: null
+          cantidad_a_pagar: 113002
+        pdf: =PDF-STRING=
+        receipt_pdf: =PDF-STRING=
+    TaxReturnPersonalListDetail:
+      summary: Tax Return Personal
+      description: Example of a list of personal tax returns
+      value:
+        id: 02589c41-ba22-4d44-8558-8111cc751318
+        link: 19697249-01b8-443e-a451-76bfc5fbeebf
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          ejercicio: 2018
+          fecha_hora_presentacion: '2020-01-07T17:28:00-05:00'
+          numero_operacion: '00000000001'
+          periodo_declaracion: Del Ejercicio
+          rfc: ABCD111111A11
+          tipo_declaracion: Normal
+          nombre: JOHN DOE
+        sueldos_salarios:
+          retenedores:
+          - rfc_retenedor: ABCD222222A22
+            nombre_denominacion_razon_social: ACME CORP
+            ingresos_exentos: 118263
+            ingreso_anual: 2265
+            subsidio_empleo: 0
+          impuesto_retenido: 19497
+          ingreso_anual: 118263
+          ingresos_acumulables: 115998
+          ingresos_exentos: 2265
+          subsidio_empleo: 0
+        servicios_profesionales:
+          deducciones_autorizadas:
+            deducciones_autorizadas: 11870
+            otras_deducciones: null
+            detalle_deducciones:
+            - tipo_deduccion: GASTOS
+              concepto: GASOLINA Y MANTENIMIENTO DE TRANSPORTE
+              monto_detallado: 9682
+            - tipo_deduccion: GASTOS
+              concepto: COMPRAS Y GASTOS GENERALES
+              monto_detallado: 2188
+            total_deducciones_autorizadas: 11870
+          ingresos:
+            ingresos_acumulables: 46000
+            ingresos_exentos: null
+            otros_ingresos: null
+            total_ingresos: 46000
+          resultado_fiscal:
+            utilidad_fiscal: 34130
+            ptu_pagada_ejercicio: 0
+            perdidas_fiscales_ejercicios_anteriores_aplicadas: 0
+            utilidad_gravable: 34130
+          pagos_provisionales:
+            pagos_provisionales_efectuados_en_ejercicio: 0
+          retenciones_isr:
+            isr_retenido_personas_morales: 4600
+        deducciones_personales:
+          honorarios_medicos_dentales_hospitalarios:
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC444444A44
+            monto_deducible: 1000
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC444444A44
+            monto_deducible: 502.34
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC444444A55
+            monto_deducible: 14183.1
+          - rfc_emisor: ABC444444A66
+            monto_deducible: 1658
+          - rfc_emisor: ABC444444A77
+            monto_deducible: 1600
+          - rfc_emisor: ABC444444A88
+            monto_deducible: 1064
+          - rfc_emisor: ABC444444A99
+            monto_deducible: 927.57
+          donativos:
+          - rfc_emisor: ABC555555A99
+            monto_deducible: 10.03
+          aportaciones_voluntarias_complementarias_al_sar:
+          - rfc_emisor: ABC666666A99
+            monto_deducible: 12.03
+          - rfc_emisor: ABC777777A99
+            monto_deducible: 87.22
+          primas_por_seguros_de_gasto_medico:
+          - rfc_emisor: ABC777777A99
+            monto_deducible: 20.03
+        determinacion_impuesto:
+          base_gravable: 126864
+          deducciones_personales: 23264
+          ingresos_acumulables: 150128
+          isr_favorable: 10308
+          isr_conforme_tarifa_final: 13789
+          isr_retenido: 24097
+          num_clabe: '000000000000000001'
+          nombre_banco: BANCO SA
+          pagos_provisionales: 0
+          titular_clabe_permite_verificacion: SÍ
+          accion_saldo_a_favor: DEVOLUCIÓN
+        retenciones:
+          sueldos_salarios:
+          - rfc_retenedor: ABC444444A99
+            monto_retenciones: 118263
+            retenciones_isr: 19497
+          dividendos: []
+          servicios_profesionales:
+          - rfc_retenedor: ABC444444A00
+            monto_retenciones: 46000
+            retenciones_isr: 4600
+        dividendos:
+          monto_acumulable_dividendos_utilidades: null
+          monto_total_isr_pagado_sociedad: null
+        datos_informativos:
+          credito_fiscal_autorizado_proyectos_investigacion_desarrollo: 0
+          credito_fiscal_autorizado_proyectos_apoyo_deporte_alto_rendimiento: 0
+          credito_fiscal_autorizado_proyectos_inversion_artes: 0
+          credito_fiscal_autorizado_inversion_equipos_fijos: 0
+          credito_fiscal_autorizado_produccion_distribucion_cinematografica: 0
+          saldo_credito_fiscal_autorizado_anteriores_investigacion_desarrollo: 0
+          saldo_credito_fiscal_anteriores_proyectos_inversion_artes: 0
+          saldo_credito_fiscal_anteriores_produccion_distribucion_cinematografica: 0
+        pdf: =PDF-STRING=
+        receipt_pdf: =PDF-STRING=
+    TaxReturnPersonalListMonthlyPFAEDetail:
+      summary: Tax Return Personal Monthly (PFAE)
+      description: Example of a PFAE-type monthly personal tax return
+      value:
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          rfc: null
+          nombre: null
+          tipo_declaracion: null
+          ejercicio: null
+          periodo_declaracion: null
+          fecha_hora_presentacion: null
+          numero_operacion: null
+        isr:
+          tipo: PFAE
+          determinacion:
+            ingresos_periodos_anteriores: 0
+            ingresos_periodo: 0
+            total_ingresos: 0
+            compras_gastos_periodos_anteriores: 1596
+            compra_gastos_periodo: 399
+            total_compras_gastos: 1995
+            base_gravable_pago_provisional: 0
+            isr_causado: 0
+            pagos_provisionales_efectuados_anterioridad: 0
+            isr_retenido_periodos_anteriores: 0
+            impuesto_retenido: 0
+            isr_cargo: 0
+          detalle_del_pago:
+            a_cargo: 0
+            parte_actualizada: 0
+            recargos: 0
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+        iva:
+          determinacion:
+            actividades_gravadas_tasa_16: 0
+            actividades_gravadas_tasa_0: 0
+            actividades_exentas: 0
+            iva_cobrado_periodo_tasa_16: 0
+            iva_acreditable_periodo: 0
+            iva_retenido: 0
+            saldo_a_favor: null
+            impuesto_a_favor: null
+          detalle_del_pago:
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+            a_favor: null
+        pdf: ===PDF_BINARY====
+        receipt_pdf: ===PDF_BINARY====
+        type: monthly
+    TaxReturnBusinessListMonthlyPaginated:
+      summary: Tax Return Business Monthly
+      description: Example of a list of monthly business tax returns
+      value:
+        count: 101
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          informacion_general:
+            rfc: DPA950805RR2
+            denominacion_razon_social: Aloha Mahalo SC
+            tipo_declaracion: Normal
+            ejercicio: 2020
+            periodo_declaracion: Diciembre
+            fecha_hora_presentacion: '2021-01-18T19:24:00-06:00'
+            numero_operacion: '400475119'
+            tipo_complementaria: null
+          determinacion_isr:
+            personas_morales_regimen_general:
+              suma_ingresos_nominales_meses_anteriores_ejercicio: 69848414
+              estimulos_acreditables: null
+              ingresos_nominales_mes_que_declara: 6482479
+              reducciones: null
+              total_ingresos_nominales: 76330893
+              impuestos_del_periodo: 284098
+              coeficiente_utilidad: 0.2318
+              pagos_provisionales_efectuados_anterioridad: 303039
+              utilidad_fiscal_pago_provisional: 17693501
+              impuesto_retenido: 29925
+              ptu: null
+              otras_cantidades_a_cargo_contribuyente: null
+              iventario_acumulable: null
+              otras_cantidades_a_favor_contribuyente: null
+              anticipos_rendimientos_distribuidos_periodo: 16746509
+              diferencia_a_cargo: 0
+              perdidas_fiscales_ejercicios_anteriores_pendientes: null
+              estimulo_fiscal_deduccion_inmediata: null
+              impuesto_correspondiente_participacion_consolidable: null
+              deduccion_adicional_fomento_primer_empleo: null
+              porcentaje_participacion_consolidable: null
+              base_gravable_pago_provisional: 946992
+              impuesto_a_cargo: 0
+              isr_causado: 284098
+              ieps_alcohol: null
+          detalle_pago_isr:
+            r1_isr_personas_morales:
+              a_cargo: 0
+              acreditamiento_sorteo_buen_fin: null
+              parte_actualizada: null
+              diesel_marino: null
+              recargos: null
+              total_aplicaciones: 0
+              multa_por_correccion: null
+              fecha_pago_realizado_anterioridad: null
+              total_de_contribuciones: 0
+              monto_pagado_anterioridad: null
+              credito_al_salario: null
+              importe_pagado_ultimas_48_hrs: null
+              subsidio_empleo: null
+              cantidad_a_cargo: 0
+              impuesto_a_depositos_efectivo_acreditable: null
+              aplica_primera_parcialidad: 'NO'
+              compensaciones: null
+              credito_ieps_diesel: null
+              diesel_automotriz_transporte: null
+              cantidad_a_favor: null
+              uso_infraestructura_carretera_cuota: null
+              cantidad_a_pagar: 0
+              otros_estimulos: null
+              importe_1ra_parcialidad: null
+              importe_sin_1ra_parcialidad: null
+            r12_isr_retenciones_por_salarios:
+              a_cargo: 415945
+              acreditamiento_sorteos: null
+              parte_actualizada: 0
+              diesel_marino: null
+              recargos: 0
+              total_aplicaciones: 379
+              multa_por_correccion: null
+              fecha_pago_realizado_anterioridad: null
+              total_de_contribuciones: 415945
+              monto_pagado_anterioridad: null
+              credito_al_salario: null
+              importe_pagado_ultimas_48_hrs: null
+              subsidio_empleo: 379
+              cantidad_a_cargo: 415566
+              impuesto_a_depositos_efectivo_acreditable: null
+              aplica_primera_parcialidad: 'NO'
+              compensaciones: null
+              credito_ieps_diesel: null
+              diesel_automotriz_transporte: null
+              cantidad_a_favor: null
+              otros_estimulos: null
+              cantidad_a_pagar: 415566
+              importe_1ra_parcialidad: null
+              importe_sin_1ra_parcialidad: null
+            r13_isr_retenciones_por_asimilados_a_salarios:
+              a_cargo: 254588
+              acreditamiento_sorteos: null
+              parte_actualizada: 0
+              diesel_marino: null
+              recargos: 0
+              total_aplicaciones: 0
+              multa_por_correccion: null
+              fecha_pago_realizado_anterioridad: null
+              total_de_contribuciones: 254588
+              monto_pagado_anterioridad: null
+              credito_al_salario: null
+              importe_pagado_ultimas_48_hrs: null
+              subsidio_empleo: null
+              cantidad_a_cargo: 254588
+              impuesto_a_depositos_efectivo_acreditable: null
+              aplica_primera_parcialidad: 'NO'
+              compensaciones: null
+              credito_ieps_diesel: null
+              diesel_automotriz_transporte: null
+              cantidad_a_favor: null
+              otros_estimulos: null
+              cantidad_a_pagar: 254588
+              importe_1ra_parcialidad: null
+              importe_sin_1ra_parcialidad: null
+            r14_isr_retenciones_por_servicios_profesionales:
+              a_cargo: 104482
+              acreditamiento_sorteos: null
+              parte_actualizada: 0
+              diesel_marino: null
+              recargos: 0
+              total_aplicaciones: 0
+              multa_por_correccion: null
+              fecha_pago_realizado_anterioridad: null
+              total_de_contribuciones: 104482
+              monto_pagado_anterioridad: null
+              credito_al_salario: null
+              importe_pagado_ultimas_48_hrs: null
+              subsidio_empleo: null
+              cantidad_a_cargo: 104482
+              impuesto_a_depositos_efectivo_acreditable: null
+              aplica_primera_parcialidad: 'NO'
+              compensaciones: null
+              credito_ieps_diesel: null
+              diesel_automotriz_transporte: null
+              cantidad_a_favor: null
+              otros_estimulos: null
+              cantidad_a_pagar: 104482
+              importe_1ra_parcialidad: null
+              importe_sin_1ra_parcialidad: null
+          determinacion_iva:
+            montos_actos_actividades_pagados:
+              total_actos_actividades_pagados_tasa_16: 2094706
+              total_actos_actividades_pagados_importacion_bienes_tasa_11: null
+              total_actos_actividades_sujetos_estimulo_rfn: 0
+              total_actos_actividades_pagados_tasa_0: 0
+              total_actos_actividades_pagados_importacion_bienes_tasa_16: null
+              total_actos_actividades_pagados_no_paga_iva: 0
+            detalle_total_actos_actividades_pagados_tasa_16:
+              intereses_pagados_tasa_16: null
+              otros_actos_pagados_tasa_16: 2094706
+              regalias_pagadas_tasa_16: null
+              total_actos_pagados_tasa_16: 2094706
+            determinacion_iva_acreditable:
+              total_iva_actos_actividades_pagados_tasa_16: 335153
+              iva_trasladado_o_pagado_adquisicion_bienes_distintos_inversiones_actos_no_obligados_pago_impuesto: null
+              iva_pagado_sujeto_estimulo_rfn: null
+              iva_trasladado_o_pagado_importacion_inversiones_actos_no_obligados_pago_impuesto: null
+              total_actos_actividades_pagados_importacion_bienes_tasa_16: 0
+              iva_bienes_utilizados_indistintamente_actos_gravados_o_actos_no_obligados_pago_impuesto: 0
+              proporcion_utilizada_conforme_art_5: null
+              total_iva_trasladado_contribuyente: 335153
+              proporcion_utilizada_conforme_art_5_b: null
+              iva_trasladado_adquisicion_bienes_distintos_inversiones_actos_gravados: 335153
+              iva_pagado_importacion_adquisicion_bienes_distintos_inversiones_actos_gravados: null
+              iva_acreditable: 335153
+              monto_acreditable_actualizado_a_incrementar_derivado_ajuste: null
+              iva_pagado_importacion_inversiones_actos_gravados: null
+              total_iva_acreditable_periodo: 335153
+              total_iva_actos_actividades_gravados: 335153
+              total_actos_actividades_pagados_importacion_bienes_tasa_11: null
+              iva_trasladado_adquisicion_inversiones_actos_gravados: null
+              iva_acreditable_bienes_utilizados_indistintamente_actos_gravados_o_actos_no_obligados_pago_impuesto: null
+            determinacion_iva:
+              valor_actos_actividades_gravados_tasa_16: 6457950
+              otras_cantidades_a_favor_contribuyente: null
+              valor_actos_actividades_gravados_tasa_11: null
+              cantidad_a_cargo: 312421
+              valor_actos_actividades_gravados_tasa_0_exportacion: null
+              saldo_a_favor: null
+              valor_actos_actividades_gravados_tasa_9_otros: null
+              devolucion_inmediata_obtenida: null
+              suma_actos_actividades_gravados: 6457950
+              saldo_a_favor_periodo: 0
+              valor_actos_actividades_no_se_deba_pagar_impuesto_exentos: null
+              acreditamiento_saldo_favor_periodos_anteriores: null
+              impuesto_causado: 1033272
+              diferencia_a_cargo: 312421
+              cantidad_actualizada_a_reintegrarse_derivada_de_ajuste: null
+              ieps_acreditable_alcohol: null
+              iva_retenido_al_contribuyente: 385698
+              impuesto_a_cargo: 312421
+              total_iva_acreditable: 335153
+              remanente_saldo_favor_ieps_alcohol: null
+              otras_cantidades_a_cargo_contribuyente: null
+            detalle_valor_actos_actividades_gravados_tasa_16:
+              intereses_cobrados_tasa_16: null
+              otros_actos_actividades_gravados_tasa_16: 6457950
+              regalias_entre_partes_relacionadas_tasa_16: null
+              total_actos_actividades_gravados_tasa_16: 6457950
+          detalle_pago_iva:
+            r21_iva:
+              a_cargo: 312421
+              cretificados_tesofe: null
+              a_favor: null
+              diesel_marino: null
+              parte_actualizada: 0
+              total_aplicaciones: 0
+              recargos: 0
+              fecha_pago_realizado_anterioridad: null
+              multa_por_correccion: null
+              monto_pagado_anterioridad: null
+              total_de_contribuciones: 312421
+              importe_pagado_ultimas_48_hrs: null
+              credito_al_salario: null
+              cantidad_a_cargo: 312421
+              subsidio_empleo: null
+              aplica_primera_parcialidad: 'NO'
+              compensaciones: null
+              diesel_automotriz_transporte: null
+              uso_infraestructura_carretera_cuota: null
+              cantidad_a_favor: null
+              otros_estimulos: null
+              cantidad_a_pagar: 312421
+              importe_1ra_parcialidad: null
+              importe_sin_1ra_parcialidad: null
+            r21_iva_retenciones:
+              a_cargo: 111448
+              diesel_marino: null
+              parte_actualizada: 0
+              total_aplicaciones: 0
+              recargos: 0
+              fecha_pago_realizado_anterioridad: null
+              multa_por_correccion: null
+              monto_pagado_anterioridad: null
+              total_de_contribuciones: 111448
+              importe_pagado_ultimas_48_hrs: null
+              credito_al_salario: null
+              cantidad_a_cargo: 111448
+              subsidio_empleo: null
+              aplica_primera_parcialidad: 'NO'
+              compensaciones: null
+              credito_ieps_diesel: null
+              otros_estimulos: null
+              cantidad_a_favor: null
+              cretificados_tesofe: null
+              cantidad_a_pagar: 111448
+              importe_1ra_parcialidad: null
+              importe_sin_1ra_parcialidad: null
+          pdf: ===PDF_BINARY====
+          receipt_pdf: ===PDF_BINARY====
+          type: monthly
+    TaxReturnPersonalListMonthlyPFAE:
+      summary: Personal Monthly (PFAE)
+      description: Example of a PFAE-type monthly personal tax return
+      value:
+      - collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          rfc: null
+          nombre: null
+          tipo_declaracion: null
+          ejercicio: null
+          periodo_declaracion: null
+          fecha_hora_presentacion: null
+          numero_operacion: null
+        isr:
+          tipo: PFAE
+          determinacion:
+            ingresos_periodos_anteriores: 0
+            ingresos_periodo: 0
+            total_ingresos: 0
+            compras_gastos_periodos_anteriores: 1596
+            compra_gastos_periodo: 399
+            total_compras_gastos: 1995
+            base_gravable_pago_provisional: 0
+            isr_causado: 0
+            pagos_provisionales_efectuados_anterioridad: 0
+            isr_retenido_periodos_anteriores: 0
+            impuesto_retenido: 0
+            isr_cargo: 0
+          detalle_del_pago:
+            a_cargo: 0
+            parte_actualizada: 0
+            recargos: 0
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+        iva:
+          determinacion:
+            actividades_gravadas_tasa_16: 0
+            actividades_gravadas_tasa_0: 0
+            actividades_exentas: 0
+            iva_cobrado_periodo_tasa_16: 0
+            iva_acreditable_periodo: 0
+            iva_retenido: 0
+            saldo_a_favor: null
+            impuesto_a_favor: null
+          detalle_del_pago:
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+            a_favor: null
+        pdf: ===PDF_BINARY====
+        receipt_pdf: ===PDF_BINARY====
+        type: monthly
+    TaxReturnPersonalListPaginated:
+      summary: Tax Return Personal
+      description: Example of a list of personal tax returns
+      value:
+        count: 101
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: 02589c41-ba22-4d44-8558-8111cc751318
+          link: 19697249-01b8-443e-a451-76bfc5fbeebf
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          informacion_general:
+            ejercicio: 2018
+            fecha_hora_presentacion: '2020-01-07T17:28:00-05:00'
+            numero_operacion: '00000000001'
+            periodo_declaracion: Del Ejercicio
+            rfc: ABCD111111A11
+            tipo_declaracion: Normal
+            nombre: JOHN DOE
+          sueldos_salarios:
+            retenedores:
+            - rfc_retenedor: ABCD222222A22
+              nombre_denominacion_razon_social: ACME CORP
+              ingresos_exentos: 118263
+              ingreso_anual: 2265
+              subsidio_empleo: 0
+            impuesto_retenido: 19497
+            ingreso_anual: 118263
+            ingresos_acumulables: 115998
+            ingresos_exentos: 2265
+            subsidio_empleo: 0
+          servicios_profesionales:
+            deducciones_autorizadas:
+              deducciones_autorizadas: 11870
+              otras_deducciones: null
+              detalle_deducciones:
+              - tipo_deduccion: GASTOS
+                concepto: GASOLINA Y MANTENIMIENTO DE TRANSPORTE
+                monto_detallado: 9682
+              - tipo_deduccion: GASTOS
+                concepto: COMPRAS Y GASTOS GENERALES
+                monto_detallado: 2188
+              total_deducciones_autorizadas: 11870
+            ingresos:
+              ingresos_acumulables: 46000
+              ingresos_exentos: null
+              otros_ingresos: null
+              total_ingresos: 46000
+            resultado_fiscal:
+              utilidad_fiscal: 34130
+              ptu_pagada_ejercicio: 0
+              perdidas_fiscales_ejercicios_anteriores_aplicadas: 0
+              utilidad_gravable: 34130
+            pagos_provisionales:
+              pagos_provisionales_efectuados_en_ejercicio: 0
+            retenciones_isr:
+              isr_retenido_personas_morales: 4600
+          deducciones_personales:
+            honorarios_medicos_dentales_hospitalarios:
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC444444A44
+              monto_deducible: 1000
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC444444A44
+              monto_deducible: 502.34
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC333333A33
+              monto_deducible: 258.83
+            - rfc_emisor: ABC444444A55
+              monto_deducible: 14183.1
+            - rfc_emisor: ABC444444A66
+              monto_deducible: 1658
+            - rfc_emisor: ABC444444A77
+              monto_deducible: 1600
+            - rfc_emisor: ABC444444A88
+              monto_deducible: 1064
+            - rfc_emisor: ABC444444A99
+              monto_deducible: 927.57
+            donativos:
+            - rfc_emisor: ABC555555A99
+              monto_deducible: 10.03
+            aportaciones_voluntarias_complementarias_al_sar:
+            - rfc_emisor: ABC666666A99
+              monto_deducible: 12.03
+            - rfc_emisor: ABC777777A99
+              monto_deducible: 87.22
+            primas_por_seguros_de_gasto_medico:
+            - rfc_emisor: ABC777777A99
+              monto_deducible: 20.03
+          determinacion_impuesto:
+            base_gravable: 126864
+            deducciones_personales: 23264
+            ingresos_acumulables: 150128
+            isr_favorable: 10308
+            isr_conforme_tarifa_final: 13789
+            isr_retenido: 24097
+            num_clabe: '000000000000000001'
+            nombre_banco: BANCO SA
+            pagos_provisionales: 0
+            titular_clabe_permite_verificacion: SÍ
+            accion_saldo_a_favor: DEVOLUCIÓN
+          retenciones:
+            sueldos_salarios:
+            - rfc_retenedor: ABC444444A99
+              monto_retenciones: 118263
+              retenciones_isr: 19497
+            dividendos: []
+            servicios_profesionales:
+            - rfc_retenedor: ABC444444A00
+              monto_retenciones: 46000
+              retenciones_isr: 4600
+          dividendos:
+            monto_acumulable_dividendos_utilidades: null
+            monto_total_isr_pagado_sociedad: null
+          datos_informativos:
+            credito_fiscal_autorizado_proyectos_investigacion_desarrollo: 0
+            credito_fiscal_autorizado_proyectos_apoyo_deporte_alto_rendimiento: 0
+            credito_fiscal_autorizado_proyectos_inversion_artes: 0
+            credito_fiscal_autorizado_inversion_equipos_fijos: 0
+            credito_fiscal_autorizado_produccion_distribucion_cinematografica: 0
+            saldo_credito_fiscal_autorizado_anteriores_investigacion_desarrollo: 0
+            saldo_credito_fiscal_anteriores_proyectos_inversion_artes: 0
+            saldo_credito_fiscal_anteriores_produccion_distribucion_cinematografica: 0
+          pdf: =PDF-STRING=
+          receipt_pdf: =PDF-STRING=
+          type: yearly
+    TaxReturnBusinessListPaginated:
+      summary: Tax Return Business
+      description: Example of a list of business tax returns
+      value:
+        count: 101
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - id: 02589c41-ba22-4d44-8558-8111cc751318
+          link: 19697249-01b8-443e-a451-76bfc5fbeebf
+          collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          informacion_general:
+            ejercicio: 2018
+            fecha_hora_presentacion: '2020-01-07T16:55:00-06:00'
+            numero_operacion: '000000000001'
+            periodo_declaracion: Del Ejercicio
+            rfc: ABC1111111A1
+            tipo_declaracion: Normal
+            tipo_complementaria: null
+            denominacion_razon_social: ACME CORP
+          datos_adicionales:
+            indica_si_optas_por_dictaminar_tus_estados_financieros: 'NO'
+            estas_obligado_a_presentar_la_informacion_sobre_tu_situacion_fiscal: 'NO'
+            estas_obligado_unicamente_por_supuesto_distinto_al_de_haber_realizado_operaciones_con_residentes_extranjero: SIN SELECCIÓN
+            ? estas_obligado_unicamente_por_supuesto_distinto_al_de_haber_realizado_operaciones_con_residentes_extranjero_inferiores_100mdp
+            : SIN SELECCIÓN
+            optas_por_presentar_informacion_sobre_tu_situacion_fiscal: SIN SELECCIÓN
+            indica_si_te_dedicas_exclisivamente_a_generacion_energia_fuentes_renovables_o_cogeneracion_electricidad_eficiente: 'NO'
+          estado_resultados:
+            ventas_servicios_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: 911165
+              total: 911165
+            ventas_servicios_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            devoluciones_descuentos_bonificaciones_ventas_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            devoluciones_descuentos_bonificaciones_ventas_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            ingresos_netos:
+              partes_relacionadas: null
+              partes_no_relacionadas: 911165
+              total: 911165
+            inventario_inicial: null
+            compras_netas_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            compras_netas_importacion:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            inventario_final: null
+            costo_mercancias: null
+            mano_de_obra:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            maquilas:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            gastos_indirectos_fabricacion:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            costo_ventas_servicios: null
+            utilidad_bruta: 911165
+            perdida_bruta: null
+            gastos_operacion:
+              partes_relacionadas: null
+              partes_no_relacionadas: 499540
+              total: 499540
+            utilidad_operacion: 411625
+            perdida_operacion: null
+            intereses_devengados_a_favor_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            intereses_devengados_a_favor_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            intereses_moratorios_a_favor_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            intereses_moratorios_a_favor_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            ganancia_cambiaria:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            intereses_devengados_a_cargo_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            intereses_devengados_a_cargo_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            intereses_moratorios_a_cargo_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            intereses_moratorios_a_cargo_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            perdida_cambiaria:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            resultado_posicion_monetaria_favorable:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            resultado_posicion_monetaria_desfavorable:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            otras_operaciones_financieras_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            otras_operaciones_financieras_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            otras_operaciones_financieras: null
+            resultado_integral_financiamiento: null
+            otros_gastos_nacionales: null
+            otros_gastos_extranjero: null
+            otros_gastos: null
+            otros_productos_nacionales: null
+            otros_productos_extranjero: null
+            otros_productos: null
+            ingresos_partidas_discontinuas_extraordinarias: null
+            gastos_partidas_discontinuas_extraordinarias: null
+            utilidad_antes_impuesto: 411625
+            perdida_antes_impuesto: null
+            isr: 113002
+            ietu: null
+            impac: null
+            ptu: null
+            utilidad_participacion_subsidiaria: null
+            perdida_participacion_subsidiaria: null
+            efectos_reexpresion_favorables_excepto_resultado_posicion_monetaria: null
+            efectos_reexpresion_desfavorables_excepto_resultado_posicion_monetaria: null
+            utilidad_neta: 298623
+            perdida_neta: null
+          estado_posicion_financiera_balance:
+            activo:
+              efectivo_caja_depositos_instituciones_credito_nacionales: 726644
+              efectivo_caja_depositos_instituciones_credito_extranjero: null
+              inversiones_valores_instituciones_nacionales_excepto_acciones: null
+              inversiones_valores_instituciones_extranjero_excepto_acciones: null
+              cuentas_documentos_por_cobrar_nacionales:
+                partes_relacionadas: null
+                partes_no_relacionadas: null
+                total: null
+              cuentas_documentos_por_cobrar_extranjero:
+                partes_relacionadas: null
+                partes_no_relacionadas: null
+                total: null
+              contribuciones_a_favor: null
+              inventarios: null
+              otros_activos_circulantes: 13277
+              inversiones_en_acciones_nacionales: null
+              inversiones_en_acciones_extranjero: null
+              inversiones_en_acciones_total: null
+              terrenos: null
+              construcciones: null
+              construcciones_en_proceso: null
+              maquinaria_y_equipo: null
+              mobiliario_y_equipo_oficina: null
+              equipo_de_computo: null
+              equipo_de_transporte: null
+              otros_activos_fijos: 12756
+              depreciacion_acumulada: -106
+              cargos_y_gastos_diferidos: 9319
+              amortizacion_acumulada: null
+              suma_activo: 761890
+            pasivo:
+              cuentas_documentos_por_pagar_nacionales:
+                partes_relacionadas: null
+                partes_no_relacionadas: 268227
+                total: 268227
+              cuentas_documentos_por_pagar_extranjero:
+                partes_relacionadas: null
+                partes_no_relacionadas: null
+                total: null
+              contribuciones_por_pagar: 223490
+              anticipos_de_clientes:
+                partes_relacionadas: null
+                partes_no_relacionadas: null
+                total: null
+              aportaciones_futuros_aumentos_de_capital: null
+              otros_pasivos: null
+              suma_pasivo: 491717
+            capital_contable:
+              capital_social_proveniente_aportaciones: 10000
+              capital_social_proveniente_capitalizacion: null
+              reservas: null
+              otras_cuentas_capital: null
+              aportaciones_futuros_aumentos_de_capital: null
+              utilidades_acumuladas: null
+              utilidad_del_ejercicio: 298623
+              perdidas_acumuladas: -38450
+              perdida_del_ejercicio: null
+              exceso_en_actualizacion_capital: null
+              insuficiencia_en_actualizacion_capital: null
+              actualizacion_del_capital_contable: null
+              suma_capital_contable: 270173
+              suma_pasivo_mas_capital_contable: 761890
+          conciliacion_entre_resultado_contable_fiscal:
+            utilidad_o_perdida_neta: 298623
+            efectos_reexpresion: null
+            resultado_posicion_monetaria: null
+            utilidad_o_perdida_neta_historica: 298623
+            ingresos_fiscales_no_contables: 95
+            ajuste_anual_inflacion_acumulable: 95
+            anticipos_de_clientes: null
+            intereses_moratorios_efectivamente_cobrados: null
+            ganancia_en_enajenacion_acciones_por_reembolso_capital: null
+            ganancia_en_enajenacion_de_terrenos_y_activo_fijo: null
+            inventario_acumulable_del_ejercicio: null
+            otros_ingresos_fiscales_no_contables: null
+            deducciones_contables_no_fiscales: 117415
+            costo_de_ventas_contable: null
+            depreciacion_y_amortizacion_contable: 106
+            gastos_que_no_reunen_requisitos_fiscales: 4307
+            isr_ietu_impac_ptu: 113002
+            perdida_contable_enajenacion_de_acciones: null
+            perdida_contable_enajenacion_de_activo_fijo: null
+            perdida_en_participacion_subsidiaria: null
+            intereses_devengados_que_exceden_valor_mercado_y_moratorios_pagados_o_no: 0
+            otras_deducciones_contables_no_fiscales: 0
+            deducciones_fiscales_no_contables: 0
+            ajuste_anual_inflacion_deducible: null
+            costo_vendido_fiscal: null
+            deduccion_inversiones: null
+            estimulo_fiscal_por_deduccion_inmediata_inversiones: null
+            donacion_bienes_basicos_subsistencia_humana: 0
+            estimulo_fiscal_contratacion_personas_discapacidad_yo_mayores: 0
+            deduccion_impuesto_sobre_renta_retenido_personas_discapacidad_yo_mayores: 0
+            perdida_fiscal_en_enajenacion_acciones: null
+            perdida_fiscal_en_enajenacion_de_terrenos_y_activo_fijo: null
+            intereses_moratorios_efectivamente_pagados: null
+            otras_deducciones_fiscales_no_contables: null
+            ingresos_contables_no_fiscales: null
+            intereses_moratorios_devengados_a_favor_cobrados_o_no: null
+            anticipos_de_clientes_ejercicios_anteriores: null
+            saldos_a_favor_impuestos_y_su_actualizacion: null
+            utilidad_contable_enajenacion_de_activo_fijo: null
+            utilidad_contable_enajenacion_de_acciones: null
+            utilidad_en_participacion_subsidiaria: null
+            otros_ingresos_contables_no_fiscales: null
+            utilidad_o_perdida_fiscal_antes_de_ptu: 416133
+          deducciones_autorizadas:
+            sueldos_salarios: null
+            honorarios_pagados_a_personas_fisicas: null
+            regalias_y_asistencia_tecnica: null
+            donativos_otorgados: null
+            uso_o_goce_temporal_de_bienes_pagados_a_personas_fisicas: null
+            fletes_y_acarreos_pagados_a_parsonas_fisicas: null
+            contribuciones_pagadas_excepto_isr_ietu_impac_iva_ieps: null
+            seguros_fianzas: null
+            perdida_por_creditos_incobrables: null
+            viaticos_y_gastos_viaje: 59527
+            combustible_y_lubricantes: null
+            credito_al_salario_no_disminuido_de_contribuciones: null
+            aportaciones_sar_infonavit_y_jubilaciones_vejez: null
+            aportaciones_para_fondos_de_pensiones_y_jubilaciones: null
+            cuotas_imss: null
+            consumos_en_restaurantes: 11254
+            perdida_por_operaciones_financieras_derivadas: null
+            deduccion_por_concepto_de_ayuda_alimentaria_para_trabajadores: null
+            monto_total_pagos_que_sean_ingresos_exentos_para_trabajador: null
+            monto_deducible_al_47_pagos_son_ingresos_exentos_para_trabajador: null
+            monto_deducible_al_53_pagos_son_ingresos_exentos_para_trabajador: null
+            uso_o_goce_temporal_de_automoviles_baterias_electricas_o_electricos_con_motor_combustion_o_hidrogeno: null
+            otras_deducciones_autorizadas: 424346
+            total_deducciones_autorizadas: 495127
+          cifras_cierre_ejercicio:
+            perdidas_fiscales_de_ejercicios_anteriores_pendientes_de_amortizar_actualiazadas: null
+            saldo_promedio_anual_de_creditos: 142795
+            saldo_promedio_anual_de_deudas: 144765
+            coeficiente_de_utilidad_por_aplicar_en_ejercicio_siguiente: 0.4567
+            porcentaje_de_participacion_consolidable: null
+            isr_causado_en_exceso_del_impac_en_los_3_ejercicios_anteriores_pendientes_aplicar: null
+            saldo_actualizado_de_cuenta_de_utilidad_fiscal_neta_2013_y_anteriores: null
+            saldo_actualizado_de_cuenta_de_utilidad_fiscal_neta_a_partir_2014_y_anteriores: null
+            saldo_actualizado_de_cuenta_de_utilidad_fiscal_reinvertida: null
+            saldo_actualizado_de_cuenta_de_capital_de_aportacion: null
+            saldo_de_cuenta_de_utilidad_fiscal_neta_por_inversion_en_renovables: null
+          determinacion_del_impuesto_sobre_la_renta:
+            determinacion_del_impuesto_sobre_la_renta:
+              total_ingresos_acumulables: 911260
+              total_deducciones_autorizadas_y_deduccion_inmediata_inversiones: 495126
+              deduccion_adicional_por_pago_servicios_personales_en_operacion_maquila: null
+              utilidad_o_perdida_fiscal_antes_de_ptu: 416134
+              ptu_pagada_en_el_ejercicio: null
+              utilidad_fiscal_del_ejercicio: 416134
+              perdidas_fiscales_de_ejercicios_anteriores_que_se_aplican_en_ejercicio: 39462
+              resultado_fiscal: 376672
+              impuesto_causado_en_ejercicio: 113002
+              tienes_estimulos_fiscales_a_acreditar: SIN SELECCIÓN
+              impuesto_sobre_la_renta_del_ejercicio: 113002
+              pagos_provisionales_efectuados_enterados_a_federacion: null
+              impuesto_retenido_al_contribuyente: null
+              impuesto_acreditable_pagado_en_extranjero: null
+              impuesto_acreditable_por_dividendos_o_utilidades_distribuidos: null
+              otras_cantidades_a_cargo: null
+              otras_cantidades_a_favor: null
+              diferencia_a_cargo: 113002
+              isr_a_cargo_del_ejercicio: 113002
+              isr_a_favor_del_ejercicio: null
+            impuesto_sobre_ingresos_sujetos_a_regimenes_fiscales_preferentes: null
+            datos_informativos_ejercicio:
+              monto_aplicado_del_estimulo_fiscal_de_chatarrizacion: 0
+              monto_deducible_de_pagos_efectuados_por_uso_o_goce_temporal_automoviles: 0
+              impac_recuperado_en_ejercicio_derivado_de_deconsolidacion: 0
+              ingresos_obtenidos_por_apoyos_gubernamentales: 0
+              gastos_realidados_en_ejercicio_por_proyectos_en_investigacion_desarrollo_tecnologico: 0
+              credito_fiscal_autorizado_en_ejercicio_por_proyectos_en_investigacion_desarrollo_tecnologico_pendiente_aplicar: 0
+              credito_fiscal_autorizado_en_ejercicio_por_proyectos_de_inversion_en_artes_pendiente_aplicar: 0
+              ? credito_fiscal_autorizado_en_ejercicio_por_inversion_en_proyectos_programas_para_deporte_de_alto_rendimiento_pendiente_aplicar
+              : 0
+              saldo_pendiente_aplicar_por_inversion_en_equipos_de_alimentacion_vehiculos_electricos: 0
+              credito_fiscal_autorizado_en_ejercicio_a_produccion_distribucion_cinematografica_nacional_pendiente_aplicar: 0
+            datos_informativos_ejercicios_anteriores_aplicados_en_ejercicio:
+              total_estimulo_produccion_y_distribucion_cinematografica_nacional_ejercicios_anteriores_aplicado_en_ejercicio: null
+              ? saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_inversion_en_proyectos_programas_para_deporte_alto_rendimiento_pendiente_aplicar
+              : 0
+              saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_proyectos_investigacion_desarrollo_tecnologico_pendiente_aplicar: 0
+              saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_proyectos_inversion_artes_pendiente_aplicar: 0
+              saldo_credito_fiscal_autorizado_ejercicios_anteriores_a_produccion_distribucion_nacional_pendiente_aplicar: 0
+          dividendos_o_utilidades_distribuidos:
+            provenientes_de_cuenta_de_utilidad_fisica_neta_cufin_generada_en_2013_y_anteriores: null
+            provenientes_de_cuenta_de_utilidad_fisica_neta_cufin_generada_a_partir_de_2014: null
+            provenientes_de_cuenta_de_utilidad_fisica_neta_reinvertida_cufinre: null
+            no_provenientes_de_cufin_ni_cufinre_en_efectivo: null
+            no_provenientes_de_cufin_ni_cufinre_en_acciones: null
+            monto_del_impuesto_pagado_no_proveniente_de_cufin_ni_cufinre: null
+            monto_del_impuesto_pagado_de_utilidades_provenientes_de_cufinre: null
+            ? provenientes_de_cuenta_de_utilidad_fiscal_neta_por_inversion_en_energia_de_fuentes_renovables_o_sistemas_cogeneracion_electricidad_eficiente
+            : null
+          detalle_pago_r1_isr_personas_morales:
+            a_cargo: 113002
+            parte_actualizada: null
+            recargos: null
+            multa_por_correccion: null
+            total_contribuciones: 113002
+            desea_aplicar_alguna_compensacion_o_estimulo: 'NO'
+            cantidad_a_cargo: 113002
+            opta_por_pagar_parcialidades: SIN SELECCIÓN
+            importe_de_primera_parcialidad: null
+            importe_sin_primera_parcialidad: null
+            cantidad_a_favor: null
+            cantidad_a_pagar: 113002
+          pdf: =PDF-STRING=
+          receipt_pdf: =PDF-STRING=
+          type: yearly
+    TaxReturnBusinessListDetail:
+      summary: Tax Return Business
+      description: Example of a list of business tax returns
+      value:
+        id: 02589c41-ba22-4d44-8558-8111cc751318
+        link: 19697249-01b8-443e-a451-76bfc5fbeebf
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          ejercicio: 2018
+          fecha_hora_presentacion: '2020-01-07T16:55:00-06:00'
+          numero_operacion: '000000000001'
+          periodo_declaracion: Del Ejercicio
+          rfc: ABC1111111A1
+          tipo_declaracion: Normal
+          tipo_complementaria: null
+          denominacion_razon_social: ACME CORP
+        datos_adicionales:
+          indica_si_optas_por_dictaminar_tus_estados_financieros: 'NO'
+          estas_obligado_a_presentar_la_informacion_sobre_tu_situacion_fiscal: 'NO'
+          estas_obligado_unicamente_por_supuesto_distinto_al_de_haber_realizado_operaciones_con_residentes_extranjero: SIN SELECCIÓN
+          ? estas_obligado_unicamente_por_supuesto_distinto_al_de_haber_realizado_operaciones_con_residentes_extranjero_inferiores_100mdp
+          : SIN SELECCIÓN
+          optas_por_presentar_informacion_sobre_tu_situacion_fiscal: SIN SELECCIÓN
+          indica_si_te_dedicas_exclisivamente_a_generacion_energia_fuentes_renovables_o_cogeneracion_electricidad_eficiente: 'NO'
+        estado_resultados:
+          ventas_servicios_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: 911165
+            total: 911165
+          ventas_servicios_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          devoluciones_descuentos_bonificaciones_ventas_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          devoluciones_descuentos_bonificaciones_ventas_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          ingresos_netos:
+            partes_relacionadas: null
+            partes_no_relacionadas: 911165
+            total: 911165
+          inventario_inicial: null
+          compras_netas_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          compras_netas_importacion:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          inventario_final: null
+          costo_mercancias: null
+          mano_de_obra:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          maquilas:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          gastos_indirectos_fabricacion:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          costo_ventas_servicios: null
+          utilidad_bruta: 911165
+          perdida_bruta: null
+          gastos_operacion:
+            partes_relacionadas: null
+            partes_no_relacionadas: 499540
+            total: 499540
+          utilidad_operacion: 411625
+          perdida_operacion: null
+          intereses_devengados_a_favor_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_devengados_a_favor_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_favor_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_favor_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          ganancia_cambiaria:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_devengados_a_cargo_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_devengados_a_cargo_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_cargo_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          intereses_moratorios_a_cargo_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          perdida_cambiaria:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          resultado_posicion_monetaria_favorable:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          resultado_posicion_monetaria_desfavorable:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          otras_operaciones_financieras_nacionales:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          otras_operaciones_financieras_extranjero:
+            partes_relacionadas: null
+            partes_no_relacionadas: null
+            total: null
+          otras_operaciones_financieras: null
+          resultado_integral_financiamiento: null
+          otros_gastos_nacionales: null
+          otros_gastos_extranjero: null
+          otros_gastos: null
+          otros_productos_nacionales: null
+          otros_productos_extranjero: null
+          otros_productos: null
+          ingresos_partidas_discontinuas_extraordinarias: null
+          gastos_partidas_discontinuas_extraordinarias: null
+          utilidad_antes_impuesto: 411625
+          perdida_antes_impuesto: null
+          isr: 113002
+          ietu: null
+          impac: null
+          ptu: null
+          utilidad_participacion_subsidiaria: null
+          perdida_participacion_subsidiaria: null
+          efectos_reexpresion_favorables_excepto_resultado_posicion_monetaria: null
+          efectos_reexpresion_desfavorables_excepto_resultado_posicion_monetaria: null
+          utilidad_neta: 298623
+          perdida_neta: null
+        estado_posicion_financiera_balance:
+          activo:
+            efectivo_caja_depositos_instituciones_credito_nacionales: 726644
+            efectivo_caja_depositos_instituciones_credito_extranjero: null
+            inversiones_valores_instituciones_nacionales_excepto_acciones: null
+            inversiones_valores_instituciones_extranjero_excepto_acciones: null
+            cuentas_documentos_por_cobrar_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            cuentas_documentos_por_cobrar_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            contribuciones_a_favor: null
+            inventarios: null
+            otros_activos_circulantes: 13277
+            inversiones_en_acciones_nacionales: null
+            inversiones_en_acciones_extranjero: null
+            inversiones_en_acciones_total: null
+            terrenos: null
+            construcciones: null
+            construcciones_en_proceso: null
+            maquinaria_y_equipo: null
+            mobiliario_y_equipo_oficina: null
+            equipo_de_computo: null
+            equipo_de_transporte: null
+            otros_activos_fijos: 12756
+            depreciacion_acumulada: -106
+            cargos_y_gastos_diferidos: 9319
+            amortizacion_acumulada: null
+            suma_activo: 761890
+          pasivo:
+            cuentas_documentos_por_pagar_nacionales:
+              partes_relacionadas: null
+              partes_no_relacionadas: 268227
+              total: 268227
+            cuentas_documentos_por_pagar_extranjero:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            contribuciones_por_pagar: 223490
+            anticipos_de_clientes:
+              partes_relacionadas: null
+              partes_no_relacionadas: null
+              total: null
+            aportaciones_futuros_aumentos_de_capital: null
+            otros_pasivos: null
+            suma_pasivo: 491717
+          capital_contable:
+            capital_social_proveniente_aportaciones: 10000
+            capital_social_proveniente_capitalizacion: null
+            reservas: null
+            otras_cuentas_capital: null
+            aportaciones_futuros_aumentos_de_capital: null
+            utilidades_acumuladas: null
+            utilidad_del_ejercicio: 298623
+            perdidas_acumuladas: -38450
+            perdida_del_ejercicio: null
+            exceso_en_actualizacion_capital: null
+            insuficiencia_en_actualizacion_capital: null
+            actualizacion_del_capital_contable: null
+            suma_capital_contable: 270173
+            suma_pasivo_mas_capital_contable: 761890
+        conciliacion_entre_resultado_contable_fiscal:
+          utilidad_o_perdida_neta: 298623
+          efectos_reexpresion: null
+          resultado_posicion_monetaria: null
+          utilidad_o_perdida_neta_historica: 298623
+          ingresos_fiscales_no_contables: 95
+          ajuste_anual_inflacion_acumulable: 95
+          anticipos_de_clientes: null
+          intereses_moratorios_efectivamente_cobrados: null
+          ganancia_en_enajenacion_acciones_por_reembolso_capital: null
+          ganancia_en_enajenacion_de_terrenos_y_activo_fijo: null
+          inventario_acumulable_del_ejercicio: null
+          otros_ingresos_fiscales_no_contables: null
+          deducciones_contables_no_fiscales: 117415
+          costo_de_ventas_contable: null
+          depreciacion_y_amortizacion_contable: 106
+          gastos_que_no_reunen_requisitos_fiscales: 4307
+          isr_ietu_impac_ptu: 113002
+          perdida_contable_enajenacion_de_acciones: null
+          perdida_contable_enajenacion_de_activo_fijo: null
+          perdida_en_participacion_subsidiaria: null
+          intereses_devengados_que_exceden_valor_mercado_y_moratorios_pagados_o_no: 0
+          otras_deducciones_contables_no_fiscales: 0
+          deducciones_fiscales_no_contables: 0
+          ajuste_anual_inflacion_deducible: null
+          costo_vendido_fiscal: null
+          deduccion_inversiones: null
+          estimulo_fiscal_por_deduccion_inmediata_inversiones: null
+          donacion_bienes_basicos_subsistencia_humana: 0
+          estimulo_fiscal_contratacion_personas_discapacidad_yo_mayores: 0
+          deduccion_impuesto_sobre_renta_retenido_personas_discapacidad_yo_mayores: 0
+          perdida_fiscal_en_enajenacion_acciones: null
+          perdida_fiscal_en_enajenacion_de_terrenos_y_activo_fijo: null
+          intereses_moratorios_efectivamente_pagados: null
+          otras_deducciones_fiscales_no_contables: null
+          ingresos_contables_no_fiscales: null
+          intereses_moratorios_devengados_a_favor_cobrados_o_no: null
+          anticipos_de_clientes_ejercicios_anteriores: null
+          saldos_a_favor_impuestos_y_su_actualizacion: null
+          utilidad_contable_enajenacion_de_activo_fijo: null
+          utilidad_contable_enajenacion_de_acciones: null
+          utilidad_en_participacion_subsidiaria: null
+          otros_ingresos_contables_no_fiscales: null
+          utilidad_o_perdida_fiscal_antes_de_ptu: 416133
+        deducciones_autorizadas:
+          sueldos_salarios: null
+          honorarios_pagados_a_personas_fisicas: null
+          regalias_y_asistencia_tecnica: null
+          donativos_otorgados: null
+          uso_o_goce_temporal_de_bienes_pagados_a_personas_fisicas: null
+          fletes_y_acarreos_pagados_a_parsonas_fisicas: null
+          contribuciones_pagadas_excepto_isr_ietu_impac_iva_ieps: null
+          seguros_fianzas: null
+          perdida_por_creditos_incobrables: null
+          viaticos_y_gastos_viaje: 59527
+          combustible_y_lubricantes: null
+          credito_al_salario_no_disminuido_de_contribuciones: null
+          aportaciones_sar_infonavit_y_jubilaciones_vejez: null
+          aportaciones_para_fondos_de_pensiones_y_jubilaciones: null
+          cuotas_imss: null
+          consumos_en_restaurantes: 11254
+          perdida_por_operaciones_financieras_derivadas: null
+          deduccion_por_concepto_de_ayuda_alimentaria_para_trabajadores: null
+          monto_total_pagos_que_sean_ingresos_exentos_para_trabajador: null
+          monto_deducible_al_47_pagos_son_ingresos_exentos_para_trabajador: null
+          monto_deducible_al_53_pagos_son_ingresos_exentos_para_trabajador: null
+          uso_o_goce_temporal_de_automoviles_baterias_electricas_o_electricos_con_motor_combustion_o_hidrogeno: null
+          otras_deducciones_autorizadas: 424346
+          total_deducciones_autorizadas: 495127
+        cifras_cierre_ejercicio:
+          perdidas_fiscales_de_ejercicios_anteriores_pendientes_de_amortizar_actualiazadas: null
+          saldo_promedio_anual_de_creditos: 142795
+          saldo_promedio_anual_de_deudas: 144765
+          coeficiente_de_utilidad_por_aplicar_en_ejercicio_siguiente: 0.4567
+          porcentaje_de_participacion_consolidable: null
+          isr_causado_en_exceso_del_impac_en_los_3_ejercicios_anteriores_pendientes_aplicar: null
+          saldo_actualizado_de_cuenta_de_utilidad_fiscal_neta_2013_y_anteriores: null
+          saldo_actualizado_de_cuenta_de_utilidad_fiscal_neta_a_partir_2014_y_anteriores: null
+          saldo_actualizado_de_cuenta_de_utilidad_fiscal_reinvertida: null
+          saldo_actualizado_de_cuenta_de_capital_de_aportacion: null
+          saldo_de_cuenta_de_utilidad_fiscal_neta_por_inversion_en_renovables: null
+        determinacion_del_impuesto_sobre_la_renta:
+          determinacion_del_impuesto_sobre_la_renta:
+            total_ingresos_acumulables: 911260
+            total_deducciones_autorizadas_y_deduccion_inmediata_inversiones: 495126
+            deduccion_adicional_por_pago_servicios_personales_en_operacion_maquila: null
+            utilidad_o_perdida_fiscal_antes_de_ptu: 416134
+            ptu_pagada_en_el_ejercicio: null
+            utilidad_fiscal_del_ejercicio: 416134
+            perdidas_fiscales_de_ejercicios_anteriores_que_se_aplican_en_ejercicio: 39462
+            resultado_fiscal: 376672
+            impuesto_causado_en_ejercicio: 113002
+            tienes_estimulos_fiscales_a_acreditar: SIN SELECCIÓN
+            impuesto_sobre_la_renta_del_ejercicio: 113002
+            pagos_provisionales_efectuados_enterados_a_federacion: null
+            impuesto_retenido_al_contribuyente: null
+            impuesto_acreditable_pagado_en_extranjero: null
+            impuesto_acreditable_por_dividendos_o_utilidades_distribuidos: null
+            otras_cantidades_a_cargo: null
+            otras_cantidades_a_favor: null
+            diferencia_a_cargo: 113002
+            isr_a_cargo_del_ejercicio: 113002
+            isr_a_favor_del_ejercicio: null
+          impuesto_sobre_ingresos_sujetos_a_regimenes_fiscales_preferentes: null
+          datos_informativos_ejercicio:
+            monto_aplicado_del_estimulo_fiscal_de_chatarrizacion: 0
+            monto_deducible_de_pagos_efectuados_por_uso_o_goce_temporal_automoviles: 0
+            impac_recuperado_en_ejercicio_derivado_de_deconsolidacion: 0
+            ingresos_obtenidos_por_apoyos_gubernamentales: 0
+            gastos_realidados_en_ejercicio_por_proyectos_en_investigacion_desarrollo_tecnologico: 0
+            credito_fiscal_autorizado_en_ejercicio_por_proyectos_en_investigacion_desarrollo_tecnologico_pendiente_aplicar: 0
+            credito_fiscal_autorizado_en_ejercicio_por_proyectos_de_inversion_en_artes_pendiente_aplicar: 0
+            ? credito_fiscal_autorizado_en_ejercicio_por_inversion_en_proyectos_programas_para_deporte_de_alto_rendimiento_pendiente_aplicar
+            : 0
+            saldo_pendiente_aplicar_por_inversion_en_equipos_de_alimentacion_vehiculos_electricos: 0
+            credito_fiscal_autorizado_en_ejercicio_a_produccion_distribucion_cinematografica_nacional_pendiente_aplicar: 0
+          datos_informativos_ejercicios_anteriores_aplicados_en_ejercicio:
+            total_estimulo_produccion_y_distribucion_cinematografica_nacional_ejercicios_anteriores_aplicado_en_ejercicio: null
+            ? saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_inversion_en_proyectos_programas_para_deporte_alto_rendimiento_pendiente_aplicar
+            : 0
+            saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_proyectos_investigacion_desarrollo_tecnologico_pendiente_aplicar: 0
+            saldo_credito_fiscal_autorizado_ejercicios_anteriores_por_proyectos_inversion_artes_pendiente_aplicar: 0
+            saldo_credito_fiscal_autorizado_ejercicios_anteriores_a_produccion_distribucion_nacional_pendiente_aplicar: 0
+        dividendos_o_utilidades_distribuidos:
+          provenientes_de_cuenta_de_utilidad_fisica_neta_cufin_generada_en_2013_y_anteriores: null
+          provenientes_de_cuenta_de_utilidad_fisica_neta_cufin_generada_a_partir_de_2014: null
+          provenientes_de_cuenta_de_utilidad_fisica_neta_reinvertida_cufinre: null
+          no_provenientes_de_cufin_ni_cufinre_en_efectivo: null
+          no_provenientes_de_cufin_ni_cufinre_en_acciones: null
+          monto_del_impuesto_pagado_no_proveniente_de_cufin_ni_cufinre: null
+          monto_del_impuesto_pagado_de_utilidades_provenientes_de_cufinre: null
+          ? provenientes_de_cuenta_de_utilidad_fiscal_neta_por_inversion_en_energia_de_fuentes_renovables_o_sistemas_cogeneracion_electricidad_eficiente
+          : null
+        detalle_pago_r1_isr_personas_morales:
+          a_cargo: 113002
+          parte_actualizada: null
+          recargos: null
+          multa_por_correccion: null
+          total_contribuciones: 113002
+          desea_aplicar_alguna_compensacion_o_estimulo: 'NO'
+          cantidad_a_cargo: 113002
+          opta_por_pagar_parcialidades: SIN SELECCIÓN
+          importe_de_primera_parcialidad: null
+          importe_sin_primera_parcialidad: null
+          cantidad_a_favor: null
+          cantidad_a_pagar: 113002
+        pdf: =PDF-STRING=
+        receipt_pdf: =PDF-STRING=
+    TaxReturnBusinessListMonthlyDetail:
+      summary: Tax Return Business Monthly
+      description: Example of a monthly business tax return
+      value:
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          rfc: DPA950805RR2
+          denominacion_razon_social: Aloha Mahalo SC
+          tipo_declaracion: Normal
+          ejercicio: 2020
+          periodo_declaracion: Diciembre
+          fecha_hora_presentacion: '2021-01-18T19:24:00-06:00'
+          numero_operacion: '400475119'
+          tipo_complementaria: null
+        determinacion_isr:
+          personas_morales_regimen_general:
+            suma_ingresos_nominales_meses_anteriores_ejercicio: 69848414
+            estimulos_acreditables: null
+            ingresos_nominales_mes_que_declara: 6482479
+            reducciones: null
+            total_ingresos_nominales: 76330893
+            impuestos_del_periodo: 284098
+            coeficiente_utilidad: 0.2318
+            pagos_provisionales_efectuados_anterioridad: 303039
+            utilidad_fiscal_pago_provisional: 17693501
+            impuesto_retenido: 29925
+            ptu: null
+            otras_cantidades_a_cargo_contribuyente: null
+            iventario_acumulable: null
+            otras_cantidades_a_favor_contribuyente: null
+            anticipos_rendimientos_distribuidos_periodo: 16746509
+            diferencia_a_cargo: 0
+            perdidas_fiscales_ejercicios_anteriores_pendientes: null
+            estimulo_fiscal_deduccion_inmediata: null
+            impuesto_correspondiente_participacion_consolidable: null
+            deduccion_adicional_fomento_primer_empleo: null
+            porcentaje_participacion_consolidable: null
+            base_gravable_pago_provisional: 946992
+            impuesto_a_cargo: 0
+            isr_causado: 284098
+            ieps_alcohol: null
+        detalle_pago_isr:
+          r1_isr_personas_morales:
+            a_cargo: 0
+            acreditamiento_sorteo_buen_fin: null
+            parte_actualizada: null
+            diesel_marino: null
+            recargos: null
+            total_aplicaciones: 0
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 0
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: null
+            cantidad_a_cargo: 0
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            uso_infraestructura_carretera_cuota: null
+            cantidad_a_pagar: 0
+            otros_estimulos: null
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r12_isr_retenciones_por_salarios:
+            a_cargo: 415945
+            acreditamiento_sorteos: null
+            parte_actualizada: 0
+            diesel_marino: null
+            recargos: 0
+            total_aplicaciones: 379
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 415945
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: 379
+            cantidad_a_cargo: 415566
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 415566
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r13_isr_retenciones_por_asimilados_a_salarios:
+            a_cargo: 254588
+            acreditamiento_sorteos: null
+            parte_actualizada: 0
+            diesel_marino: null
+            recargos: 0
+            total_aplicaciones: 0
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 254588
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: null
+            cantidad_a_cargo: 254588
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 254588
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r14_isr_retenciones_por_servicios_profesionales:
+            a_cargo: 104482
+            acreditamiento_sorteos: null
+            parte_actualizada: 0
+            diesel_marino: null
+            recargos: 0
+            total_aplicaciones: 0
+            multa_por_correccion: null
+            fecha_pago_realizado_anterioridad: null
+            total_de_contribuciones: 104482
+            monto_pagado_anterioridad: null
+            credito_al_salario: null
+            importe_pagado_ultimas_48_hrs: null
+            subsidio_empleo: null
+            cantidad_a_cargo: 104482
+            impuesto_a_depositos_efectivo_acreditable: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            diesel_automotriz_transporte: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 104482
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+        determinacion_iva:
+          montos_actos_actividades_pagados:
+            total_actos_actividades_pagados_tasa_16: 2094706
+            total_actos_actividades_pagados_importacion_bienes_tasa_11: null
+            total_actos_actividades_sujetos_estimulo_rfn: 0
+            total_actos_actividades_pagados_tasa_0: 0
+            total_actos_actividades_pagados_importacion_bienes_tasa_16: null
+            total_actos_actividades_pagados_no_paga_iva: 0
+          detalle_total_actos_actividades_pagados_tasa_16:
+            intereses_pagados_tasa_16: null
+            otros_actos_pagados_tasa_16: 2094706
+            regalias_pagadas_tasa_16: null
+            total_actos_pagados_tasa_16: 2094706
+          determinacion_iva_acreditable:
+            total_iva_actos_actividades_pagados_tasa_16: 335153
+            iva_trasladado_o_pagado_adquisicion_bienes_distintos_inversiones_actos_no_obligados_pago_impuesto: null
+            iva_pagado_sujeto_estimulo_rfn: null
+            iva_trasladado_o_pagado_importacion_inversiones_actos_no_obligados_pago_impuesto: null
+            total_actos_actividades_pagados_importacion_bienes_tasa_16: 0
+            iva_bienes_utilizados_indistintamente_actos_gravados_o_actos_no_obligados_pago_impuesto: 0
+            proporcion_utilizada_conforme_art_5: null
+            total_iva_trasladado_contribuyente: 335153
+            proporcion_utilizada_conforme_art_5_b: null
+            iva_trasladado_adquisicion_bienes_distintos_inversiones_actos_gravados: 335153
+            iva_pagado_importacion_adquisicion_bienes_distintos_inversiones_actos_gravados: null
+            iva_acreditable: 335153
+            monto_acreditable_actualizado_a_incrementar_derivado_ajuste: null
+            iva_pagado_importacion_inversiones_actos_gravados: null
+            total_iva_acreditable_periodo: 335153
+            total_iva_actos_actividades_gravados: 335153
+            total_actos_actividades_pagados_importacion_bienes_tasa_11: null
+            iva_trasladado_adquisicion_inversiones_actos_gravados: null
+            iva_acreditable_bienes_utilizados_indistintamente_actos_gravados_o_actos_no_obligados_pago_impuesto: null
+          determinacion_iva:
+            valor_actos_actividades_gravados_tasa_16: 6457950
+            otras_cantidades_a_favor_contribuyente: null
+            valor_actos_actividades_gravados_tasa_11: null
+            cantidad_a_cargo: 312421
+            valor_actos_actividades_gravados_tasa_0_exportacion: null
+            saldo_a_favor: null
+            valor_actos_actividades_gravados_tasa_9_otros: null
+            devolucion_inmediata_obtenida: null
+            suma_actos_actividades_gravados: 6457950
+            saldo_a_favor_periodo: 0
+            valor_actos_actividades_no_se_deba_pagar_impuesto_exentos: null
+            acreditamiento_saldo_favor_periodos_anteriores: null
+            impuesto_causado: 1033272
+            diferencia_a_cargo: 312421
+            cantidad_actualizada_a_reintegrarse_derivada_de_ajuste: null
+            ieps_acreditable_alcohol: null
+            iva_retenido_al_contribuyente: 385698
+            impuesto_a_cargo: 312421
+            total_iva_acreditable: 335153
+            remanente_saldo_favor_ieps_alcohol: null
+            otras_cantidades_a_cargo_contribuyente: null
+          detalle_valor_actos_actividades_gravados_tasa_16:
+            intereses_cobrados_tasa_16: null
+            otros_actos_actividades_gravados_tasa_16: 6457950
+            regalias_entre_partes_relacionadas_tasa_16: null
+            total_actos_actividades_gravados_tasa_16: 6457950
+        detalle_pago_iva:
+          r21_iva:
+            a_cargo: 312421
+            cretificados_tesofe: null
+            a_favor: null
+            diesel_marino: null
+            parte_actualizada: 0
+            total_aplicaciones: 0
+            recargos: 0
+            fecha_pago_realizado_anterioridad: null
+            multa_por_correccion: null
+            monto_pagado_anterioridad: null
+            total_de_contribuciones: 312421
+            importe_pagado_ultimas_48_hrs: null
+            credito_al_salario: null
+            cantidad_a_cargo: 312421
+            subsidio_empleo: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            diesel_automotriz_transporte: null
+            uso_infraestructura_carretera_cuota: null
+            cantidad_a_favor: null
+            otros_estimulos: null
+            cantidad_a_pagar: 312421
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+          r21_iva_retenciones:
+            a_cargo: 111448
+            diesel_marino: null
+            parte_actualizada: 0
+            total_aplicaciones: 0
+            recargos: 0
+            fecha_pago_realizado_anterioridad: null
+            multa_por_correccion: null
+            monto_pagado_anterioridad: null
+            total_de_contribuciones: 111448
+            importe_pagado_ultimas_48_hrs: null
+            credito_al_salario: null
+            cantidad_a_cargo: 111448
+            subsidio_empleo: null
+            aplica_primera_parcialidad: 'NO'
+            compensaciones: null
+            credito_ieps_diesel: null
+            otros_estimulos: null
+            cantidad_a_favor: null
+            cretificados_tesofe: null
+            cantidad_a_pagar: 111448
+            importe_1ra_parcialidad: null
+            importe_sin_1ra_parcialidad: null
+        pdf: ===PDF_BINARY====
+        receipt_pdf: ===PDF_BINARY====
+        type: monthly
+    TaxReturnPersonalListMonthlyPaginatedPFAE:
+      summary: Tax Return Personal Monthly (PFAe)
+      description: Example of a list of PFAE-type monthly personal tax returns
+      value:
+        count: 101
+        next: https://sandbox.belvo.com/api/{endpoint}/?link=1bd948f7-245d-4313-b604-34d1044cb908&page=2
+        previous: null
+        results:
+        - collected_at: '2022-02-09T08:45:50.406032Z'
+          created_at: '2022-02-09T08:46:20.406032Z'
+          informacion_general:
+            rfc: null
+            nombre: null
+            tipo_declaracion: null
+            ejercicio: null
+            periodo_declaracion: null
+            fecha_hora_presentacion: null
+            numero_operacion: null
+          isr:
+            tipo: PFAE
+            determinacion:
+              ingresos_periodos_anteriores: 0
+              ingresos_periodo: 0
+              total_ingresos: 0
+              compras_gastos_periodos_anteriores: 1596
+              compra_gastos_periodo: 399
+              total_compras_gastos: 1995
+              base_gravable_pago_provisional: 0
+              isr_causado: 0
+              pagos_provisionales_efectuados_anterioridad: 0
+              isr_retenido_periodos_anteriores: 0
+              impuesto_retenido: 0
+              isr_cargo: 0
+            detalle_del_pago:
+              a_cargo: 0
+              parte_actualizada: 0
+              recargos: 0
+              total_contribuciones: 0
+              total_aplicaciones: 0
+              cantidad_a_cargo: 0
+              cantidad_a_pagar: 0
+          iva:
+            determinacion:
+              actividades_gravadas_tasa_16: 0
+              actividades_gravadas_tasa_0: 0
+              actividades_exentas: 0
+              iva_cobrado_periodo_tasa_16: 0
+              iva_acreditable_periodo: 0
+              iva_retenido: 0
+              saldo_a_favor: null
+              impuesto_a_favor: null
+            detalle_del_pago:
+              total_contribuciones: 0
+              total_aplicaciones: 0
+              cantidad_a_cargo: 0
+              cantidad_a_pagar: 0
+              a_favor: null
+          pdf: ===PDF_BINARY====
+          receipt_pdf: ===PDF_BINARY====
+          type: monthly
+    TaxReturnPersonalListMonthlyPFAIDetail:
+      summary: Tax Return Personal Monthly (PFAI)
+      description: Example of a PFAI-type monthly personal tax return
+      value:
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          rfc: null
+          nombre: null
+          tipo_declaracion: null
+          ejercicio: null
+          periodo_declaracion: null
+          fecha_hora_presentacion: null
+          numero_operacion: null
+        isr:
+          tipo: PFAE
+          determinacion:
+            ingresos_periodos_anteriores: 0
+            ingresos_periodo: 0
+            total_ingresos: 0
+            compras_gastos_periodos_anteriores: 1596
+            compra_gastos_periodo: 399
+            total_compras_gastos: 1995
+            base_gravable_pago_provisional: 0
+            isr_causado: 0
+            pagos_provisionales_efectuados_anterioridad: 0
+            isr_retenido_periodos_anteriores: 0
+            impuesto_retenido: 0
+            isr_cargo: 0
+            tipo_de_deduccíon: dedduccíon opicional
+            optas_por_el_cálculo_acumulado: 'NO'
+            deduccíon_opcional: 700
+            impuesto_predial: 0
+            total_deducciones_autorizadas: 700
+            tienes_facilidades_administrativas_o_estímulos_deducibles: 'NO'
+          detalle_del_pago:
+            a_cargo: 0
+            parte_actualizada: 0
+            recargos: 0
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+        iva:
+          determinacion:
+            actividades_gravadas_tasa_16: 0
+            actividades_gravadas_tasa_0: 0
+            actividades_exentas: 0
+            iva_cobrado_periodo_tasa_16: 0
+            iva_acreditable_periodo: 0
+            iva_retenido: 0
+            saldo_a_favor: null
+            impuesto_a_favor: null
+            impuesto_a_cargo: 54
+            cantidad_a_cargo: 54
+          detalle_del_pago:
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+            a_favor: null
+        pdf: ===PDF_BINARY====
+        receipt_pdf: ===PDF_BINARY====
+        type: monthly
+    TaxReturnPersonalListMonthlyPFAI:
+      summary: Personal Monthly (PFAI)
+      description: Example of a PFAI-type monthly personal tax return
+      value:
+      - collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          rfc: null
+          nombre: null
+          tipo_declaracion: null
+          ejercicio: null
+          periodo_declaracion: null
+          fecha_hora_presentacion: null
+          numero_operacion: null
+        isr:
+          tipo: PFAE
+          determinacion:
+            ingresos_periodos_anteriores: 0
+            ingresos_periodo: 0
+            total_ingresos: 0
+            compras_gastos_periodos_anteriores: 1596
+            compra_gastos_periodo: 399
+            total_compras_gastos: 1995
+            base_gravable_pago_provisional: 0
+            isr_causado: 0
+            pagos_provisionales_efectuados_anterioridad: 0
+            isr_retenido_periodos_anteriores: 0
+            impuesto_retenido: 0
+            isr_cargo: 0
+            tipo_de_deduccíon: dedduccíon opicional
+            optas_por_el_cálculo_acumulado: 'NO'
+            deduccíon_opcional: 700
+            impuesto_predial: 0
+            total_deducciones_autorizadas: 700
+            tienes_facilidades_administrativas_o_estímulos_deducibles: 'NO'
+          detalle_del_pago:
+            a_cargo: 0
+            parte_actualizada: 0
+            recargos: 0
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+        iva:
+          determinacion:
+            actividades_gravadas_tasa_16: 0
+            actividades_gravadas_tasa_0: 0
+            actividades_exentas: 0
+            iva_cobrado_periodo_tasa_16: 0
+            iva_acreditable_periodo: 0
+            iva_retenido: 0
+            saldo_a_favor: null
+            impuesto_a_favor: null
+            impuesto_a_cargo: 54
+            cantidad_a_cargo: 54
+          detalle_del_pago:
+            total_contribuciones: 0
+            total_aplicaciones: 0
+            cantidad_a_cargo: 0
+            cantidad_a_pagar: 0
+            a_favor: null
+        pdf: ===PDF_BINARY====
+        receipt_pdf: ===PDF_BINARY====
+        type: monthly
+    TaxReturnPersonalList:
+      summary: Personal Yearly
+      description: Example of a list of personal tax returns
+      value:
+      - id: 02589c41-ba22-4d44-8558-8111cc751318
+        link: 19697249-01b8-443e-a451-76bfc5fbeebf
+        collected_at: '2022-02-09T08:45:50.406032Z'
+        created_at: '2022-02-09T08:46:20.406032Z'
+        informacion_general:
+          ejercicio: 2018
+          fecha_hora_presentacion: '2020-01-07T17:28:00-05:00'
+          numero_operacion: '00000000001'
+          periodo_declaracion: Del Ejercicio
+          rfc: ABCD111111A11
+          tipo_declaracion: Normal
+          nombre: JOHN DOE
+        sueldos_salarios:
+          retenedores:
+          - rfc_retenedor: ABCD222222A22
+            nombre_denominacion_razon_social: ACME CORP
+            ingresos_exentos: 118263
+            ingreso_anual: 2265
+            subsidio_empleo: 0
+          impuesto_retenido: 19497
+          ingreso_anual: 118263
+          ingresos_acumulables: 115998
+          ingresos_exentos: 2265
+          subsidio_empleo: 0
+        servicios_profesionales:
+          deducciones_autorizadas:
+            deducciones_autorizadas: 11870
+            otras_deducciones: null
+            detalle_deducciones:
+            - tipo_deduccion: GASTOS
+              concepto: GASOLINA Y MANTENIMIENTO DE TRANSPORTE
+              monto_detallado: 9682
+            - tipo_deduccion: GASTOS
+              concepto: COMPRAS Y GASTOS GENERALES
+              monto_detallado: 2188
+            total_deducciones_autorizadas: 11870
+          ingresos:
+            ingresos_acumulables: 46000
+            ingresos_exentos: null
+            otros_ingresos: null
+            total_ingresos: 46000
+          resultado_fiscal:
+            utilidad_fiscal: 34130
+            ptu_pagada_ejercicio: 0
+            perdidas_fiscales_ejercicios_anteriores_aplicadas: 0
+            utilidad_gravable: 34130
+          pagos_provisionales:
+            pagos_provisionales_efectuados_en_ejercicio: 0
+          retenciones_isr:
+            isr_retenido_personas_morales: 4600
+        deducciones_personales:
+          honorarios_medicos_dentales_hospitalarios:
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC444444A44
+            monto_deducible: 1000
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC444444A44
+            monto_deducible: 502.34
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC333333A33
+            monto_deducible: 258.83
+          - rfc_emisor: ABC444444A55
+            monto_deducible: 14183.1
+          - rfc_emisor: ABC444444A66
+            monto_deducible: 1658
+          - rfc_emisor: ABC444444A77
+            monto_deducible: 1600
+          - rfc_emisor: ABC444444A88
+            monto_deducible: 1064
+          - rfc_emisor: ABC444444A99
+            monto_deducible: 927.57
+          donativos:
+          - rfc_emisor: ABC555555A99
+            monto_deducible: 10.03
+          aportaciones_voluntarias_complementarias_al_sar:
+          - rfc_emisor: ABC666666A99
+            monto_deducible: 12.03
+          - rfc_emisor: ABC777777A99
+            monto_deducible: 87.22
+          primas_por_seguros_de_gasto_medico:
+          - rfc_emisor: ABC777777A99
+            monto_deducible: 20.03
+        determinacion_impuesto:
+          base_gravable: 126864
+          deducciones_personales: 23264
+          ingresos_acumulables: 150128
+          isr_favorable: 10308
+          isr_conforme_tarifa_final: 13789
+          isr_retenido: 24097
+          num_clabe: '000000000000000001'
+          nombre_banco: BANCO SA
+          pagos_provisionales: 0
+          titular_clabe_permite_verificacion: SÍ
+          accion_saldo_a_favor: DEVOLUCIÓN
+        retenciones:
+          sueldos_salarios:
+          - rfc_retenedor: ABC444444A99
+            monto_retenciones: 118263
+            retenciones_isr: 19497
+          dividendos: []
+          servicios_profesionales:
+          - rfc_retenedor: ABC444444A00
+            monto_retenciones: 46000
+            retenciones_isr: 4600
+        dividendos:
+          monto_acumulable_dividendos_utilidades: null
+          monto_total_isr_pagado_sociedad: null
+        datos_informativos:
+          credito_fiscal_autorizado_proyectos_investigacion_desarrollo: 0
+          credito_fiscal_autorizado_proyectos_apoyo_deporte_alto_rendimiento: 0
+          credito_fiscal_autorizado_proyectos_inversion_artes: 0
+          credito_fiscal_autorizado_inversion_equipos_fijos: 0
+          credito_fiscal_autorizado_produccion_distribucion_cinematografica: 0
+          saldo_credito_fiscal_autorizado_anteriores_investigacion_desarrollo: 0
+          saldo_credito_fiscal_anteriores_proyectos_inversion_artes: 0
+          saldo_credito_fiscal_anteriores_produccion_distribucion_cinematografica: 0
+        pdf: =PDF-STRING=
+        receipt_pdf: =PDF-STRING=
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Belvo employs **basic authentication** using your secret keys (You can find your API secret keys in your Belvo Dashboard, under the **Developers** section).\n\n\nTo authenticate, you need to use your API `secretId` as the `username` and your API `secretPassword` as the `password`. These credentials need to be **Base64 encoded** and included in the `Authorization` header of your HTTP requests. For example:\n\n\n```shell\ncurl -X GET https://sandbox.belvo.com/api/ \\\n  -H \"Authorization: Basic $(echo -n 'YOUR_SECRET_ID:YOUR_SECRET_PASSWORD' | base64)\"\n```\n\nReplace `YOUR_SECRET_ID` and `YOUR_SECRET_PASSWORD` with your actual credentials. **Never expose your credentials in client-side code or public repositories**."
+x-tagGroups:
+- name: Core Resources
+  tags:
+  - Institutions
+  - Links
+  - Widget Access Token
+  - Consents
+- name: Open Finance Data Aggregation (Brazil)
+  tags:
+  - Owners
+  - Accounts
+  - Balances
+  - Exchanges
+  - Transactions
+  - Bills
+  - Investments Brazil
+  - Investment Transactions Brazil
+- name: Employments Brazil
+  tags:
+  - Employments Brazil
+- name: Employment Records Mexico
+  tags:
+  - Employment Records Mexico
+  - Current Employments Mexico
+- name: Fiscal Mexico
+  tags:
+  - Invoices
+  - Tax compliance status
+  - Tax returns
+  - Tax retentions
+  - Tax status
+  - Financial Statements
+- name: Fiscal Chile
+  tags:
+  - Invoices Chile
+  - Tax Status Chile
+  - Debt Reports Chile
+- name: Enrichment API
+  tags:
+  - Incomes
+  - Recurring Expenses
+  - Risk Insights
+  - Employment Metrics
+- name: Payment Initiation (Brazil)
+  tags:
+  - Payment Initiation introduction (Brazil)
+  - Payment Institutions (Brazil)
+  - Customers (Brazil)
+  - Bank Accounts (Brazil)
+  - Payment Authorizations (Brazil)
+  - Charges (Brazil)
+  - Payment Intents (Brazil)
+  - Biometric payments Widget Access Token (Brazil)
+  - Enrollments (Brazil)
+  - Payment Transactions (Brazil)
