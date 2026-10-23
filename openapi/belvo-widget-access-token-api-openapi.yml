@@ -1432,3 +1432,9 @@ x-tagGroups:
   - Biometric payments Widget Access Token (Brazil)
   - Enrollments (Brazil)
   - Payment Transactions (Brazil)
+x-provenance:
+  method: harvested
+  publisher: Belvo
+  source: https://developers.belvo.com/_bundle/apis/BelvoOpenApiSpec.json?download
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
