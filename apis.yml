@@ -1066,6 +1066,8 @@ apis:
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
+  - Exchange
+  tags_raw:
   - Exchanges
   properties:
   - type: OpenAPI
@@ -1688,6 +1690,8 @@ apis:
   humanURL: https://developers.belvo.com/apis/belvoopenapispec/links
   baseURL: https://api.belvo.com/api
   tags:
+  - Tax Returns
+  tags_raw:
   - Tax returns
   properties:
   - type: OpenAPI
