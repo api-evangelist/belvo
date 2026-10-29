@@ -1,4 +1,4 @@
-# Belvo (belvo)
+# Belvo
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,185 +66,137 @@
 
 Belvo is a Latin American open-finance API platform that lets companies connect to bank, fiscal, and employment institutions across Mexico, Brazil, and Colombia to aggregate accounts, balances, transactions, owners, and income data, and to initiate account-to-account payments over Brazil's Pix / Open Finance rails.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/belvo/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/belvo/refs/heads/main/apis.yml)
+**Areas:** Open Finance · Open Banking · Bank Data · Aggregation · Payments · Pix · Latin America
 
-## Tags
+## Belvo on APIs.io
 
-- Open Finance
-- Open Banking
-- Bank Data
-- Aggregation
-- Payments
-- Pix
-- Latin America
+Everything profiled for Belvo is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/belvo/](https://apis.io/providers/belvo/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (10)
 
-- **Created:** 2026-06-21
-- **Modified:** 2026-06-21
+- [Belvo Accounts API](https://apis.io/apis/belvo/belvo-accounts-api/) — Bank accounts held inside a Link.
+- [Belvo Balances API](https://apis.io/apis/belvo/belvo-balances-api/) — Point-in-time balances for checking and savings accounts.
+- [Belvo Incomes API](https://apis.io/apis/belvo/belvo-incomes-api/) — Income insights derived from account activity.
+- [Belvo Institutions API](https://apis.io/apis/belvo/belvo-institutions-api/) — Institutions Belvo can connect to.
+- [Belvo Links API](https://apis.io/apis/belvo/belvo-links-api/) — Manage the credential connections to institutions.
+- [Belvo Owners API](https://apis.io/apis/belvo/belvo-owners-api/) — Identity of the Link owner.
+- [Belvo Payments (Brazil) API](https://apis.io/apis/belvo/belvo-payments-brazil-api/) — Pix / Open Finance payment initiation in Brazil.
+- [Belvo Recurring Expenses API](https://apis.io/apis/belvo/belvo-recurring-expenses-api/) — Regular subscription and utility payments.
+- [Belvo Transactions API](https://apis.io/apis/belvo/belvo-transactions-api/) — Detailed transaction history for accounts in a Link.
+- [Belvo Webhooks API](https://apis.io/apis/belvo/belvo-webhooks-api/) — Asynchronous event notifications.
 
-## APIs
+### Published properties
 
-### Belvo Links API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-A Link is the set of end-user credentials that grants access to an institution. Create single (one-time) or recurrent Links and manage their lifecycle before retrieving accounts, owners, balances, and transactions.
+#### Agentic access (1)
 
-- **Human URL:** [https://developers.belvo.com/apis/belvoopenapispec/links](https://developers.belvo.com/apis/belvoopenapispec/links)
-- **Base URL:** `https://api.belvo.com/api`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Belvo Agentic Access](https://apis.io/agentic-access/belvo/belvo-agentic-access/)
 
-- Links
-- Connections
-- Credentials
+#### Collections (11)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://developers.belvo.com/docs/links)
-- [API Reference](https://developers.belvo.com/apis/belvoopenapispec/links)
-- [OpenAPI](openapi/belvo-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/belvo.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/belvo.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Belvo API](https://apis.io/collections/belvo/open-belvo/)
+- [Belvo Accounts API](https://apis.io/collections/belvo/open-belvo-accounts-api/)
+- [Belvo Accounts Balances API](https://apis.io/collections/belvo/open-belvo-balances-api/)
+- [Belvo Accounts Incomes API](https://apis.io/collections/belvo/open-belvo-incomes-api/)
+- [Belvo Accounts Institutions API](https://apis.io/collections/belvo/open-belvo-institutions-api/)
+- [Belvo Accounts Links API](https://apis.io/collections/belvo/open-belvo-links-api/)
+- [Belvo Accounts Owners API](https://apis.io/collections/belvo/open-belvo-owners-api/)
+- [Belvo Accounts Payments (Brazil) API](https://apis.io/collections/belvo/open-belvo-payments-brazil-api/)
+- [Belvo Accounts Recurring Expenses API](https://apis.io/collections/belvo/open-belvo-recurring-expenses-api/)
+- [Belvo Accounts Transactions API](https://apis.io/collections/belvo/open-belvo-transactions-api/)
+- [Belvo Accounts Webhooks API](https://apis.io/collections/belvo/open-belvo-webhooks-api/)
 
-### Belvo Accounts API
+#### Security (3)
 
-Retrieve the bank accounts held inside a Link - checking, savings, credit cards, and loans - with account numbers, currency, type, and balance details.
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Human URL:** [https://developers.belvo.com/apis/belvoopenapispec/accounts](https://developers.belvo.com/apis/belvoopenapispec/accounts)
-- **Base URL:** `https://api.belvo.com/api`
+- [Belvo Authentication](https://apis.io/security/belvo/belvo-authentication/)
+- [Belvo Domain Security](https://apis.io/security/belvo/belvo-domain-security/)
+- [Belvo Vulnerability Disclosure](https://apis.io/security/belvo/belvo-vulnerability-disclosure/)
 
-#### Tags
+#### Plans and pricing (2)
 
-- Accounts
-- Bank Accounts
+Published plans, tiers and prices.
 
-#### Properties
+- [Belvo Plans Pricing](https://apis.io/plans/belvo/belvo-plans-pricing/)
+- [Belvo Price Estimates](https://apis.io/plans/belvo/belvo-price-estimates/)
 
-- [Documentation](https://developers.belvo.com/docs/accounts)
-- [API Reference](https://developers.belvo.com/apis/belvoopenapispec/accounts)
-- [OpenAPI](openapi/belvo-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/belvo.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/belvo.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Rate limits (1)
 
-### Belvo Transactions & Balances API
+Published request limits.
 
-Retrieve detailed, categorized transaction history for the accounts in a Link and point-in-time balances for checking and savings accounts, with paginated responses up to 1000 items per page.
+- [Belvo Rate Limits](https://apis.io/rate-limits/belvo/belvo-rate-limits/)
 
-- **Human URL:** [https://developers.belvo.com/apis/belvoopenapispec/transactions](https://developers.belvo.com/apis/belvoopenapispec/transactions)
-- **Base URL:** `https://api.belvo.com/api`
+#### FinOps (1)
 
-#### Tags
+What the API costs to run, by operation.
 
-- Transactions
-- Balances
-- History
+- [Belvo Finops](https://apis.io/finops/belvo/belvo-finops/)
 
-#### Properties
+## Where to find this API
 
-- [Documentation](https://developers.belvo.com/docs/transactions)
-- [API Reference](https://developers.belvo.com/apis/belvoopenapispec/transactions)
-- [OpenAPI](openapi/belvo-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/belvo.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/belvo.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-### Belvo Owners & Incomes API
-
-Retrieve the identity of the Link owner, derive income sources over the past 365 days, and identify regular recurring expenses such as subscriptions and utility bills for verification and underwriting.
-
-- **Human URL:** [https://developers.belvo.com/apis/belvoopenapispec/owners](https://developers.belvo.com/apis/belvoopenapispec/owners)
-- **Base URL:** `https://api.belvo.com/api`
-
-#### Tags
-
-- Owners
-- Incomes
-- Identity
-- Verification
-
-#### Properties
-
-- [Documentation](https://developers.belvo.com/docs/owners)
-- [API Reference](https://developers.belvo.com/apis/belvoopenapispec/owners)
-- [OpenAPI](openapi/belvo-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/belvo.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/belvo.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Belvo Institutions API
-
-List the bank, fiscal, and employment institutions Belvo can connect to across Mexico, Brazil, and Colombia, including supported resources, country, and connection types.
-
-- **Human URL:** [https://developers.belvo.com/apis/belvoopenapispec/institutions](https://developers.belvo.com/apis/belvoopenapispec/institutions)
-- **Base URL:** `https://api.belvo.com/api`
-
-#### Tags
-
-- Institutions
-- Catalog
-- Coverage
-
-#### Properties
-
-- [Documentation](https://developers.belvo.com/docs/institutions)
-- [API Reference](https://developers.belvo.com/apis/belvoopenapispec/institutions)
-- [OpenAPI](openapi/belvo-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/belvo.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/belvo.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Belvo Payments (Brazil / Pix) API
-
-Initiate account-to-account payments in Brazil over Pix and the Open Finance network using payment intents, customers, payment institutions, and payment transactions.
-
-- **Human URL:** [https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil)](https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil))
-- **Base URL:** `https://api.belvo.com`
-
-#### Tags
-
-- Payments
-- Pix
-- Open Finance
-- Brazil
-
-#### Properties
-
-- [Documentation](https://developers.belvo.com/products/payments_brazil/payments-brazil-pix-via-open-finance-api-guide)
-- [API Reference](https://developers.belvo.com/apis/belvoopenapispec/payment-intents-(brazil))
-- [OpenAPI](openapi/belvo-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/belvo.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/belvo.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Belvo Webhooks API
-
-Register and manage webhook endpoints to receive asynchronous notifications when aggregation resources (accounts, owners, transactions) are ready and when payment intents, charges, and transactions change state.
-
-- **Human URL:** [https://developers.belvo.com/docs/webhooks](https://developers.belvo.com/docs/webhooks)
-- **Base URL:** `https://api.belvo.com/api`
-
-#### Tags
-
-- Webhooks
-- Events
-- Notifications
-
-#### Properties
-
-- [Documentation](https://developers.belvo.com/docs/webhooks)
-- [API Reference](https://developers.belvo.com/developer_resources/resources-webhooks-aggregation)
-- [OpenAPI](openapi/belvo-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Review](review.yml)
-- [Postman Collection](collections/belvo.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/belvo.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/belvo-finance)
-- [LinkedIn](https://www.linkedin.com/company/belvo)
 - [Website](https://belvo.com)
 - [Documentation](https://developers.belvo.com)
-- [Plans](plans/belvo-plans-pricing.yml)
-- [Rate Limits](rate-limits/belvo-rate-limits.yml)
-- [Fin Ops](finops/belvo-finops.yml)
+- [Pricing](https://belvo.com/plans-and-pricing/)
+- [Blog](https://belvo.com/feed)
+- [GitHub](https://github.com/belvo-finance)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 35.5** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 46.2 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 42.1 |
+
+**Agent readiness 17.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 14.2** — Banking & Open Finance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/belvo/](https://apis.io/providers/belvo/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Belvo: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/belvo/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
